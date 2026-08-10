@@ -1,0 +1,109 @@
+---
+description: features 레이어 설계 원칙 — TanStack Query 훅 배치, entities·screens와의 역할 분리
+globs: features/**/*
+alwaysApply: false
+---
+
+# features 설계 원칙
+
+FSD `features` 레이어는 **여러 screens·widgets에서 재사용되는 비즈니스 기능**을 담는다.
+
+```
+features/
+  {slice}/
+    model/      # TanStack Query 훅 (useQuery, useMutation)
+    ui/         # 재사용 UI·인터랙션
+    lib/        # mock, mapper, 순수 유틸
+    config/     # queryKey, 상수·설정
+    index.ts    # public API
+```
+
+## TanStack Query 배치
+
+`entities/model`은 **도메인 타입**(Req/Res, 엔티티)만 둔다. `useQuery`·`useMutation` 등 TanStack Query 코드는 **entities에 두지 않는다**.
+
+| 위치 | TanStack Query | 기준 |
+| ---- | -------------- | ---- |
+| `entities/model` | ❌ 금지 | 타입 정의만 |
+| `features/{slice}/model` | ✅ 권장 | 2곳 이상(screens·widgets)에서 재사용 |
+| `screens/{slice}/model` | ✅ 허용 | 해당 화면에서만 사용 |
+
+```typescript
+// ❌ entities/transaction/model/useCreateTransaction.ts
+export const useCreateTransaction = () => {
+  return useMutation({ mutationFn: createTransaction, ... });
+};
+
+// ✅ features/transaction/model/useCreateTransaction.ts
+import { createTransaction } from '@/entities/transaction';
+
+export const useCreateTransaction = () => {
+  return useMutation({ mutationFn: createTransaction, ... });
+};
+```
+
+### features에 두는 경우
+
+- `entities` api를 감싼 `useQuery` / `useMutation` 훅
+- queryKey 정의, `invalidateQueries` 등 **캐시 전략**
+- mutation의 `onSuccess` / `onError` 등 **클라이언트 부수 효과** (Alert, 라우팅 등)
+- **여러 엔티티**를 조합하는 데이터 페칭·갱신 로직
+
+### screens에 두는 경우
+
+- 위 훅을 **한 화면에서만** 쓰고, 다른 곳에서 재사용 계획이 없을 때
+- 화면 전용 폼 상태·검증과 강하게 결합된 훅
+
+## model
+
+- Hook 파일명은 **camelCase** (`useCreateTransaction.ts`).
+- API 원본은 `entities`에서 import한다. **entities api를 model에 복제하지 않는다.**
+- queryKey는 `config/queryKeys.ts` 등으로 분리해 재사용한다.
+
+```typescript
+// ✅ features/transaction/model/useMonthlySummary.ts
+import { fetchMonthlySummary } from '@/entities/transaction';
+import { transactionQueryKeys } from '../config/queryKeys';
+
+export const useMonthlySummary = (householdId: string, date = new Date()) => {
+  return useQuery({
+    queryKey: transactionQueryKeys.monthlySummary(householdId, date),
+    queryFn: () => fetchMonthlySummary({ householdId, referenceDate: date }),
+    enabled: !!householdId,
+  });
+};
+```
+
+## ui
+
+- 여러 화면·위젯에서 쓰이는 UI·인터랙션 컴포넌트.
+- `model` 훅을 사용해 데이터를 주입받거나, 내부에서 직접 호출한다.
+
+## entities vs features vs screens
+
+| 레이어 | 역할 |
+| ------ | ---- |
+| `entities` | Supabase 등 **순수 API** + Req/Res·도메인 타입 |
+| `features` | entities api + **TanStack Query** + 재사용 비즈니스 로직·UI |
+| `screens` | 페이지 조립, 화면 전용 훅·UI |
+
+```
+entities/transaction/api/createTransaction.ts   → API 함수
+features/create-transaction/model/useCreateTransaction.ts → mutation 훅
+screens/add-transaction/ui/AddTransactionForm.tsx         → UI 조립
+```
+
+## index.ts (public API)
+
+- 슬라이스 외부에서는 `index.ts` export만 사용한다.
+- 내부 경로(`features/.../model/...`) 직접 import 지양.
+
+## 체크리스트
+
+TanStack Query 훅 추가 시:
+
+1. `entities/model`이 아닌 `features` 또는 `screens`에 둘 위치를 결정한다.
+2. 2곳 이상에서 쓰이면 `features/{slice}/model`에 작성한다.
+3. `entities` 혹은 `shared`에서만 import한다.
+4. queryKey·invalidate 대상은 `config/`로 분리한다.
+5. `index.ts`에 export를 추가한다.

@@ -1,0 +1,105 @@
+---
+alwaysApply: true
+---
+
+# 공통
+
+## 폴더 및 파일 관리
+
+- 모든 파일 및 폴더명은 **camelCase** (`createProfile.ts`, `/addTransaction`)
+- ui 컴포넌트 파일명은 **PascalCase** (`HeroSection.tsx`).
+
+## 함수·컴포넌트 작성 규칙
+
+- Hook, 컴포넌트, 유틸 함수 등 **모든 함수**는 **화살표 함수**로 선언합니다.
+- 컴포넌트의 Props 타입 이름은 `Props` 를 기본으로 합니다.
+
+```ts
+// 화살표 함수 사용
+// ✅ Good
+export const useCreateProfile = () => {
+  // ...
+};
+
+export const LoginPage = () => {
+  // ...
+};
+
+export const createProfile = async (payload: CreateProfileReq) => {
+  // ...
+};
+
+// default export
+const RootLayout = () => {
+  // ...
+};
+
+export default RootLayout;
+
+// ❌ Bad
+export function useCreateProfile() {}
+export function LoginPage() {}
+export async function createProfile() {}
+export default function RootLayout() {}
+```
+
+```ts
+// Props 타입 선언
+// ✅ Good
+type Props = {
+ // ...
+}
+
+export const ProfileActionSection = () => {
+  // ...
+};
+
+// ❌ Bad
+type ProfileActionSectionProps = {
+  // ...
+}
+
+export const ProfileActionSection = () => {
+  // ...
+};
+```
+
+## FSD 원칙
+
+### 레이어 의존성 규칙
+
+상위 레이어만 하위 레이어를 import할 수 있습니다. **역방향·동일 레이어 간 직접 참조는 금지**합니다.
+
+```
+app → pages → widgets → features → entities → shared
+```
+
+| 허용                                        | 금지                   |
+| ------------------------------------------- | ---------------------- |
+| `pages` → `features`, `widgets`, `shared` | `features` → `pages` |
+| `app` → `pages`, `features`, `shared`     | `shared` → `features`  |
+| `widgets` → `features`, `shared`            | `features` → `widgets` |
+
+### Public API
+
+- 슬라이스 외부에서는 **반드시 슬라이스 루트 `index.ts`** 를 통해 import합니다.
+- 내부 파일(`ui/`, `model/` 등)을 직접 import하지 않습니다.
+
+```ts
+// ✅ Good
+import { useGetCategories } from '@/features/category';
+
+// ❌ Bad
+import { useGetCategories } from '@/features/category/model/useGetCategories';
+```
+
+### root `app/` 레이어 역할 분리
+
+root의 `app/`은 라우팅과 네비게이션 설정만 담당합니다. 페이지 관련 UI 및 로직은 `src/pages/`에 둡니다.
+
+```tsx
+// app/(tabs)/index.tsx
+import { HomePage } from '@/pages/home';
+
+export default HomePage;
+```

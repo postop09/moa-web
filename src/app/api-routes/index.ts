@@ -1,0 +1,1 @@
+export { authCallback } from './authCallback';

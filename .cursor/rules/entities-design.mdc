@@ -1,0 +1,94 @@
+---
+description: entities 레이어 설계 원칙 — api/lib/model/config 세그먼트, 단일 요청 파일, Req/Res 타입 규칙
+globs: entities/**/*
+alwaysApply: false
+---
+
+# entities 설계 원칙
+
+FSD `entities` 레이어는 **도메인 단위 슬라이스**로 구성한다. 각 슬라이스는 목적에 따라 아래 세그먼트만 사용한다.
+
+```
+entities/
+  {slice}/
+    api/      # 외부 요청 1건 = 파일 1개
+    lib/      # 순수 헬퍼, mock, 로컬 저장소
+    model/    # 타입 정의 (Req/Res, 도메인 모델)
+    config/   # 슬라이스 전용 상수·설정 (필요 시)
+    index.ts  # public API
+```
+
+## api
+
+- **파일 1개 = API 요청 1개**. 여러 요청을 한 파일에 묶지 않는다.
+- 파일명은 **camelCase 동사+명사** (`createProfile.ts`, `getProfile.ts`).
+- 파일당 **export 함수 1개** (해당 요청만 담당).
+
+```typescript
+// ✅ entities/profile/api/createProfile.ts
+export const createProfile = async (payload: CreateProfileReq) => { ... };
+
+// ✅ entities/profile/api/getProfile.ts
+export const getProfile = async (userId: string) => { ... };
+
+// ❌ entities/profile/api/profiles-api.ts — 여러 요청을 한 파일에 모음
+```
+
+### 요청 인자 (payload)
+
+| 조건                           | 형태                              |
+| ------------------------------ | --------------------------------- |
+| request body 필드 **1개**      | 단일 인자 허용 (`userId: string`) |
+| request body 필드 **2개 이상** | **`payload` 객체** 하나로 전달    |
+
+```typescript
+// ✅ body 3필드 → payload 객체
+export const createProfile = async (payload: CreateProfileReq) => {
+  await supabase.from('profiles').insert(payload);
+};
+
+// ❌ createProfile(id, email, nickname) — 필드 2개 이상을 개별 인자로 나눔
+```
+
+## model
+
+- **TanStack Query 훅(`useQuery`, `useMutation`)은 두지 않는다.** → `features` 또는 `screens`의 `model`에 작성한다. ([features-design](./features-design.mdc) 참고)
+- API 요청/응답 타입은 **파일 1개 = 타입 1개**.
+- 파일명: `{api함수명}Req.ts` 또는 `{api함수명}Res.ts` (camelCase).
+- 타입명: 파일명과 동일한 PascalCase (`CreateProfileReq`, `GetProfileRes`).
+
+```typescript
+// ✅ entities/profile/model/createProfileReq.ts
+export type CreateProfileReq = {
+  id: string;
+  email: string;
+  nickname: string;
+};
+
+// ❌ model/types.ts에 여러 API Req/Res를 한꺼번에 정의
+```
+
+- **도메인 엔티티**(`Profile` 등)는 API와 1:1이 아니면 `{entity}.ts` 등 별도 파일로 둔다.
+- api 파일은 model의 Req/Res를 import한다. **api 간 직접 import 금지** — 공통 조합은 `lib/` 또는 슬라이스 `index.ts`에서 처리.
+
+## lib
+
+- mock 데이터, mapper, 로컬 캐시, 비즈니스 없는 유틸.
+
+## config
+
+- 슬라이스 전용 env 키, 테이블명, 쿼리 키 상수 등.
+
+## index.ts (public API)
+
+- 슬라이스 외부에는 `index.ts` export만 사용한다.
+- 내부 경로(`entities/profile/api/getProfile`) 직접 import 지양.
+
+## 체크리스트
+
+새 API 추가 시:
+
+1. `model/{name}Req.ts` 또는 `model/{name}Res.ts` 작성
+2. `api/{name}.ts`에 요청 함수 1개 작성
+3. body 필드 2개 이상이면 `payload` 객체 사용
+4. `index.ts`에 export 추가
