@@ -1,12 +1,15 @@
 :root {
-  --color-bg: #f7f4ef;
-  --color-surface: #fffdf9;
-  --color-text: #1c1a17;
-  --color-muted: #6b6560;
-  --color-accent: #2f5d50;
-  --color-border: #e4ddd3;
+  --color-bg: #f4f6f8;
+  --color-surface: #ffffff;
+  --color-text: #0f172a;
+  --color-muted: #64748b;
+  --color-accent: #0d9488;
+  --color-border: #e2e8f0;
+  --color-grid: rgba(15, 23, 42, 0.06);
+  --color-grid-strong: rgba(15, 23, 42, 0.1);
   --font-sans:
     var(--font-geist-sans), 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+  --font-display: var(--font-instrument), var(--font-sans);
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -26,9 +29,7 @@ html,
 body {
   margin: 0;
   min-height: 100%;
-  background:
-    radial-gradient(circle at top left, #efe7db 0%, transparent 40%),
-    linear-gradient(180deg, var(--color-bg), #f3eee6);
+  background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-sans);
 }

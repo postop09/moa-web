@@ -1,1 +1,0 @@
-export { TabsShell } from './TabsShell';

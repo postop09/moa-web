@@ -1,8 +1,16 @@
+import { BrandHero } from './ui/BrandHero';
+import { GoogleSignInButton } from './ui/GoogleSignInButton';
+import { GridBackdrop } from './ui/GridBackdrop';
+import styles from './ui/login.module.css';
+
 export const LoginPage = () => {
   return (
-    <main>
-      <h1>로그인</h1>
-      <p>스캐폴딩 placeholder 화면입니다.</p>
+    <main className={styles.page}>
+      <GridBackdrop />
+      <div className={styles.panel}>
+        <BrandHero />
+        <GoogleSignInButton />
+      </div>
     </main>
   );
 };

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist, Geist_Mono, Instrument_Serif } from 'next/font/google';
 import { type ReactNode } from 'react';
 
 import { Providers } from '@/app/providers';
@@ -15,9 +15,15 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
+const instrumentSerif = Instrument_Serif({
+  variable: '--font-instrument',
+  subsets: ['latin'],
+  weight: '400',
+});
+
 export const metadata: Metadata = {
   title: 'Moa',
-  description: '가계부 웹 클라이언트',
+  description: '그래프 중심 가계부 — 숫자로 보는 지출',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
@@ -27,7 +33,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#1c1a17',
+  themeColor: '#0f172a',
 };
 
 type Props = {
@@ -36,7 +42,10 @@ type Props = {
 
 const RootLayout = ({ children }: Props) => {
   return (
-    <html lang="ko" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html
+      lang="ko"
+      className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable}`}
+    >
       <body>
         <Providers>{children}</Providers>
       </body>

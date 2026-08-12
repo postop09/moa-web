@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { createServerClient } from '@/shared/api';
+import { createServerClient } from '@/shared/api/server';
 
 export const authCallback = async (request: Request) => {
   const { searchParams, origin } = new URL(request.url);

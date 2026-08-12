@@ -1,11 +1,11 @@
 {
   "name": "Moa",
   "short_name": "Moa",
-  "description": "가계부 웹 클라이언트",
+  "description": "그래프 중심 가계부 — 숫자로 보는 지출",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f7f4ef",
-  "theme_color": "#1c1a17",
+  "background_color": "#f4f6f8",
+  "theme_color": "#0f172a",
   "icons": [
     {
       "src": "/icons/icon-192.png",
