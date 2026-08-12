@@ -1,3 +1,10 @@
-import type { Tables } from '@/shared/api';
+import type { TransactionType } from '@/shared/model';
 
-export type Category = Tables<'categories'>;
+export type Category = {
+  id: number;
+  householdId: string;
+  name: string;
+  type: TransactionType;
+  budget: number | null;
+  created_at: string;
+};

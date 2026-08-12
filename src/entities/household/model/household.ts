@@ -1,3 +1,7 @@
-import type { Tables } from '@/shared/api';
-
-export type Household = Tables<'households'>;
+export type Household = {
+  id: string;
+  name: string;
+  ownerId: string;
+  createdAt: string;
+  updatedAt: string;
+};

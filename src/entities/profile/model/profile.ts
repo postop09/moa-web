@@ -1,3 +1,7 @@
-import type { Tables } from '@/shared/api';
-
-export type Profile = Tables<'profiles'>;
+export type Profile = {
+  id: string;
+  email: string;
+  nickname: string;
+  createdAt: string;
+  updatedAt: string;
+};

@@ -1,9 +1,7 @@
 import { createBrowserClient as createSupabaseBrowserClient } from '@supabase/ssr';
 
-import type { Database } from './database';
-
 export const createBrowserClient = () => {
-  return createSupabaseBrowserClient<Database>(
+  return createSupabaseBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
   );
