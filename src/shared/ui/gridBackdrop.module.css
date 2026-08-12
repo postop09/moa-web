@@ -1,0 +1,49 @@
+.backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-position: center;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 20%, transparent 75%);
+}
+
+.axisX {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 58%;
+  height: 1px;
+  background: var(--color-grid-strong);
+}
+
+.axisY {
+  position: absolute;
+  top: 18%;
+  bottom: 18%;
+  left: 22%;
+  width: 1px;
+  background: var(--color-grid-strong);
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop {
+    animation: none;
+    opacity: 1;
+  }
+}

@@ -1,9 +1,11 @@
-import { createBrowserClient } from '@/shared/api';
+import type { SupabaseClient } from '@/shared/api';
 
 import { TABLE_NAME } from '../config/tableName';
 
-export const deleteProfile = async (userId: string): Promise<void> => {
-  const supabase = createBrowserClient();
+export const deleteProfile = async (
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<void> => {
   const { error } = await supabase.from(TABLE_NAME).delete().eq('id', userId);
 
   if (error) {

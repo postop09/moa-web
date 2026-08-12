@@ -1,14 +1,14 @@
-import { createBrowserClient } from '@/shared/api';
+import type { SupabaseClient } from '@/shared/api';
 
 import { TABLE_NAME } from '../config/tableName';
 import type { ListTransactionsReq } from '../model/listTransactionsReq';
 import type { ListTransactionsRes } from '../model/listTransactionsRes';
 
 export const listTransactions = async (
+  supabase: SupabaseClient,
   payload: ListTransactionsReq,
 ): Promise<ListTransactionsRes> => {
   const { householdId, from, to } = payload;
-  const supabase = createBrowserClient();
 
   let query = supabase
     .from(TABLE_NAME)

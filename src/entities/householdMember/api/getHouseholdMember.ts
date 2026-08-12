@@ -1,12 +1,12 @@
-import { createBrowserClient } from '@/shared/api';
+import type { SupabaseClient } from '@/shared/api';
 
 import { TABLE_NAME } from '../config/tableName';
 import type { GetHouseholdMemberRes } from '../model/getHouseholdMemberRes';
 
 export const getHouseholdMember = async (
+  supabase: SupabaseClient,
   id: number,
 ): Promise<GetHouseholdMemberRes> => {
-  const supabase = createBrowserClient();
   const { data, error } = await supabase
     .from(TABLE_NAME)
     .select('*')

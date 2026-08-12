@@ -1,10 +1,12 @@
-import { createBrowserClient } from '@/shared/api';
+import type { SupabaseClient } from '@/shared/api';
 
 import { TABLE_NAME } from '../config/tableName';
 import type { GetCategoryRes } from '../model/getCategoryRes';
 
-export const getCategory = async (id: number): Promise<GetCategoryRes> => {
-  const supabase = createBrowserClient();
+export const getCategory = async (
+  supabase: SupabaseClient,
+  id: number,
+): Promise<GetCategoryRes> => {
   const { data, error } = await supabase
     .from(TABLE_NAME)
     .select('*')

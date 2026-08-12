@@ -2,6 +2,7 @@ export { createHouseholdMember } from './api/createHouseholdMember';
 export { deleteHouseholdMember } from './api/deleteHouseholdMember';
 export { getHouseholdMember } from './api/getHouseholdMember';
 export { listHouseholdMembers } from './api/listHouseholdMembers';
+export { listHouseholdMembersByUserId } from './api/listHouseholdMembersByUserId';
 export { updateHouseholdMember } from './api/updateHouseholdMember';
 export type { CreateHouseholdMemberReq } from './model/createHouseholdMemberReq';
 export type { GetHouseholdMemberRes } from './model/getHouseholdMemberRes';
