@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
 
 import { useCreateProfile } from '@/features/profile';
-import { GridBackdrop } from '@/shared/ui';
+import { GridBackdrop, MoaLogo } from '@/shared/ui';
 
 import styles from './createProfile.module.css';
 
@@ -34,7 +34,7 @@ export const CreateProfileForm = () => {
       <GridBackdrop />
       <div className={styles.panel}>
         <header className={styles.hero}>
-          <p className={styles.brand}>Moa</p>
+          <MoaLogo variant="black" size={72} className={styles.brand} />
           <h1 className={styles.headline}>프로필을 만들어 주세요</h1>
           <p className={styles.support}>
             가계부에서 사용할 닉네임을 입력합니다.

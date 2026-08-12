@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
 
 import { useCreateHousehold } from '@/features/household';
-import { GridBackdrop } from '@/shared/ui';
+import { GridBackdrop, MoaLogo } from '@/shared/ui';
 
 import styles from './createHousehold.module.css';
 
@@ -34,7 +34,7 @@ export const CreateHouseholdForm = () => {
       <GridBackdrop />
       <div className={styles.panel}>
         <header className={styles.hero}>
-          <p className={styles.brand}>Moa</p>
+          <MoaLogo variant="black" size={72} className={styles.brand} />
           <h1 className={styles.headline}>가계부를 만들어 주세요</h1>
           <p className={styles.support}>함께 관리할 가계부 이름을 정합니다.</p>
         </header>
