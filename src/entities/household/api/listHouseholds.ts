@@ -9,7 +9,7 @@ export const listHouseholds = async (
   const { data, error } = await supabase
     .from(TABLE_NAME)
     .select('*')
-    .order('createdAt', { ascending: false });
+    .order('createdAt', { ascending: true });
 
   if (error) {
     throw error;

@@ -7,21 +7,6 @@
   max-width: 40rem;
 }
 
-.headline {
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--color-text);
-}
-
-.support {
-  margin: var(--space-2) 0 0;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  color: var(--color-muted);
-}
-
 .section {
   display: flex;
   flex-direction: column;
