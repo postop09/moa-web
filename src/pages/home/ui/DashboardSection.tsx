@@ -56,9 +56,7 @@ export const DashboardSection = ({ householdId }: Props) => {
   if (error) {
     return (
       <p className={styles.error}>
-        {error instanceof Error
-          ? error.message
-          : '현황을 불러오지 못했습니다.'}
+        {error instanceof Error ? error.message : '현황을 불러오지 못했습니다.'}
       </p>
     );
   }
@@ -117,18 +115,18 @@ export const DashboardSection = ({ householdId }: Props) => {
               ratio={savingRingRatio}
               negative={savingRate !== null && savingRate < 0}
             />
+            <RecentTransactionsCard transactions={recentTransactions} />
           </div>
         </div>
 
         <div className={styles.column}>
           <CategoryPieCard items={expenseByCategory} />
-          <RecentTransactionsCard transactions={recentTransactions} />
+          <TopSpendingsCard items={expenseByCategory} />
         </div>
 
         <div className={styles.column}>
           <SpendingOverTimeCard items={monthlyExpenses} />
           <CategoryBudgetCard items={categoryBudgets} />
-          <TopSpendingsCard items={expenseByCategory} />
         </div>
       </div>
     </div>

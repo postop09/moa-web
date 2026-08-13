@@ -33,7 +33,7 @@ const formatPercent = (ratio: number | null) => {
 export const CategoryBudgetCard = ({ items }: Props) => {
   return (
     <section className={styles.card}>
-      <h3 className={styles.cardTitle}>카테고리별 예산</h3>
+      <h3 className={styles.cardTitle}>지출 예산</h3>
       {items.length === 0 ? (
         <p className={styles.empty}>지출 카테고리가 없습니다.</p>
       ) : (
