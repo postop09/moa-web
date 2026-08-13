@@ -4,7 +4,6 @@
   flex-direction: column;
   gap: var(--space-6);
   padding: var(--space-6) var(--space-4);
-  max-width: 72rem;
 }
 
 .dashboard {
@@ -45,55 +44,72 @@
   font-variant-numeric: tabular-nums;
 }
 
-.bars {
+.budgetNegative {
+  color: #b91c1c;
+}
+
+.budgetPositive {
+  color: #2563eb;
+}
+
+.stackBarBlock {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
 
-.barRow {
+.legend {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-4);
 }
 
-.barMeta {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-
-.barLabel {
-  margin: 0;
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--color-muted);
-}
-
-.barAmount {
-  margin: 0;
-  font-size: 0.875rem;
-  font-weight: 600;
   color: var(--color-text);
   font-variant-numeric: tabular-nums;
 }
 
-.barTrack {
+.legendDot {
+  width: 0.5rem;
   height: 0.5rem;
-  overflow: hidden;
   border-radius: 999px;
-  background: var(--color-bg);
+  flex-shrink: 0;
 }
 
-.barFill {
-  height: 100%;
-  border-radius: 999px;
+.legendDotIncome {
   background: var(--color-accent);
 }
 
-.barFillMuted {
-  background: var(--color-muted);
+.legendDotExpense {
+  background: #b91c1c;
+}
+
+.legendDotSaving {
+  background: #2563eb;
+}
+
+.stackBarTrack {
+  display: flex;
+  width: 100%;
+  height: 0.625rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 20%, var(--color-bg));
+}
+
+.barFillExpense {
+  height: 100%;
+  background: #b91c1c;
+}
+
+.barFillSaving {
+  height: 100%;
+  background: #2563eb;
 }
 
 .grid {
@@ -252,6 +268,14 @@
 
 .recentIncome {
   color: var(--color-accent);
+}
+
+.recentExpense {
+  color: #b91c1c;
+}
+
+.recentSaving {
+  color: #2563eb;
 }
 
 .empty {

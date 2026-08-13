@@ -147,6 +147,17 @@ export const TransactionForm = ({ householdId, mode, onSuccess }: Props) => {
             />
             수입
           </label>
+          <label className={styles.radioLabel}>
+            <input
+              type="radio"
+              name="transactionType"
+              value="saving"
+              checked={type === 'saving'}
+              disabled={disabled}
+              onChange={() => handleTypeChange('saving')}
+            />
+            저축
+          </label>
         </div>
       </div>
 

@@ -1,6 +1,7 @@
 'use client';
 
 import type { Category } from '@/entities/category';
+import { TRANSACTION_TYPE_LABEL, type TransactionType } from '@/shared/model';
 
 import styles from '../settings.module.css';
 
@@ -10,10 +11,7 @@ type Props = {
   onDelete: (category: Category) => void;
 };
 
-const TYPE_LABEL: Record<Category['type'], string> = {
-  income: '수입',
-  expense: '지출',
-};
+const TYPE_ORDER: TransactionType[] = ['expense', 'income', 'saving'];
 
 const formatBudget = (budget: number | null) => {
   if (budget === null) {
@@ -31,11 +29,12 @@ export const CategoryList = ({ categories, onEdit, onDelete }: Props) => {
   const grouped = {
     expense: categories.filter((item) => item.type === 'expense'),
     income: categories.filter((item) => item.type === 'income'),
+    saving: categories.filter((item) => item.type === 'saving'),
   } as const;
 
   return (
     <div className={styles.list}>
-      {(['expense', 'income'] as const).map((type) => {
+      {TYPE_ORDER.map((type) => {
         const items = grouped[type];
         if (items.length === 0) {
           return null;
@@ -43,7 +42,7 @@ export const CategoryList = ({ categories, onEdit, onDelete }: Props) => {
 
         return (
           <section key={type} className={styles.group}>
-            <h3 className={styles.groupTitle}>{TYPE_LABEL[type]}</h3>
+            <h3 className={styles.groupTitle}>{TRANSACTION_TYPE_LABEL[type]}</h3>
             <ul className={styles.groupList}>
               {items.map((category) => (
                 <li key={category.id} className={styles.row}>

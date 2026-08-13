@@ -22,19 +22,22 @@ export const useMonthlyStatus = (householdId: string | null) => {
     const transactions = query.data ?? [];
     let income = 0;
     let expense = 0;
+    let saving = 0;
 
     for (const transaction of transactions) {
       if (transaction.type === 'income') {
         income += transaction.amount;
-      } else {
+      } else if (transaction.type === 'expense') {
         expense += transaction.amount;
+      } else if (transaction.type === 'saving') {
+        saving += transaction.amount;
       }
     }
 
     return {
       income,
       expense,
-      saving: income - expense,
+      saving,
     };
   }, [query.data]);
 

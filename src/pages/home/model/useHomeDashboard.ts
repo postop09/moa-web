@@ -45,16 +45,17 @@ export const useHomeDashboard = (householdId: string | null) => {
 
     let income = 0;
     let expense = 0;
+    let saving = 0;
 
     for (const transaction of currentMonthTransactions) {
       if (transaction.type === 'income') {
         income += transaction.amount;
-      } else {
+      } else if (transaction.type === 'expense') {
         expense += transaction.amount;
+      } else if (transaction.type === 'saving') {
+        saving += transaction.amount;
       }
     }
-
-    const saving = income - expense;
 
     const budgetValues = categories
       .filter((category) => category.type === 'expense' && category.budget !== null)

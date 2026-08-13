@@ -1,50 +1,76 @@
 import styles from './home.module.css';
 
 type Props = {
-  budgetTotal: number | null;
   income: number;
   expense: number;
+  saving: number;
 };
 
 const formatAmount = (amount: number) => {
   return `${amount.toLocaleString('ko-KR')}원`;
 };
 
-export const DashboardHeader = ({ budgetTotal, income, expense }: Props) => {
-  const maxAmount = Math.max(income, expense, 1);
-  const incomeWidth = `${Math.min(100, (income / maxAmount) * 100)}%`;
-  const expenseWidth = `${Math.min(100, (expense / maxAmount) * 100)}%`;
+export const DashboardHeader = ({ income, expense, saving }: Props) => {
+  const balance = income - expense - saving;
+  const hasIncome = income > 0;
+  const expenseShare = hasIncome ? Math.min(100, (expense / income) * 100) : 0;
+  const savingShare = hasIncome
+    ? Math.max(0, Math.min(100 - expenseShare, (saving / income) * 100))
+    : 0;
 
   return (
     <section className={styles.header}>
       <div className={styles.budgetBlock}>
-        <p className={styles.budgetLabel}>예산</p>
-        <p className={styles.budgetValue}>
-          {budgetTotal === null ? '—' : formatAmount(budgetTotal)}
+        <p className={styles.budgetLabel}>잔액 (수입 - 지출 - 저축)</p>
+        <p
+          className={`${styles.budgetValue} ${balance < 0 ? styles.budgetNegative : styles.budgetPositive}`}
+        >
+          {formatAmount(balance)}
         </p>
       </div>
 
-      <div className={styles.bars}>
-        <div className={styles.barRow}>
-          <div className={styles.barMeta}>
-            <p className={styles.barLabel}>수입</p>
-            <p className={styles.barAmount}>{formatAmount(income)}</p>
-          </div>
-          <div className={styles.barTrack}>
-            <div className={styles.barFill} style={{ width: incomeWidth }} />
-          </div>
-        </div>
-        <div className={styles.barRow}>
-          <div className={styles.barMeta}>
-            <p className={styles.barLabel}>지출</p>
-            <p className={styles.barAmount}>{formatAmount(expense)}</p>
-          </div>
-          <div className={styles.barTrack}>
-            <div
-              className={`${styles.barFill} ${styles.barFillMuted}`}
-              style={{ width: expenseWidth }}
+      <div className={styles.stackBarBlock}>
+        <div className={styles.legend}>
+          <span className={styles.legendItem}>
+            <span
+              className={`${styles.legendDot} ${styles.legendDotIncome}`}
+              aria-hidden
             />
-          </div>
+            수입 {formatAmount(income)}
+          </span>
+          <span className={styles.legendItem}>
+            <span
+              className={`${styles.legendDot} ${styles.legendDotExpense}`}
+              aria-hidden
+            />
+            지출 {formatAmount(expense)}
+          </span>
+          <span className={styles.legendItem}>
+            <span
+              className={`${styles.legendDot} ${styles.legendDotSaving}`}
+              aria-hidden
+            />
+            저축 {formatAmount(saving)}
+          </span>
+        </div>
+
+        <div
+          className={styles.stackBarTrack}
+          role="img"
+          aria-label={`수입 ${formatAmount(income)}, 지출 ${formatAmount(expense)}, 저축 ${formatAmount(saving)}`}
+        >
+          {hasIncome ? (
+            <>
+              <div
+                className={styles.barFillExpense}
+                style={{ width: `${expenseShare}%` }}
+              />
+              <div
+                className={styles.barFillSaving}
+                style={{ width: `${savingShare}%` }}
+              />
+            </>
+          ) : null}
         </div>
       </div>
     </section>

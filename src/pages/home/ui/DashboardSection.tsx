@@ -71,11 +71,7 @@ export const DashboardSection = ({ householdId }: Props) => {
 
   return (
     <div className={styles.dashboard}>
-      <DashboardHeader
-        budgetTotal={budgetTotal}
-        income={income}
-        expense={expense}
-      />
+      <DashboardHeader income={income} expense={expense} saving={saving} />
 
       <div className={styles.grid}>
         <div className={styles.column}>

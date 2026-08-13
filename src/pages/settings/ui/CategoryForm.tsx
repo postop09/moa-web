@@ -130,6 +130,17 @@ export const CategoryForm = ({
               />
               수입
             </label>
+            <label className={styles.radioLabel}>
+              <input
+                type="radio"
+                name="categoryType"
+                value="saving"
+                checked={type === 'saving'}
+                disabled={isPending}
+                onChange={() => setType('saving')}
+              />
+              저축
+            </label>
           </div>
         </div>
 

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import type { Transaction } from '@/entities/transaction';
+import { TRANSACTION_TYPE_LABEL } from '@/shared/model';
 
 import styles from './home.module.css';
 
@@ -28,7 +29,21 @@ export const RecentTransactionsCard = ({ transactions }: Props) => {
           {transactions.map((transaction) => {
             const name =
               transaction.name?.trim() ||
-              (transaction.type === 'income' ? '수입' : '지출');
+              TRANSACTION_TYPE_LABEL[transaction.type];
+
+            const amountClass =
+              transaction.type === 'income'
+                ? styles.recentIncome
+                : transaction.type === 'saving'
+                  ? styles.recentSaving
+                  : styles.recentExpense;
+
+            const sign =
+              transaction.type === 'income'
+                ? '+'
+                : transaction.type === 'saving'
+                  ? ''
+                  : '-';
 
             return (
               <li key={transaction.id}>
@@ -42,10 +57,8 @@ export const RecentTransactionsCard = ({ transactions }: Props) => {
                       {formatDate(transaction.transactionDt)}
                     </span>
                   </div>
-                  <span
-                    className={`${styles.recentAmount} ${transaction.type === 'income' ? styles.recentIncome : ''}`}
-                  >
-                    {transaction.type === 'income' ? '+' : '-'}
+                  <span className={`${styles.recentAmount} ${amountClass}`}>
+                    {sign}
                     {formatAmount(transaction.amount)}
                   </span>
                 </Link>
