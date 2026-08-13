@@ -85,16 +85,15 @@ export const TopSpendingsCard = ({ items }: Props) => {
               return `${amount.toLocaleString('ko-KR')}\n${name}`;
             },
             color: '#fff',
-            fontSize: 10,
+            fontSize: 8,
             fontWeight: 600,
-            lineHeight: 14,
           },
         },
       ],
     };
   }, [items]);
 
-  const chartHeight = Math.max(200, Math.ceil(items.length / 3) * 100);
+  const chartHeight = Math.max(150, Math.ceil(items.length / 3) * 100);
 
   return (
     <section className={styles.card}>
