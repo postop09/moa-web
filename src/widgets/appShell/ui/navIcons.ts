@@ -1,7 +1,7 @@
 import {
   Calendar,
-  ChartColumn,
   Home,
+  List,
   Settings,
   type LucideIcon,
 } from 'lucide-react';
@@ -10,7 +10,7 @@ import type { NavItemId } from '@/shared/config';
 
 export const navIcons: Record<NavItemId, LucideIcon> = {
   home: Home,
-  stats: ChartColumn,
+  history: List,
   calendar: Calendar,
   settings: Settings,
 };
