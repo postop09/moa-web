@@ -20,7 +20,7 @@ export const useUpdateTransaction = (householdId: string) => {
     },
     onSuccess: (data) => {
       void queryClient.invalidateQueries({
-        queryKey: transactionQueryKeys.list(householdId),
+        queryKey: transactionQueryKeys.lists(householdId),
       });
       void queryClient.invalidateQueries({
         queryKey: transactionQueryKeys.detail(data.id),

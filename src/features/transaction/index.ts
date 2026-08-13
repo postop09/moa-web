@@ -1,4 +1,15 @@
 export { useCreateTransaction } from './model/useCreateTransaction';
 export { useDeleteTransaction } from './model/useDeleteTransaction';
 export { useGetTransaction } from './model/useGetTransaction';
+export { useListTransactions } from './model/useListTransactions';
+export { useMonthlyStatus } from './model/useMonthlyStatus';
 export { useUpdateTransaction } from './model/useUpdateTransaction';
+export {
+  buildExpenseByCategory,
+  type ExpenseByCategory,
+} from './lib/buildExpenseByCategory';
+export {
+  buildMonthlyExpenses,
+  type MonthlyExpense,
+} from './lib/buildMonthlyExpenses';
+export { getMonthRange, getTrailingMonthsRange } from './lib/monthRange';

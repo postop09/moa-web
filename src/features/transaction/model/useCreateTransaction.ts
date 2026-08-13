@@ -33,7 +33,7 @@ export const useCreateTransaction = () => {
     },
     onSuccess: (data) => {
       void queryClient.invalidateQueries({
-        queryKey: transactionQueryKeys.list(data.householdId),
+        queryKey: transactionQueryKeys.lists(data.householdId),
       });
     },
   });

@@ -2,6 +2,284 @@
   display: flex;
   min-height: 100%;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-6);
   padding: var(--space-6) var(--space-4);
+  max-width: 72rem;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.budgetBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.budgetLabel {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+.budgetValue {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.barRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.barMeta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.barLabel {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+.barAmount {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.barTrack {
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-bg);
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--color-accent);
+}
+
+.barFillMuted {
+  background: var(--color-muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.ringCard {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.ringChart {
+  flex-shrink: 0;
+  width: 4.5rem;
+  height: 4.5rem;
+}
+
+.ringBody {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.ringLabel {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+.ringValue {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  word-break: break-all;
+}
+
+.ringNegative {
+  color: #b91c1c;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.cardTitleRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.cardMeta {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.chart {
+  width: 100%;
+}
+
+.recentList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.recentItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--color-border);
+  color: inherit;
+}
+
+.recentItem:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.recentItem:hover .recentName {
+  color: var(--color-accent);
+}
+
+.recentBody {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.recentName {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recentMeta {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+}
+
+.recentAmount {
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
+.recentIncome {
+  color: var(--color-accent);
+}
+
+.empty {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+}
+
+.error {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #b91c1c;
+}
+
+@media (min-width: 640px) {
+  .header {
+    grid-template-columns: minmax(10rem, 1fr) minmax(14rem, 1.2fr);
+    align-items: end;
+  }
+}
+
+@media (min-width: 960px) {
+  .grid {
+    grid-template-columns: 1fr 1.2fr 1.2fr;
+    align-items: start;
+  }
+
+  .kpiGrid {
+    grid-template-columns: 1fr;
+  }
 }

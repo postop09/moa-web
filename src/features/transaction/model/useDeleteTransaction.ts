@@ -18,7 +18,7 @@ export const useDeleteTransaction = (householdId: string) => {
     },
     onSuccess: (id) => {
       void queryClient.invalidateQueries({
-        queryKey: transactionQueryKeys.list(householdId),
+        queryKey: transactionQueryKeys.lists(householdId),
       });
       void queryClient.invalidateQueries({
         queryKey: transactionQueryKeys.detail(id),
