@@ -37,12 +37,7 @@ export const CategorySection = ({ householdId }: Props) => {
   return (
     <section className={styles.section}>
       <header className={styles.sectionHeader}>
-        <div>
-          <h2 className={styles.sectionTitle}>카테고리</h2>
-          <p className={styles.sectionSupport}>
-            수입·지출 카테고리와 예산을 관리합니다.
-          </p>
-        </div>
+        <h2 className={styles.sectionTitle}>카테고리</h2>
         <button
           type="button"
           className={styles.primaryButton}
