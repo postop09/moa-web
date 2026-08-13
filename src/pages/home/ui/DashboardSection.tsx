@@ -2,6 +2,7 @@
 
 import { CategoryBudgetCard } from './CategoryBudgetCard';
 import { CategoryPieCard } from './CategoryPieCard';
+import { CumulativeSavingsCard } from './CumulativeSavingsCard';
 import { DashboardHeader } from './DashboardHeader';
 import { MetricRingCard } from './MetricRingCard';
 import { MonthNavigator } from './MonthNavigator';
@@ -39,6 +40,7 @@ export const DashboardSection = ({ householdId }: Props) => {
     categoryBudgets,
     recentTransactions,
     monthlyExpenses,
+    cumulativeSavings,
     selectedMonth,
     canGoNext,
     goPrevMonth,
@@ -85,6 +87,7 @@ export const DashboardSection = ({ householdId }: Props) => {
         canGoNext={canGoNext}
       />
       <DashboardHeader income={income} expense={expense} saving={saving} />
+      <CumulativeSavingsCard items={cumulativeSavings} />
 
       <div className={styles.grid}>
         <div className={styles.column}>

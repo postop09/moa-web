@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 import { useListCategories } from '@/features/category';
 import {
   buildCategoryBudgets,
+  buildCumulativeSavings,
   buildExpenseByCategory,
   buildMonthlyExpenses,
   getMonthRange,
@@ -50,6 +51,14 @@ export const useHomeDashboard = (householdId: string | null) => {
         }
       : null,
   );
+  const cumulativeQuery = useListTransactions(
+    householdId
+      ? {
+          householdId,
+          to: monthRange.to,
+        }
+      : null,
+  );
   const categoriesQuery = useListCategories(householdId);
 
   const canGoNext = !isSameMonth(selectedMonth, startOfMonth(new Date()));
@@ -71,6 +80,7 @@ export const useHomeDashboard = (householdId: string | null) => {
 
   const dashboard = useMemo(() => {
     const allTransactions = transactionsQuery.data ?? [];
+    const cumulativeTransactions = cumulativeQuery.data ?? [];
     const categories = categoriesQuery.data ?? [];
     const monthFrom = new Date(monthRange.from).getTime();
     const monthTo = new Date(monthRange.to).getTime();
@@ -133,9 +143,14 @@ export const useHomeDashboard = (householdId: string | null) => {
         MONTH_WINDOW,
         selectedMonth,
       ),
+      cumulativeSavings: buildCumulativeSavings(
+        cumulativeTransactions,
+        monthRange.to,
+      ),
     };
   }, [
     categoriesQuery.data,
+    cumulativeQuery.data,
     monthRange.from,
     monthRange.to,
     selectedMonth,
@@ -148,7 +163,13 @@ export const useHomeDashboard = (householdId: string | null) => {
     canGoNext,
     goPrevMonth,
     goNextMonth,
-    isLoading: transactionsQuery.isLoading || categoriesQuery.isLoading,
-    error: transactionsQuery.error ?? categoriesQuery.error,
+    isLoading:
+      transactionsQuery.isLoading ||
+      cumulativeQuery.isLoading ||
+      categoriesQuery.isLoading,
+    error:
+      transactionsQuery.error ??
+      cumulativeQuery.error ??
+      categoriesQuery.error,
   };
 };

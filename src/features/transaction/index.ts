@@ -16,4 +16,8 @@ export {
   buildMonthlyExpenses,
   type MonthlyExpense,
 } from './lib/buildMonthlyExpenses';
+export {
+  buildCumulativeSavings,
+  type CumulativeSavingPoint,
+} from './lib/buildCumulativeSavings';
 export { getMonthRange, getTrailingMonthsRange } from './lib/monthRange';
