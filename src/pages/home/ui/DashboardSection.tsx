@@ -5,7 +5,6 @@ import { CategoryPieCard } from './CategoryPieCard';
 import { CumulativeSavingsCard } from './CumulativeSavingsCard';
 import { DashboardHeader } from './DashboardHeader';
 import { MetricRingCard } from './MetricRingCard';
-import { MonthNavigator } from './MonthNavigator';
 import { RecentTransactionsCard } from './RecentTransactionsCard';
 import { SpendingOverTimeCard } from './SpendingOverTimeCard';
 import { TopSpendingsCard } from './TopSpendingsCard';
@@ -14,6 +13,7 @@ import styles from './home.module.css';
 
 type Props = {
   householdId: string;
+  selectedMonth: Date;
 };
 
 const formatAmount = (amount: number) => {
@@ -28,7 +28,7 @@ const formatRate = (rate: number | null) => {
   return `${Math.round(rate * 10) / 10}%`;
 };
 
-export const DashboardSection = ({ householdId }: Props) => {
+export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
   const {
     income,
     expense,
@@ -41,13 +41,9 @@ export const DashboardSection = ({ householdId }: Props) => {
     recentTransactions,
     monthlyExpenses,
     cumulativeSavings,
-    selectedMonth,
-    canGoNext,
-    goPrevMonth,
-    goNextMonth,
     isLoading,
     error,
-  } = useHomeDashboard(householdId);
+  } = useHomeDashboard(householdId, selectedMonth);
 
   if (isLoading) {
     return <p className={styles.empty}>불러오는 중…</p>;
@@ -78,12 +74,6 @@ export const DashboardSection = ({ householdId }: Props) => {
 
   return (
     <div className={styles.dashboard}>
-      <MonthNavigator
-        value={selectedMonth}
-        onPrev={goPrevMonth}
-        onNext={goNextMonth}
-        canGoNext={canGoNext}
-      />
       <DashboardHeader income={income} expense={expense} saving={saving} />
       <CumulativeSavingsCard items={cumulativeSavings} />
 

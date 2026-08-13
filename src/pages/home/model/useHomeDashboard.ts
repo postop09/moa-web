@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import { useListCategories } from '@/features/category';
 import {
@@ -16,23 +16,10 @@ import {
 const RECENT_LIMIT = 5;
 const MONTH_WINDOW = 6;
 
-const startOfMonth = (date: Date) => {
-  return new Date(date.getFullYear(), date.getMonth(), 1);
-};
-
-const shiftMonth = (date: Date, delta: number) => {
-  return new Date(date.getFullYear(), date.getMonth() + delta, 1);
-};
-
-const isSameMonth = (a: Date, b: Date) => {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
-};
-
-export const useHomeDashboard = (householdId: string | null) => {
-  const [selectedMonth, setSelectedMonth] = useState(() =>
-    startOfMonth(new Date()),
-  );
-
+export const useHomeDashboard = (
+  householdId: string | null,
+  selectedMonth: Date,
+) => {
   const monthRange = useMemo(
     () => getMonthRange(selectedMonth),
     [selectedMonth],
@@ -60,23 +47,6 @@ export const useHomeDashboard = (householdId: string | null) => {
       : null,
   );
   const categoriesQuery = useListCategories(householdId);
-
-  const canGoNext = !isSameMonth(selectedMonth, startOfMonth(new Date()));
-
-  const goPrevMonth = () => {
-    setSelectedMonth((current) => shiftMonth(current, -1));
-  };
-
-  const goNextMonth = () => {
-    setSelectedMonth((current) => {
-      const next = shiftMonth(current, 1);
-      const currentMonth = startOfMonth(new Date());
-      if (next.getTime() > currentMonth.getTime()) {
-        return current;
-      }
-      return next;
-    });
-  };
 
   const dashboard = useMemo(() => {
     const allTransactions = transactionsQuery.data ?? [];
@@ -159,10 +129,6 @@ export const useHomeDashboard = (householdId: string | null) => {
 
   return {
     ...dashboard,
-    selectedMonth,
-    canGoNext,
-    goPrevMonth,
-    goNextMonth,
     isLoading:
       transactionsQuery.isLoading ||
       cumulativeQuery.isLoading ||

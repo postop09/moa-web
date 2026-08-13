@@ -51,12 +51,10 @@ export const RecentTransactionsCard = ({ transactions }: Props) => {
                   href={`/write/${transaction.id}`}
                   className={styles.recentItem}
                 >
-                  <div className={styles.recentBody}>
-                    <span className={styles.recentName}>{name}</span>
-                    <span className={styles.recentMeta}>
-                      {formatDate(transaction.transactionDt)}
-                    </span>
-                  </div>
+                  <span className={styles.recentMeta}>
+                    {formatDate(transaction.transactionDt)}
+                  </span>
+                  <span className={styles.recentName}>{name}</span>
                   <span className={`${styles.recentAmount} ${amountClass}`}>
                     {sign}
                     {formatAmount(transaction.amount)}
