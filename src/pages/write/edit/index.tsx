@@ -30,7 +30,7 @@ export const WriteEditPage = ({ transactionId }: Props) => {
 
   return (
     <main className={styles.page}>
-      <HouseholdPageTitle subtitle="내역을 수정합니다." />
+      <h2 className={styles.title}>수정하기</h2>
 
       {isLoading ? <p className={styles.empty}>불러오는 중…</p> : null}
 

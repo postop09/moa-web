@@ -13,7 +13,7 @@ export const WritePage = () => {
 
   return (
     <main className={styles.page}>
-      <HouseholdPageTitle subtitle="수입·지출 내역을 작성합니다." />
+      <h2 className={styles.title}>추가하기</h2>
 
       {isLoading ? <p className={styles.empty}>불러오는 중…</p> : null}
 
