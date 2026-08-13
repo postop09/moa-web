@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import { useListCategories } from '@/features/category';
 import {
+  buildCategoryBudgets,
   buildExpenseByCategory,
   buildMonthlyExpenses,
   getMonthRange,
@@ -14,11 +15,30 @@ import {
 const RECENT_LIMIT = 5;
 const MONTH_WINDOW = 6;
 
+const startOfMonth = (date: Date) => {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+};
+
+const shiftMonth = (date: Date, delta: number) => {
+  return new Date(date.getFullYear(), date.getMonth() + delta, 1);
+};
+
+const isSameMonth = (a: Date, b: Date) => {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
+};
+
 export const useHomeDashboard = (householdId: string | null) => {
-  const monthRange = useMemo(() => getMonthRange(), []);
+  const [selectedMonth, setSelectedMonth] = useState(() =>
+    startOfMonth(new Date()),
+  );
+
+  const monthRange = useMemo(
+    () => getMonthRange(selectedMonth),
+    [selectedMonth],
+  );
   const trailingRange = useMemo(
-    () => getTrailingMonthsRange(MONTH_WINDOW),
-    [],
+    () => getTrailingMonthsRange(MONTH_WINDOW, selectedMonth),
+    [selectedMonth],
   );
 
   const transactionsQuery = useListTransactions(
@@ -31,6 +51,23 @@ export const useHomeDashboard = (householdId: string | null) => {
       : null,
   );
   const categoriesQuery = useListCategories(householdId);
+
+  const canGoNext = !isSameMonth(selectedMonth, startOfMonth(new Date()));
+
+  const goPrevMonth = () => {
+    setSelectedMonth((current) => shiftMonth(current, -1));
+  };
+
+  const goNextMonth = () => {
+    setSelectedMonth((current) => {
+      const next = shiftMonth(current, 1);
+      const currentMonth = startOfMonth(new Date());
+      if (next.getTime() > currentMonth.getTime()) {
+        return current;
+      }
+      return next;
+    });
+  };
 
   const dashboard = useMemo(() => {
     const allTransactions = transactionsQuery.data ?? [];
@@ -80,6 +117,10 @@ export const useHomeDashboard = (householdId: string | null) => {
         currentMonthTransactions,
         categories,
       ),
+      categoryBudgets: buildCategoryBudgets(
+        currentMonthTransactions,
+        categories,
+      ),
       recentTransactions: [...currentMonthTransactions]
         .sort(
           (a, b) =>
@@ -87,17 +128,26 @@ export const useHomeDashboard = (householdId: string | null) => {
             new Date(a.transactionDt).getTime(),
         )
         .slice(0, RECENT_LIMIT),
-      monthlyExpenses: buildMonthlyExpenses(allTransactions, MONTH_WINDOW),
+      monthlyExpenses: buildMonthlyExpenses(
+        allTransactions,
+        MONTH_WINDOW,
+        selectedMonth,
+      ),
     };
   }, [
     categoriesQuery.data,
     monthRange.from,
     monthRange.to,
+    selectedMonth,
     transactionsQuery.data,
   ]);
 
   return {
     ...dashboard,
+    selectedMonth,
+    canGoNext,
+    goPrevMonth,
+    goNextMonth,
     isLoading: transactionsQuery.isLoading || categoriesQuery.isLoading,
     error: transactionsQuery.error ?? categoriesQuery.error,
   };

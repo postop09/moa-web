@@ -9,6 +9,10 @@ export {
   type ExpenseByCategory,
 } from './lib/buildExpenseByCategory';
 export {
+  buildCategoryBudgets,
+  type CategoryBudget,
+} from './lib/buildCategoryBudgets';
+export {
   buildMonthlyExpenses,
   type MonthlyExpense,
 } from './lib/buildMonthlyExpenses';

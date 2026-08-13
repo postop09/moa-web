@@ -1,8 +1,10 @@
 'use client';
 
+import { CategoryBudgetCard } from './CategoryBudgetCard';
 import { CategoryPieCard } from './CategoryPieCard';
 import { DashboardHeader } from './DashboardHeader';
 import { MetricRingCard } from './MetricRingCard';
+import { MonthNavigator } from './MonthNavigator';
 import { RecentTransactionsCard } from './RecentTransactionsCard';
 import { SpendingOverTimeCard } from './SpendingOverTimeCard';
 import { TopSpendingsCard } from './TopSpendingsCard';
@@ -34,8 +36,13 @@ export const DashboardSection = ({ householdId }: Props) => {
     budgetTotal,
     budgetRemaining,
     expenseByCategory,
+    categoryBudgets,
     recentTransactions,
     monthlyExpenses,
+    selectedMonth,
+    canGoNext,
+    goPrevMonth,
+    goNextMonth,
     isLoading,
     error,
   } = useHomeDashboard(householdId);
@@ -71,6 +78,12 @@ export const DashboardSection = ({ householdId }: Props) => {
 
   return (
     <div className={styles.dashboard}>
+      <MonthNavigator
+        value={selectedMonth}
+        onPrev={goPrevMonth}
+        onNext={goNextMonth}
+        canGoNext={canGoNext}
+      />
       <DashboardHeader income={income} expense={expense} saving={saving} />
 
       <div className={styles.grid}>
@@ -111,6 +124,7 @@ export const DashboardSection = ({ householdId }: Props) => {
 
         <div className={styles.column}>
           <SpendingOverTimeCard items={monthlyExpenses} />
+          <CategoryBudgetCard items={categoryBudgets} />
           <TopSpendingsCard items={expenseByCategory} />
         </div>
       </div>
