@@ -108,6 +108,7 @@ export const useHomeDashboard = (
             new Date(a.transactionDt).getTime(),
         )
         .slice(0, RECENT_LIMIT),
+      categories,
       monthlyExpenses: buildMonthlyExpenses(
         allTransactions,
         MONTH_WINDOW,

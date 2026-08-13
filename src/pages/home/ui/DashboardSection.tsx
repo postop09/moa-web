@@ -39,6 +39,7 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
     expenseByCategory,
     categoryBudgets,
     recentTransactions,
+    categories,
     monthlyExpenses,
     cumulativeSavings,
     isLoading,
@@ -105,7 +106,10 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
               ratio={savingRingRatio}
               negative={savingRate !== null && savingRate < 0}
             />
-            <RecentTransactionsCard transactions={recentTransactions} />
+            <RecentTransactionsCard
+              transactions={recentTransactions}
+              categories={categories}
+            />
           </div>
         </div>
 

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import type { Category } from '@/entities/category';
 import type { Transaction } from '@/entities/transaction';
 import { TRANSACTION_TYPE_LABEL } from '@/shared/model';
 
@@ -7,6 +8,7 @@ import styles from './home.module.css';
 
 type Props = {
   transactions: Transaction[];
+  categories: Category[];
 };
 
 const formatAmount = (amount: number) => {
@@ -18,7 +20,14 @@ const formatDate = (iso: string) => {
   return `${date.getMonth() + 1}/${date.getDate()}`;
 };
 
-export const RecentTransactionsCard = ({ transactions }: Props) => {
+export const RecentTransactionsCard = ({
+  transactions,
+  categories,
+}: Props) => {
+  const categoryNameById = new Map(
+    categories.map((category) => [category.id, category.name]),
+  );
+
   return (
     <section className={styles.card}>
       <h3 className={styles.cardTitle}>최근 내역</h3>
@@ -27,9 +36,16 @@ export const RecentTransactionsCard = ({ transactions }: Props) => {
       ) : (
         <ul className={styles.recentList}>
           {transactions.map((transaction) => {
+            const categoryName =
+              transaction.categoryId === null
+                ? null
+                : (categoryNameById.get(transaction.categoryId) ?? null);
+
             const name =
               transaction.name?.trim() ||
-              TRANSACTION_TYPE_LABEL[transaction.type];
+              categoryName ||
+              TRANSACTION_TYPE_LABEL[transaction.type] ||
+              '미분류';
 
             const amountClass =
               transaction.type === 'income'
