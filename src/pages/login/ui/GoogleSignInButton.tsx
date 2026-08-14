@@ -3,8 +3,12 @@
 import { useSignInWithGoogle } from '../model/useSignInWithGoogle';
 import styles from './login.module.css';
 
-export const GoogleSignInButton = () => {
-  const { signIn, isPending, error } = useSignInWithGoogle();
+type Props = {
+  next?: string | null;
+};
+
+export const GoogleSignInButton = ({ next }: Props) => {
+  const { signIn, isPending, error } = useSignInWithGoogle({ next });
 
   return (
     <div className={styles.cta}>

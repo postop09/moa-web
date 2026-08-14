@@ -33,6 +33,7 @@ export const config = {
     '/',
     '/login',
     '/onboarding/:path*',
+    '/invite/:path*',
     '/history',
     '/stats',
     '/write',

@@ -8,7 +8,11 @@ import { GridBackdrop, MoaLogo } from '@/shared/ui';
 
 import styles from './createProfile.module.css';
 
-export const CreateProfileForm = () => {
+type Props = {
+  next?: string | null;
+};
+
+export const CreateProfileForm = ({ next }: Props) => {
   const router = useRouter();
   const { mutateAsync, isPending, error } = useCreateProfile();
   const [nickname, setNickname] = useState('');
@@ -23,7 +27,7 @@ export const CreateProfileForm = () => {
 
     try {
       await mutateAsync(trimmed);
-      router.replace('/onboarding/household');
+      router.replace(next ?? '/onboarding/household');
     } catch {
       // mutation error state에 표시
     }

@@ -4,13 +4,17 @@ import { BrandHero } from './ui/BrandHero';
 import { GoogleSignInButton } from './ui/GoogleSignInButton';
 import styles from './ui/login.module.css';
 
-export const LoginPage = () => {
+type Props = {
+  next?: string | null;
+};
+
+export const LoginPage = ({ next }: Props) => {
   return (
     <main className={styles.page}>
       <GridBackdrop />
       <div className={styles.panel}>
         <BrandHero />
-        <GoogleSignInButton />
+        <GoogleSignInButton next={next} />
       </div>
     </main>
   );
