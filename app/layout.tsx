@@ -3,6 +3,15 @@ import { Geist, Geist_Mono, Instrument_Serif } from 'next/font/google';
 import { type ReactNode } from 'react';
 
 import { Providers } from '@/app/providers';
+import {
+  defaultTitle,
+  description,
+  getSiteUrl,
+  keywords,
+  ogImage,
+  siteName,
+  titleTemplate,
+} from '@/shared/config';
 import '@/shared/styles/globals.css';
 
 const geistSans = Geist({
@@ -22,13 +31,41 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: '모아(Moa)',
-  description: '자산 관리 - 그래프로 보는 가계부',
+  metadataBase: new URL(getSiteUrl()),
+  title: {
+    default: defaultTitle,
+    template: titleTemplate,
+  },
+  description,
+  applicationName: siteName,
+  keywords,
+  category: 'finance',
+  formatDetection: {
+    telephone: false,
+  },
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
     title: '모아(Moa)',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'ko_KR',
+    siteName,
+    title: defaultTitle,
+    description,
+    images: [ogImage],
+  },
+  twitter: {
+    card: 'summary',
+    title: defaultTitle,
+    description,
+    images: [ogImage.url],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 

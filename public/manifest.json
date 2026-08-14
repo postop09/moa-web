@@ -1,7 +1,7 @@
 {
   "name": "모아",
   "short_name": "모아",
-  "description": "자산 관리 - 그래프로 보는 가계부",
+  "description": "모아(Moa)는 그래프 중심 가계부입니다. 통계와 그래프로 보는 지출과 수입·저축 흐름을 한눈에 파악하세요.",
   "lang": "ko",
   "start_url": "/",
   "display": "standalone",

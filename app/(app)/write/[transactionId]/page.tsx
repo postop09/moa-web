@@ -1,17 +1,19 @@
-'use client';
-
-import { use } from 'react';
+import type { Metadata } from 'next';
 
 import { WriteEditPage } from '@/pages/write/edit';
 
 import styles from '@/pages/write/ui/write.module.css';
 
+export const metadata: Metadata = {
+  title: '수정하기',
+};
+
 type Props = {
   params: Promise<{ transactionId: string }>;
 };
 
-const WriteEditRoutePage = ({ params }: Props) => {
-  const { transactionId: rawId } = use(params);
+const WriteEditRoutePage = async ({ params }: Props) => {
+  const { transactionId: rawId } = await params;
   const transactionId = Number(rawId);
 
   if (!Number.isFinite(transactionId)) {

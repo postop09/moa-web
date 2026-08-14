@@ -1,8 +1,17 @@
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
 import { resolveAuthGate } from '@/features/onboarding/server';
 import { AcceptInvitePage } from '@/pages/acceptInvite';
 import { getSafeNextPath } from '@/shared/lib';
+
+export const metadata: Metadata = {
+  title: '초대 수락',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 type Props = {
   params: Promise<{ token: string }>;
