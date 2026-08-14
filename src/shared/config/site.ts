@@ -5,7 +5,7 @@ export const defaultTitle = '모아(Moa) — 그래프로 보는 가계부';
 export const titleTemplate = '%s | 모아';
 
 export const description =
-  '모아(Moa)는 그래프 중심 가계부입니다. 숫자로 보는 지출과 수입·저축 흐름을 한눈에 파악하세요.';
+  '모아(Moa)는 그래프 중심 가계부입니다. 통계와 그래프로 보는 지출과 수입·저축 흐름을 한눈에 파악하세요.';
 
 export const keywords = [
   '가계부',
