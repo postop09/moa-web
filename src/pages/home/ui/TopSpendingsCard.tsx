@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import type { ExpenseByCategory } from '@/features/transaction';
 
 import styles from './home.module.css';
+import { EXPENSE_COLORS } from '../config/expenseColors';
 
 type Props = {
   items: ExpenseByCategory[];
@@ -23,14 +24,9 @@ export const TopSpendingsCard = ({ items }: Props) => {
       return {
         value: [col, row, item.amount],
         name: item.name,
-        symbolSize: 28 + (item.amount / maxAmount) * 52,
+        symbolSize: 30 + (item.amount / maxAmount) * 52,
         itemStyle: {
-          color:
-            index % 3 === 0
-              ? '#0d9488'
-              : index % 3 === 1
-                ? '#14b8a6'
-                : '#64748b',
+          color: EXPENSE_COLORS[index],
         },
       };
     });

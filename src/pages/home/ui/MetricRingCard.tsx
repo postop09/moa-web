@@ -30,7 +30,7 @@ export const MetricRingCard = ({
       series: [
         {
           type: 'pie',
-          radius: ['68%', '88%'],
+          radius: ['60%', '88%'],
           center: ['50%', '50%'],
           silent: true,
           label: { show: false },

@@ -1,0 +1,1 @@
+export const EXPENSE_COLORS = ['#92003A', '#E73F1E', '#F62477', '#FB6C00', '#FFADEE', '#F9B637', '#FFE185', '#FFDD9C'];

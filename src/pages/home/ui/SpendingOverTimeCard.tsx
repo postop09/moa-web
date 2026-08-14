@@ -68,8 +68,8 @@ export const SpendingOverTimeCard = ({ items }: Props) => {
           data: items.map((item) => item.amount),
           barWidth: 18,
           itemStyle: {
-            color: '#0d9488',
-            borderRadius: [999, 999, 999, 999],
+            color: '#92003A',
+            borderRadius: [4, 4, 0, 0],
           },
         },
       ],

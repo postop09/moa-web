@@ -37,7 +37,6 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
     saving,
     savingRate,
     budgetTotal,
-    budgetRemaining,
     expenseByCategory,
     categoryBudgets,
     recentTransactions,
@@ -67,10 +66,7 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
         ? (expense / income) * 100
         : null;
 
-  const remainingRatio =
-    budgetTotal && budgetTotal > 0 && budgetRemaining !== null
-      ? (Math.max(0, budgetRemaining) / budgetTotal) * 100
-      : null;
+  const incomeRingRatio = income > 0 ? (income / income) * 100 : null;
 
   const savingRingRatio =
     savingRate === null ? null : Math.max(0, Math.min(100, savingRate));
@@ -84,11 +80,10 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
         <div className={styles.column}>
           <div className={styles.kpiGrid}>
             <MetricRingCard
-              label="저축"
-              valueLabel={formatAmount(saving)}
-              ratio={savingRingRatio}
-              negative={saving < 0}
-              color={TRANSACTION_TYPE_COLOR.saving}
+              label="수입"
+              valueLabel={income === null ? '—' : formatAmount(income)}
+              ratio={incomeRingRatio}
+              color={TRANSACTION_TYPE_COLOR.income}
             />
             <MetricRingCard
               label="지출"
@@ -97,15 +92,7 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
               color={TRANSACTION_TYPE_COLOR.expense}
             />
             <MetricRingCard
-              label="예산 잔여"
-              valueLabel={
-                budgetRemaining === null ? '—' : formatAmount(budgetRemaining)
-              }
-              ratio={remainingRatio}
-              negative={budgetRemaining !== null && budgetRemaining < 0}
-            />
-            <MetricRingCard
-              label="저축률"
+              label="저축 비율"
               valueLabel={formatRate(savingRate)}
               ratio={savingRingRatio}
               negative={savingRate !== null && savingRate < 0}

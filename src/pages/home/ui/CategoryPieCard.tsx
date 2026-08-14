@@ -7,19 +7,18 @@ import { useMemo } from 'react';
 import type { ExpenseByCategory } from '@/features/transaction';
 
 import styles from './home.module.css';
+import { EXPENSE_COLORS } from '../config/expenseColors';
 
 type Props = {
   items: ExpenseByCategory[];
 };
-
-const COLORS = ['#0d9488', '#14b8a6', '#5eead4', '#64748b', '#94a3b8', '#cbd5e1'];
 
 export const CategoryPieCard = ({ items }: Props) => {
   const hasData = items.length > 0;
 
   const option = useMemo<EChartsOption>(() => {
     return {
-      color: COLORS,
+      color: EXPENSE_COLORS,
       tooltip: {
         trigger: 'item',
         formatter: '{b}: {c}원 ({d}%)',

@@ -293,7 +293,7 @@
 }
 
 .budgetMetaOver {
-  color: #b91c1c;
+  color: var(--color-expense);
 }
 
 .budgetTrack {
@@ -311,7 +311,7 @@
 }
 
 .budgetFillOver {
-  background: #b91c1c;
+  background: var(--color-expense);
 }
 
 .recentList {
