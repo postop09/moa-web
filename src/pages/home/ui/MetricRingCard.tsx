@@ -4,6 +4,8 @@ import type { EChartsOption } from 'echarts';
 import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
 
+import { TRANSACTION_TYPE_COLOR } from '@/shared/model';
+
 import styles from './home.module.css';
 
 type Props = {
@@ -11,6 +13,7 @@ type Props = {
   valueLabel: string;
   ratio: number | null;
   negative?: boolean;
+  color?: string;
 };
 
 export const MetricRingCard = ({
@@ -18,6 +21,7 @@ export const MetricRingCard = ({
   valueLabel,
   ratio,
   negative = false,
+  color = '#0d9488',
 }: Props) => {
   const clamped = ratio === null ? 0 : Math.max(0, Math.min(100, ratio));
 
@@ -35,7 +39,7 @@ export const MetricRingCard = ({
             {
               value: clamped,
               itemStyle: {
-                color: negative ? '#b91c1c' : '#0d9488',
+                color: negative ? TRANSACTION_TYPE_COLOR.expense : color,
               },
             },
             {
@@ -49,7 +53,7 @@ export const MetricRingCard = ({
         },
       ],
     };
-  }, [clamped, negative]);
+  }, [clamped, color, negative]);
 
   return (
     <div className={styles.ringCard}>

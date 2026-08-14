@@ -210,6 +210,18 @@
   color: var(--color-muted);
 }
 
+.groupTitleExpense {
+  color: var(--color-expense);
+}
+
+.groupTitleIncome {
+  color: var(--color-income);
+}
+
+.groupTitleSaving {
+  color: var(--color-saving);
+}
+
 .groupList {
   margin: 0;
   padding: 0;

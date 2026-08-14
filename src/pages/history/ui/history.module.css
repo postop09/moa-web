@@ -91,6 +91,24 @@
   color: var(--color-accent);
 }
 
+.typeChipExpense {
+  border-color: var(--color-expense);
+  background: color-mix(in srgb, var(--color-expense) 12%, transparent);
+  color: var(--color-expense);
+}
+
+.typeChipIncome {
+  border-color: var(--color-income);
+  background: color-mix(in srgb, var(--color-income) 12%, transparent);
+  color: var(--color-income);
+}
+
+.typeChipSaving {
+  border-color: var(--color-saving);
+  background: color-mix(in srgb, var(--color-saving) 12%, transparent);
+  color: var(--color-saving);
+}
+
 .filterRow {
   display: flex;
   flex-wrap: wrap;
@@ -372,15 +390,15 @@
 }
 
 .amountIncome {
-  color: var(--color-accent);
+  color: var(--color-income);
 }
 
 .amountExpense {
-  color: #b91c1c;
+  color: var(--color-expense);
 }
 
 .amountSaving {
-  color: #2563eb;
+  color: var(--color-saving);
 }
 
 @media (min-width: 768px) {

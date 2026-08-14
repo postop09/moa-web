@@ -1,5 +1,7 @@
 'use client';
 
+import { TRANSACTION_TYPE_COLOR } from '@/shared/model';
+
 import { AssetTrendCard } from './AssetTrendCard';
 import { CategoryBudgetCard } from './CategoryBudgetCard';
 import { CategoryPieCard } from './CategoryPieCard';
@@ -86,11 +88,13 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
               valueLabel={formatAmount(saving)}
               ratio={savingRingRatio}
               negative={saving < 0}
+              color={TRANSACTION_TYPE_COLOR.saving}
             />
             <MetricRingCard
               label="지출"
               valueLabel={formatAmount(expense)}
               ratio={expenseRatio}
+              color={TRANSACTION_TYPE_COLOR.expense}
             />
             <MetricRingCard
               label="예산 잔여"
@@ -105,6 +109,7 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
               valueLabel={formatRate(savingRate)}
               ratio={savingRingRatio}
               negative={savingRate !== null && savingRate < 0}
+              color={TRANSACTION_TYPE_COLOR.saving}
             />
             <RecentTransactionsCard
               transactions={recentTransactions}

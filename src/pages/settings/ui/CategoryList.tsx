@@ -13,6 +13,12 @@ type Props = {
 
 const TYPE_ORDER: TransactionType[] = ['expense', 'income', 'saving'];
 
+const TYPE_TITLE_CLASS: Record<TransactionType, string> = {
+  expense: styles.groupTitleExpense,
+  income: styles.groupTitleIncome,
+  saving: styles.groupTitleSaving,
+};
+
 const formatBudget = (budget: number | null) => {
   if (budget === null) {
     return '예산 없음';
@@ -42,7 +48,9 @@ export const CategoryList = ({ categories, onEdit, onDelete }: Props) => {
 
         return (
           <section key={type} className={styles.group}>
-            <h3 className={styles.groupTitle}>{TRANSACTION_TYPE_LABEL[type]}</h3>
+            <h3 className={`${styles.groupTitle} ${TYPE_TITLE_CLASS[type]}`}>
+              {TRANSACTION_TYPE_LABEL[type]}
+            </h3>
             <ul className={styles.groupList}>
               {items.map((category) => (
                 <li key={category.id} className={styles.row}>

@@ -90,11 +90,11 @@
 }
 
 .budgetNegative {
-  color: #b91c1c;
+  color: var(--color-expense);
 }
 
 .budgetPositive {
-  color: #2563eb;
+  color: var(--color-income);
 }
 
 .stackBarBlock {
@@ -127,15 +127,15 @@
 }
 
 .legendDotIncome {
-  background: var(--color-accent);
+  background: var(--color-income);
 }
 
 .legendDotExpense {
-  background: #b91c1c;
+  background: var(--color-expense);
 }
 
 .legendDotSaving {
-  background: #2563eb;
+  background: var(--color-saving);
 }
 
 .stackBarTrack {
@@ -144,17 +144,17 @@
   height: 0.625rem;
   overflow: hidden;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--color-accent) 20%, var(--color-bg));
+  background: color-mix(in srgb, var(--color-income) 20%, var(--color-bg));
 }
 
 .barFillExpense {
   height: 100%;
-  background: #b91c1c;
+  background: var(--color-expense);
 }
 
 .barFillSaving {
   height: 100%;
-  background: #2563eb;
+  background: var(--color-saving);
 }
 
 .grid {
@@ -372,15 +372,15 @@
 }
 
 .recentIncome {
-  color: var(--color-accent);
+  color: var(--color-income);
 }
 
 .recentExpense {
-  color: #b91c1c;
+  color: var(--color-expense);
 }
 
 .recentSaving {
-  color: #2563eb;
+  color: var(--color-saving);
 }
 
 .empty {

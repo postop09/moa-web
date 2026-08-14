@@ -29,6 +29,13 @@ const TYPE_OPTIONS: { value: TypeFilter; label: string }[] = [
   { value: 'saving', label: TRANSACTION_TYPE_LABEL.saving },
 ];
 
+const TYPE_CHIP_ACTIVE: Record<TypeFilter, string> = {
+  all: styles.typeChipActive,
+  expense: styles.typeChipExpense,
+  income: styles.typeChipIncome,
+  saving: styles.typeChipSaving,
+};
+
 const formatMonthLabel = (date: Date) => {
   return `${date.getFullYear()}년 ${date.getMonth() + 1}월`;
 };
@@ -52,7 +59,7 @@ export const HistoryFilterBar = ({
           <button
             key={option.value}
             type="button"
-            className={`${styles.typeChip} ${typeFilter === option.value ? styles.typeChipActive : ''}`}
+            className={`${styles.typeChip} ${typeFilter === option.value ? TYPE_CHIP_ACTIVE[option.value] : ''}`}
             onClick={() => onTypeChange(option.value)}
           >
             {option.label}

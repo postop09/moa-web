@@ -5,6 +5,7 @@ import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
 
 import type { AssetTrendPoint } from '@/features/transaction';
+import { TRANSACTION_TYPE_COLOR } from '@/shared/model';
 
 import styles from './home.module.css';
 
@@ -25,9 +26,9 @@ const hexToRgba = (hex: string, alpha: number) => {
 };
 
 const SERIES = [
-  { key: 'income', label: '수입', color: '#0d9488' },
-  { key: 'expense', label: '지출', color: '#b91c1c' },
-  { key: 'saving', label: '저축', color: '#2563eb' },
+  { key: 'income', label: '수입', color: TRANSACTION_TYPE_COLOR.income },
+  { key: 'expense', label: '지출', color: TRANSACTION_TYPE_COLOR.expense },
+  { key: 'saving', label: '저축', color: TRANSACTION_TYPE_COLOR.saving },
   { key: 'asset', label: '자산', color: '#7c3aed' },
 ] as const;
 

@@ -198,21 +198,21 @@
 }
 
 .typeSegmentExpense {
-  border-color: #b91c1c;
-  background: color-mix(in srgb, #b91c1c 12%, transparent);
-  color: #b91c1c;
+  border-color: var(--color-expense);
+  background: color-mix(in srgb, var(--color-expense) 12%, transparent);
+  color: var(--color-expense);
 }
 
 .typeSegmentIncome {
-  border-color: #0d9488;
-  background: color-mix(in srgb, #0d9488 12%, transparent);
-  color: #0d9488;
+  border-color: var(--color-income);
+  background: color-mix(in srgb, var(--color-income) 12%, transparent);
+  color: var(--color-income);
 }
 
 .typeSegmentSaving {
-  border-color: #2563eb;
-  background: color-mix(in srgb, #2563eb 12%, transparent);
-  color: #2563eb;
+  border-color: var(--color-saving);
+  background: color-mix(in srgb, var(--color-saving) 12%, transparent);
+  color: var(--color-saving);
 }
 
 .toggleRow {
