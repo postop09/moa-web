@@ -17,6 +17,8 @@ export const HistoryPage = () => {
     categoryOptions,
     categories,
     transactions,
+    totals,
+    creatorNameById,
     canGoNext,
     goPrevMonth,
     goNextMonth,
@@ -74,6 +76,9 @@ export const HistoryPage = () => {
             <TransactionList
               transactions={transactions}
               categories={categories}
+              creatorNameById={creatorNameById}
+              totals={totals}
+              showBalance={typeFilter === 'all'}
             />
           ) : null}
         </>

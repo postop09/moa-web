@@ -6,11 +6,15 @@ import type { Category } from '@/entities/category';
 import type { Transaction } from '@/entities/transaction';
 import { TRANSACTION_TYPE_LABEL } from '@/shared/model';
 
+import type { HistoryTotals } from '../model/useTransactionHistory';
 import styles from './history.module.css';
 
 type Props = {
   transactions: Transaction[];
   categories: Category[];
+  creatorNameById: Record<string, string>;
+  totals: HistoryTotals;
+  showBalance?: boolean;
 };
 
 const formatAmount = (amount: number) => {
@@ -27,10 +31,17 @@ const formatShortDate = (iso: string) => {
   return `${date.getMonth() + 1}/${date.getDate()}`;
 };
 
-export const TransactionList = ({ transactions, categories }: Props) => {
+export const TransactionList = ({
+  transactions,
+  categories,
+  creatorNameById,
+  totals,
+  showBalance = false,
+}: Props) => {
   const categoryNameById = new Map(
     categories.map((category) => [category.id, category.name]),
   );
+  const balance = totals.income - totals.expense - totals.saving;
 
   const resolveName = (transaction: Transaction) => {
     const categoryName =
@@ -53,6 +64,10 @@ export const TransactionList = ({ transactions, categories }: Props) => {
     return categoryNameById.get(transaction.categoryId) ?? '미분류';
   };
 
+  const resolveCreatorName = (createdBy: string) => {
+    return creatorNameById[createdBy] ?? '알 수 없음';
+  };
+
   const amountClass = (type: Transaction['type']) => {
     if (type === 'income') {
       return styles.amountIncome;
@@ -73,92 +88,145 @@ export const TransactionList = ({ transactions, categories }: Props) => {
     return '-';
   };
 
-  if (transactions.length === 0) {
-    return <p className={styles.empty}>조건에 맞는 거래가 없습니다.</p>;
-  }
-
   return (
-    <>
-      <ul className={styles.listCards}>
-        {transactions.map((transaction) => (
-          <li key={transaction.id}>
-            <Link
-              href={`/write/${transaction.id}`}
-              className={styles.cardItem}
+    <div className={styles.listSection}>
+      <div className={styles.totals}>
+        <div className={styles.totalItem}>
+          <span className={styles.totalLabel}>수입</span>
+          <span className={`${styles.totalValue} ${styles.amountIncome}`}>
+            {formatAmount(totals.income)}
+          </span>
+        </div>
+        <div className={styles.totalItem}>
+          <span className={styles.totalLabel}>지출</span>
+          <span className={`${styles.totalValue} ${styles.amountExpense}`}>
+            {formatAmount(totals.expense)}
+          </span>
+        </div>
+        <div className={styles.totalItem}>
+          <span className={styles.totalLabel}>저축</span>
+          <span className={`${styles.totalValue} ${styles.amountSaving}`}>
+            {formatAmount(totals.saving)}
+          </span>
+        </div>
+        {showBalance ? (
+          <div className={styles.totalItem}>
+            <span className={styles.totalLabel}>잔액</span>
+            <span
+              className={`${styles.totalValue} ${balance < 0 ? styles.amountExpense : styles.amountSaving}`}
             >
-              <span className={styles.cardDate}>
-                {formatShortDate(transaction.transactionDt)}
-              </span>
-              <span className={styles.cardName}>{resolveName(transaction)}</span>
-              <span
-                className={`${styles.cardAmount} ${amountClass(transaction.type)}`}
-              >
-                {sign(transaction.type)}
-                {formatAmount(transaction.amount)}
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+              {formatAmount(balance)}
+            </span>
+          </div>
+        ) : null}
+      </div>
 
-      <table className={styles.listTable}>
-        <thead>
-          <tr>
-            <th>날짜</th>
-            <th>유형</th>
-            <th>이름</th>
-            <th>카테고리</th>
-            <th className={styles.amountCol}>금액</th>
-          </tr>
-        </thead>
-        <tbody>
-          {transactions.map((transaction) => (
-            <tr key={transaction.id}>
-              <td>
+      {transactions.length === 0 ? (
+        <p className={styles.empty}>조건에 맞는 거래가 없습니다.</p>
+      ) : (
+        <>
+          <ul className={styles.listCards}>
+            {transactions.map((transaction) => (
+              <li key={transaction.id}>
                 <Link
                   href={`/write/${transaction.id}`}
-                  className={styles.tableLink}
+                  className={styles.cardItem}
                 >
-                  {formatDate(transaction.transactionDt)}
+                  <span className={styles.cardDate}>
+                    {formatShortDate(transaction.transactionDt)}
+                  </span>
+                  <span className={styles.cardName}>
+                    {resolveName(transaction)}
+                  </span>
+                  <span
+                    className={`${styles.cardAmount} ${amountClass(transaction.type)}`}
+                  >
+                    {sign(transaction.type)}
+                    {formatAmount(transaction.amount)}
+                  </span>
                 </Link>
-              </td>
-              <td>
-                <Link
-                  href={`/write/${transaction.id}`}
-                  className={styles.tableLink}
-                >
-                  {TRANSACTION_TYPE_LABEL[transaction.type]}
-                </Link>
-              </td>
-              <td>
-                <Link
-                  href={`/write/${transaction.id}`}
-                  className={styles.tableLink}
-                >
-                  {resolveName(transaction)}
-                </Link>
-              </td>
-              <td>
-                <Link
-                  href={`/write/${transaction.id}`}
-                  className={styles.tableLink}
-                >
-                  {resolveCategoryName(transaction)}
-                </Link>
-              </td>
-              <td className={styles.amountCol}>
-                <Link
-                  href={`/write/${transaction.id}`}
-                  className={`${styles.tableLink} ${amountClass(transaction.type)}`}
-                >
-                  {sign(transaction.type)}
-                  {formatAmount(transaction.amount)}
-                </Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </>
+              </li>
+            ))}
+          </ul>
+
+          <table className={styles.listTable}>
+            <thead>
+              <tr>
+                <th>날짜</th>
+                <th>유형</th>
+                <th>이름</th>
+                <th>카테고리</th>
+                <th>생성일</th>
+                <th>생성자</th>
+                <th className={styles.amountCol}>금액</th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactions.map((transaction) => (
+                <tr key={transaction.id}>
+                  <td>
+                    <Link
+                      href={`/write/${transaction.id}`}
+                      className={styles.tableLink}
+                    >
+                      {formatDate(transaction.transactionDt)}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link
+                      href={`/write/${transaction.id}`}
+                      className={styles.tableLink}
+                    >
+                      {TRANSACTION_TYPE_LABEL[transaction.type]}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link
+                      href={`/write/${transaction.id}`}
+                      className={styles.tableLink}
+                    >
+                      {resolveName(transaction)}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link
+                      href={`/write/${transaction.id}`}
+                      className={styles.tableLink}
+                    >
+                      {resolveCategoryName(transaction)}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link
+                      href={`/write/${transaction.id}`}
+                      className={styles.tableLink}
+                    >
+                      {formatDate(transaction.createdDt)}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link
+                      href={`/write/${transaction.id}`}
+                      className={styles.tableLink}
+                    >
+                      {resolveCreatorName(transaction.createdBy)}
+                    </Link>
+                  </td>
+                  <td className={styles.amountCol}>
+                    <Link
+                      href={`/write/${transaction.id}`}
+                      className={`${styles.tableLink} ${amountClass(transaction.type)}`}
+                    >
+                      {sign(transaction.type)}
+                      {formatAmount(transaction.amount)}
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+    </div>
   );
 };

@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 
 import { useListCategories } from '@/features/category';
+import { useListProfilesByIds } from '@/features/profile';
 import {
   getMonthRange,
   useListTransactions,
@@ -11,6 +12,12 @@ import type { TransactionType } from '@/shared/model';
 
 export type TypeFilter = TransactionType | 'all';
 export type CategoryFilter = number | 'all';
+
+export type HistoryTotals = {
+  income: number;
+  expense: number;
+  saving: number;
+};
 
 const startOfMonth = (date: Date) => {
   return new Date(date.getFullYear(), date.getMonth(), 1);
@@ -124,6 +131,37 @@ export const useTransactionHistory = (householdId: string | null) => {
       );
   }, [categoryId, transactionsQuery.data, typeFilter]);
 
+  const creatorIds = useMemo(
+    () => [...new Set(transactions.map((transaction) => transaction.createdBy))],
+    [transactions],
+  );
+
+  const profilesQuery = useListProfilesByIds(creatorIds);
+
+  const creatorNameById = useMemo(() => {
+    const map: Record<string, string> = {};
+    for (const profile of profilesQuery.data ?? []) {
+      map[profile.id] = profile.nickname;
+    }
+    return map;
+  }, [profilesQuery.data]);
+
+  const totals = useMemo(() => {
+    const next: HistoryTotals = { income: 0, expense: 0, saving: 0 };
+
+    for (const transaction of transactions) {
+      if (transaction.type === 'income') {
+        next.income += transaction.amount;
+      } else if (transaction.type === 'expense') {
+        next.expense += transaction.amount;
+      } else if (transaction.type === 'saving') {
+        next.saving += transaction.amount;
+      }
+    }
+
+    return next;
+  }, [transactions]);
+
   return {
     selectedMonth,
     typeFilter,
@@ -131,6 +169,8 @@ export const useTransactionHistory = (householdId: string | null) => {
     categoryOptions,
     categories,
     transactions,
+    totals,
+    creatorNameById,
     canGoNext,
     goPrevMonth,
     goNextMonth,

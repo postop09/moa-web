@@ -18,6 +18,45 @@
   color: #b91c1c;
 }
 
+.listSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.totalItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 6.5rem;
+}
+
+.totalItem:nth-child(4) {
+  margin-left: auto;
+}
+
+.totalLabel {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+.totalValue {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
 .filterBar {
   display: flex;
   flex-direction: column;
