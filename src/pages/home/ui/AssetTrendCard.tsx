@@ -16,6 +16,14 @@ const formatAmount = (amount: number) => {
   return `${amount.toLocaleString('ko-KR')}원`;
 };
 
+const hexToRgba = (hex: string, alpha: number) => {
+  const value = hex.replace('#', '');
+  const r = Number.parseInt(value.slice(0, 2), 16);
+  const g = Number.parseInt(value.slice(2, 4), 16);
+  const b = Number.parseInt(value.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+
 const SERIES = [
   { key: 'income', label: '수입', color: '#0d9488' },
   { key: 'expense', label: '지출', color: '#b91c1c' },
@@ -54,21 +62,22 @@ export const AssetTrendCard = ({ items }: Props) => {
       tooltip: {
         trigger: 'axis',
         formatter: (params) => {
-          const items = Array.isArray(params) ? params : [params];
-          if (items.length === 0) {
+          const tooltipItems = Array.isArray(params) ? params : [params];
+          if (tooltipItems.length === 0) {
             return '';
           }
 
-          const first = items[0];
+          const first = tooltipItems[0];
           const name =
             first && typeof first === 'object' && 'name' in first
               ? String(first.name)
               : '';
-          const lines = items.map((item) => {
+          const lines = tooltipItems.map((item) => {
             if (!item || typeof item !== 'object') {
               return '';
             }
-            const seriesName = 'seriesName' in item ? String(item.seriesName) : '';
+            const seriesName =
+              'seriesName' in item ? String(item.seriesName) : '';
             const value = 'value' in item ? Number(item.value) : 0;
             const marker = 'marker' in item ? String(item.marker) : '';
             return `${marker}${seriesName}: ${value.toLocaleString('ko-KR')}원`;
@@ -113,6 +122,19 @@ export const AssetTrendCard = ({ items }: Props) => {
         lineStyle: {
           color: series.color,
           width: 2,
+        },
+        areaStyle: {
+          color: {
+            type: 'linear' as const,
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              { offset: 0, color: hexToRgba(series.color, 0.5) },
+              { offset: 1, color: hexToRgba(series.color, 0.1) },
+            ],
+          },
         },
         itemStyle: {
           color: series.color,
