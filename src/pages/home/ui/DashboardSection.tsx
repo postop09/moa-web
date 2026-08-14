@@ -1,8 +1,8 @@
 'use client';
 
+import { AssetTrendCard } from './AssetTrendCard';
 import { CategoryBudgetCard } from './CategoryBudgetCard';
 import { CategoryPieCard } from './CategoryPieCard';
-import { CumulativeSavingsCard } from './CumulativeSavingsCard';
 import { DashboardHeader } from './DashboardHeader';
 import { MetricRingCard } from './MetricRingCard';
 import { RecentTransactionsCard } from './RecentTransactionsCard';
@@ -41,7 +41,7 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
     recentTransactions,
     categories,
     monthlyExpenses,
-    cumulativeSavings,
+    assetTrends,
     isLoading,
     error,
   } = useHomeDashboard(householdId, selectedMonth);
@@ -76,7 +76,7 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
   return (
     <div className={styles.dashboard}>
       <DashboardHeader income={income} expense={expense} saving={saving} />
-      <CumulativeSavingsCard items={cumulativeSavings} />
+      <AssetTrendCard items={assetTrends} />
 
       <div className={styles.grid}>
         <div className={styles.column}>

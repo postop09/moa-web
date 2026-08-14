@@ -4,8 +4,8 @@ import { useMemo } from 'react';
 
 import { useListCategories } from '@/features/category';
 import {
+  buildAssetTrends,
   buildCategoryBudgets,
-  buildCumulativeSavings,
   buildExpenseByCategory,
   buildMonthlyExpenses,
   getMonthRange,
@@ -15,6 +15,7 @@ import {
 
 const RECENT_LIMIT = 5;
 const MONTH_WINDOW = 6;
+const YEAR_WINDOW = 12;
 
 export const useHomeDashboard = (
   householdId: string | null,
@@ -25,7 +26,7 @@ export const useHomeDashboard = (
     [selectedMonth],
   );
   const trailingRange = useMemo(
-    () => getTrailingMonthsRange(MONTH_WINDOW, selectedMonth),
+    () => getTrailingMonthsRange(YEAR_WINDOW, selectedMonth),
     [selectedMonth],
   );
 
@@ -38,19 +39,10 @@ export const useHomeDashboard = (
         }
       : null,
   );
-  const cumulativeQuery = useListTransactions(
-    householdId
-      ? {
-          householdId,
-          to: monthRange.to,
-        }
-      : null,
-  );
   const categoriesQuery = useListCategories(householdId);
 
   const dashboard = useMemo(() => {
     const allTransactions = transactionsQuery.data ?? [];
-    const cumulativeTransactions = cumulativeQuery.data ?? [];
     const categories = categoriesQuery.data ?? [];
     const monthFrom = new Date(monthRange.from).getTime();
     const monthTo = new Date(monthRange.to).getTime();
@@ -75,7 +67,9 @@ export const useHomeDashboard = (
     }
 
     const budgetValues = categories
-      .filter((category) => category.type === 'expense' && category.budget !== null)
+      .filter(
+        (category) => category.type === 'expense' && category.budget !== null,
+      )
       .map((category) => category.budget as number);
 
     const budgetTotal =
@@ -83,8 +77,7 @@ export const useHomeDashboard = (
         ? null
         : budgetValues.reduce((sum, value) => sum + value, 0);
 
-    const budgetRemaining =
-      budgetTotal === null ? null : budgetTotal - expense;
+    const budgetRemaining = budgetTotal === null ? null : budgetTotal - expense;
 
     return {
       income,
@@ -114,14 +107,14 @@ export const useHomeDashboard = (
         MONTH_WINDOW,
         selectedMonth,
       ),
-      cumulativeSavings: buildCumulativeSavings(
-        cumulativeTransactions,
-        monthRange.to,
+      assetTrends: buildAssetTrends(
+        allTransactions,
+        YEAR_WINDOW,
+        selectedMonth,
       ),
     };
   }, [
     categoriesQuery.data,
-    cumulativeQuery.data,
     monthRange.from,
     monthRange.to,
     selectedMonth,
@@ -130,13 +123,7 @@ export const useHomeDashboard = (
 
   return {
     ...dashboard,
-    isLoading:
-      transactionsQuery.isLoading ||
-      cumulativeQuery.isLoading ||
-      categoriesQuery.isLoading,
-    error:
-      transactionsQuery.error ??
-      cumulativeQuery.error ??
-      categoriesQuery.error,
+    isLoading: transactionsQuery.isLoading || categoriesQuery.isLoading,
+    error: transactionsQuery.error ?? categoriesQuery.error,
   };
 };
