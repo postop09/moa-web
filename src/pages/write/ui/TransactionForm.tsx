@@ -8,14 +8,12 @@ import {
   useCreateTransaction,
   useUpdateTransaction,
 } from '@/features/transaction';
-import type { TransactionType } from '@/shared/model';
+import { TRANSACTION_TYPE_LABEL, type TransactionType } from '@/shared/model';
 
 import { CategoryPopover } from './CategoryPopover';
 import styles from './write.module.css';
 
-type Mode =
-  | { type: 'create' }
-  | { type: 'edit'; transaction: Transaction };
+type Mode = { type: 'create' } | { type: 'edit'; transaction: Transaction };
 
 type Props = {
   householdId: string;
@@ -37,6 +35,15 @@ const fromDateInputValue = (value: string) => {
 };
 
 const todayInputValue = () => toDateInputValue(new Date().toISOString());
+
+const TYPE_OPTIONS: {
+  value: TransactionType;
+  activeClass: string;
+}[] = [
+  { value: 'expense', activeClass: styles.typeSegmentExpense },
+  { value: 'income', activeClass: styles.typeSegmentIncome },
+  { value: 'saving', activeClass: styles.typeSegmentSaving },
+];
 
 export const TransactionForm = ({
   householdId,
@@ -129,41 +136,33 @@ export const TransactionForm = ({
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.field}>
-        <span className={styles.label}>유형</span>
-        <div className={styles.typeRow}>
-          <label className={styles.radioLabel}>
-            <input
-              type="radio"
-              name="transactionType"
-              value="expense"
-              checked={type === 'expense'}
-              disabled={disabled}
-              onChange={() => handleTypeChange('expense')}
-            />
-            지출
-          </label>
-          <label className={styles.radioLabel}>
-            <input
-              type="radio"
-              name="transactionType"
-              value="income"
-              checked={type === 'income'}
-              disabled={disabled}
-              onChange={() => handleTypeChange('income')}
-            />
-            수입
-          </label>
-          <label className={styles.radioLabel}>
-            <input
-              type="radio"
-              name="transactionType"
-              value="saving"
-              checked={type === 'saving'}
-              disabled={disabled}
-              onChange={() => handleTypeChange('saving')}
-            />
-            저축
-          </label>
+        <span className={styles.label} id="transactionTypeLabel">
+          유형
+        </span>
+        <div
+          className={styles.typeSegmentGroup}
+          role="radiogroup"
+          aria-labelledby="transactionTypeLabel"
+        >
+          {TYPE_OPTIONS.map((option) => (
+            <label
+              key={option.value}
+              className={`${styles.typeSegment} ${
+                type === option.value ? option.activeClass : ''
+              }`}
+            >
+              <input
+                className={styles.visuallyHidden}
+                type="radio"
+                name="transactionType"
+                value={option.value}
+                checked={type === option.value}
+                disabled={disabled}
+                onChange={() => handleTypeChange(option.value)}
+              />
+              {TRANSACTION_TYPE_LABEL[option.value]}
+            </label>
+          ))}
         </div>
       </div>
 
@@ -243,30 +242,34 @@ export const TransactionForm = ({
         />
       </div>
 
-      <label className={styles.checkLabel}>
+      <label className={styles.toggleRow}>
+        <span className={styles.toggleLabel}>반복 거래</span>
         <input
+          className={styles.visuallyHidden}
           type="checkbox"
+          role="switch"
           checked={isRecurring}
           disabled={disabled}
+          aria-checked={isRecurring}
           onChange={(event) => setIsRecurring(event.target.checked)}
         />
-        반복 거래
+        <span className={styles.switchTrack} aria-hidden>
+          <span className={styles.switchThumb} />
+        </span>
       </label>
 
       {error ? (
         <p className={styles.error}>
-          {error instanceof Error
-            ? error.message
-            : '거래 저장에 실패했습니다.'}
+          {error instanceof Error ? error.message : '거래 저장에 실패했습니다.'}
         </p>
       ) : null}
       <div className={styles.buttonGroup}>
-        <button className={styles.primaryButton} type="submit" disabled={disabled}>
-          {isPending
-            ? '저장 중…'
-            : mode.type === 'create'
-              ? '작성'
-              : '저장'}
+        <button
+          className={styles.primaryButton}
+          type="submit"
+          disabled={disabled}
+        >
+          {isPending ? '저장 중…' : mode.type === 'create' ? '작성' : '저장'}
         </button>
         {onDelete ? (
           <button
@@ -278,7 +281,6 @@ export const TransactionForm = ({
             삭제
           </button>
         ) : null}
-
       </div>
     </form>
   );
