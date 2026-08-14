@@ -2,6 +2,7 @@
   "name": "모아",
   "short_name": "모아",
   "description": "자산 관리 - 그래프로 보는 가계부",
+  "lang": "ko",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f4f6f8",
