@@ -21,6 +21,7 @@ type Props = {
   householdId: string;
   mode: Mode;
   onSuccess: () => void;
+  onDelete?: () => void;
 };
 
 const toDateInputValue = (iso: string) => {
@@ -37,7 +38,12 @@ const fromDateInputValue = (value: string) => {
 
 const todayInputValue = () => toDateInputValue(new Date().toISOString());
 
-export const TransactionForm = ({ householdId, mode, onSuccess }: Props) => {
+export const TransactionForm = ({
+  householdId,
+  mode,
+  onSuccess,
+  onDelete,
+}: Props) => {
   const createTransaction = useCreateTransaction();
   const updateTransaction = useUpdateTransaction(householdId);
   const { data: categories = [], isLoading: isCategoriesLoading } =
@@ -254,14 +260,26 @@ export const TransactionForm = ({ householdId, mode, onSuccess }: Props) => {
             : '거래 저장에 실패했습니다.'}
         </p>
       ) : null}
+      <div className={styles.buttonGroup}>
+        <button className={styles.primaryButton} type="submit" disabled={disabled}>
+          {isPending
+            ? '저장 중…'
+            : mode.type === 'create'
+              ? '작성'
+              : '저장'}
+        </button>
+        {onDelete ? (
+          <button
+            type="button"
+            className={styles.dangerPrimaryButton}
+            onClick={onDelete}
+            disabled={disabled}
+          >
+            삭제
+          </button>
+        ) : null}
 
-      <button className={styles.primaryButton} type="submit" disabled={disabled}>
-        {isPending
-          ? '저장 중…'
-          : mode.type === 'create'
-            ? '작성'
-            : '저장'}
-      </button>
+      </div>
     </form>
   );
 };

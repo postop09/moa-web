@@ -59,14 +59,8 @@ export const WriteEditPage = ({ transactionId }: Props) => {
             householdId={householdId}
             mode={{ type: 'edit', transaction }}
             onSuccess={() => router.replace('/')}
+            onDelete={() => setIsDeleteOpen(true)}
           />
-          <button
-            type="button"
-            className={styles.dangerButton}
-            onClick={() => setIsDeleteOpen(true)}
-          >
-            삭제
-          </button>
           {isDeleteOpen ? (
             <TransactionDeleteConfirm
               householdId={householdId}
