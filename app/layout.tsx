@@ -22,13 +22,13 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: 'Moa',
-  description: '그래프 중심 가계부 — 숫자로 보는 지출',
+  title: '모아(Moa)',
+  description: '자산 관리 - 그래프로 보는 가계부',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Moa',
+    title: '모아(Moa)',
   },
 };
 
