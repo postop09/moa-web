@@ -308,7 +308,7 @@
 }
 
 .dangerPrimaryButton {
-  background: #b91c1c;
+  background: var(--color-expense);
   color: #fff;
 }
 
@@ -332,7 +332,7 @@
 .error {
   margin: 0;
   font-size: 0.8125rem;
-  color: #b91c1c;
+  color: var(--color-expense);
 }
 
 .modalRoot {

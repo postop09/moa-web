@@ -342,7 +342,7 @@
 }
 
 .dangerButton {
-  color: #b91c1c;
+  color: var(--color-expense);
 }
 
 .dangerButton:hover:not(:disabled) {
@@ -364,5 +364,5 @@
 .error {
   margin: 0;
   font-size: 0.8125rem;
-  color: #b91c1c;
+  color: var(--color-expense);
 }
