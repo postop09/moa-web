@@ -1,20 +1,22 @@
 'use client';
 
 import { useSignOut } from '@/features/auth';
+import { clearAuthGateReadyCookie } from '@/features/onboarding';
 import { useGetProfile } from '@/features/profile';
 
 import styles from '../settings.module.css';
 
 export const AccountSection = () => {
   const { data: profile, isLoading, error } = useGetProfile();
-  const {
-    mutateAsync: signOut,
-    isPending,
-    error: signOutError,
-  } = useSignOut();
+  const { mutateAsync: signOut, isPending, error: signOutError } = useSignOut();
 
   const handleSignOut = async () => {
     try {
+      try {
+        await clearAuthGateReadyCookie();
+      } catch {
+        // proxy에서도 미인증 시 쿠키를 정리함
+      }
       await signOut();
     } catch {
       // mutation error state에 표시

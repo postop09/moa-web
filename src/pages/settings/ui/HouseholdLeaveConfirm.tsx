@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import { useListHouseholds } from '@/features/household';
 import { useLeaveHousehold } from '@/features/householdMember';
+import { clearAuthGateReadyCookie } from '@/features/onboarding';
 
 import { Modal } from './Modal';
 import styles from '../settings.module.css';
@@ -31,6 +32,11 @@ export const HouseholdLeaveConfirm = ({
       const result = await refetch();
 
       if (!result.data?.length) {
+        try {
+          await clearAuthGateReadyCookie();
+        } catch {
+          // 온보딩 페이지는 풀 게이트로 상태를 다시 판별함
+        }
         router.replace('/onboarding/household');
         return;
       }

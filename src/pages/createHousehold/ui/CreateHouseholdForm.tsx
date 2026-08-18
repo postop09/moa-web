@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
 
 import { useCreateHousehold } from '@/features/household';
+import { persistAuthGateReadyCookie } from '@/features/onboarding';
 import { GridBackdrop, MoaLogo } from '@/shared/ui';
 
 import styles from './createHousehold.module.css';
@@ -23,6 +24,11 @@ export const CreateHouseholdForm = () => {
 
     try {
       await mutateAsync(trimmed);
+      try {
+        await persistAuthGateReadyCookie();
+      } catch {
+        // 다음 앱 진입 시 풀 게이트로 복구
+      }
       router.replace('/');
     } catch {
       // mutation error state에 표시

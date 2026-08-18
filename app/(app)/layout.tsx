@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-import { redirect } from 'next/navigation';
-import { type ReactNode } from 'react';
+import { type ReactNode, Suspense } from 'react';
 
-import { resolveAuthGate } from '@/features/onboarding/server';
-import { AppShell } from '@/widgets/appShell';
+import { AuthReadyGate } from '@/features/onboarding/server';
+import { AppPageFallback, AppShell } from '@/widgets/appShell';
 
 export const metadata: Metadata = {
   robots: {
@@ -16,14 +15,14 @@ type Props = {
   children: ReactNode;
 };
 
-const AppLayout = async ({ children }: Props) => {
-  const gate = await resolveAuthGate();
-
-  if (gate.status !== 'ready') {
-    redirect(gate.redirectTo);
-  }
-
-  return <AppShell>{children}</AppShell>;
+const AppLayout = ({ children }: Props) => {
+  return (
+    <AppShell>
+      <Suspense fallback={<AppPageFallback />}>
+        <AuthReadyGate>{children}</AuthReadyGate>
+      </Suspense>
+    </AppShell>
+  );
 };
 
 export default AppLayout;

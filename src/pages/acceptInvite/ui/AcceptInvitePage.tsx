@@ -6,6 +6,7 @@ import {
   useAcceptHouseholdInvite,
   useGetHouseholdInviteByToken,
 } from '@/features/householdMember';
+import { persistAuthGateReadyCookie } from '@/features/onboarding';
 import { useGetProfile } from '@/features/profile';
 import { GridBackdrop, MoaLogo } from '@/shared/ui';
 
@@ -38,6 +39,11 @@ export const AcceptInvitePage = ({ token }: Props) => {
   const handleAccept = async () => {
     try {
       await mutateAsync();
+      try {
+        await persistAuthGateReadyCookie();
+      } catch {
+        // 다음 앱 진입 시 풀 게이트로 복구
+      }
       router.replace('/');
       router.refresh();
     } catch {
