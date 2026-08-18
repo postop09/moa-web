@@ -2,12 +2,18 @@
 
 import type { EChartsOption } from 'echarts';
 import ReactECharts from 'echarts-for-react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import type { ExpenseByCategory } from '@/features/transaction';
 
 import styles from './home.module.css';
 import { EXPENSE_COLORS } from '../config/expenseColors';
+
+type LegendselectedParams = {
+  name: string;
+  selected: Record<string, boolean>;
+  type: 'legendselectchanged';
+};
 
 type Props = {
   items: ExpenseByCategory[];
@@ -15,7 +21,14 @@ type Props = {
 
 export const CategoryPieCard = ({ items }: Props) => {
   const hasData = items.length > 0;
-  console.log(items);
+  const itemNames = useMemo(() => items.map((item) => item.name), [items]);
+  const [selectedItems, setSelectedItems] = useState<string[]>(itemNames);
+  const selectedTotal = useMemo(() => {
+    return selectedItems.reduce((sum, item) => {
+      const matchedItem = items.find((i) => i.name === item);
+      return sum + (matchedItem?.amount || 0);
+    }, 0);
+  }, [items, selectedItems]);
 
   const option = useMemo<EChartsOption>(() => {
     return {
@@ -39,6 +52,11 @@ export const CategoryPieCard = ({ items }: Props) => {
           center: ['50%', '44%'],
           label: { show: false },
           labelLine: { show: false },
+          itemStyle: {
+            borderRadius: 4,
+            borderColor: '#fff',
+            borderWidth: 1.5,
+          },
           data: items.map((item) => ({
             name: item.name,
             value: item.amount,
@@ -51,6 +69,7 @@ export const CategoryPieCard = ({ items }: Props) => {
   return (
     <section className={styles.card}>
       <h3 className={styles.cardTitle}>지출 구성</h3>
+      <p className={styles.cardMeta}>{selectedTotal.toLocaleString('ko-KR')}원</p>
       {hasData ? (
         <div className={styles.chart}>
           <ReactECharts
@@ -59,6 +78,14 @@ export const CategoryPieCard = ({ items }: Props) => {
             style={{ height: 240, width: '100%' }}
             notMerge
             lazyUpdate
+            onEvents={{
+              legendselectchanged: (params: LegendselectedParams) => {
+                console.log('legendselectchanged', params);
+                const selected = params.selected;
+                const selectedItems = Object.keys(selected).filter(key => selected[key]);
+                setSelectedItems(selectedItems);
+              },
+            }}
           />
         </div>
       ) : (

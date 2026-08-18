@@ -12,10 +12,6 @@ type Props = {
   items: MonthlyExpense[];
 };
 
-const formatAmount = (amount: number) => {
-  return `${amount.toLocaleString('ko-KR')}원`;
-};
-
 export const SpendingOverTimeCard = ({ items }: Props) => {
   const total = items.reduce((sum, item) => sum + item.amount, 0);
   const hasData = total > 0;
@@ -80,7 +76,6 @@ export const SpendingOverTimeCard = ({ items }: Props) => {
     <section className={styles.card}>
       <div className={styles.cardTitleRow}>
         <h3 className={styles.cardTitle}>월별 지출</h3>
-        <p className={styles.cardMeta}>{formatAmount(total)}</p>
       </div>
       {hasData ? (
         <div className={styles.chart}>
