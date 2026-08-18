@@ -11,6 +11,7 @@ import {
 import { TRANSACTION_TYPE_LABEL, type TransactionType } from '@/shared/model';
 
 import { CategoryPopover } from './CategoryPopover';
+import { DatePicker } from './DatePicker';
 import styles from './write.module.css';
 
 type Mode = { type: 'create' } | { type: 'edit'; transaction: Transaction };
@@ -188,14 +189,12 @@ export const TransactionForm = ({
         <label className={styles.label} htmlFor="transactionDate">
           날짜
         </label>
-        <input
+        <DatePicker
           id="transactionDate"
-          className={styles.input}
-          type="date"
           required
           value={transactionDate}
           disabled={disabled}
-          onChange={(event) => setTransactionDate(event.target.value)}
+          onChange={setTransactionDate}
         />
       </div>
 
