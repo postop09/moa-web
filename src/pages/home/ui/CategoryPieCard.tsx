@@ -15,6 +15,7 @@ type Props = {
 
 export const CategoryPieCard = ({ items }: Props) => {
   const hasData = items.length > 0;
+  console.log(items);
 
   const option = useMemo<EChartsOption>(() => {
     return {

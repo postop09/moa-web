@@ -7,7 +7,7 @@ export type ExpenseByCategory = {
   amount: number;
 };
 
-const TOP_CATEGORY_COUNT = 6;
+const TOP_CATEGORY_COUNT = 15;
 
 export const buildExpenseByCategory = (
   transactions: Transaction[],
@@ -40,20 +40,9 @@ export const buildExpenseByCategory = (
   }
 
   const top = sorted.slice(0, TOP_CATEGORY_COUNT);
-  const restAmount = sorted
-    .slice(TOP_CATEGORY_COUNT)
-    .reduce((sum, item) => sum + item.amount, 0);
+  // const restAmount = sorted
+  //   .slice(TOP_CATEGORY_COUNT)
+  //   .reduce((sum, item) => sum + item.amount, 0);
 
-  if (restAmount <= 0) {
-    return top;
-  }
-
-  return [
-    ...top,
-    {
-      id: null,
-      name: '기타',
-      amount: restAmount,
-    },
-  ];
+  return top;
 };
