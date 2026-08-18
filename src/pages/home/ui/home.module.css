@@ -229,6 +229,12 @@
   background: var(--color-surface);
 }
 
+.cardHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
 .cardTitle {
   margin: 0;
   font-size: 0.9375rem;
