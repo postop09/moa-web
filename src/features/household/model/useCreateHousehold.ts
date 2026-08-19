@@ -1,11 +1,15 @@
 'use client';
 
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { createHousehold } from '@/entities/household';
+import { createHousehold, type ListHouseholdsRes } from '@/entities/household';
 import { createBrowserClient } from '@/shared/api';
 
+import { householdQueryKeys } from '../config/queryKeys';
+
 export const useCreateHousehold = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (name: string) => {
       const supabase = createBrowserClient();
@@ -20,6 +24,25 @@ export const useCreateHousehold = () => {
       return createHousehold(supabase, {
         name,
         ownerId: user.id,
+      });
+    },
+    onSuccess: (household) => {
+      queryClient.setQueryData<ListHouseholdsRes>(
+        householdQueryKeys.list(),
+        (current) => {
+          if (!current) {
+            return [household];
+          }
+
+          if (current.some((item) => item.id === household.id)) {
+            return current;
+          }
+
+          return [...current, household];
+        },
+      );
+      void queryClient.invalidateQueries({
+        queryKey: householdQueryKeys.list(),
       });
     },
   });

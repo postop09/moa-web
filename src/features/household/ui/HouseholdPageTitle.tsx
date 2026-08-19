@@ -4,6 +4,7 @@ import { ChevronDown } from 'lucide-react';
 import { useEffect, useId, useRef, useState } from 'react';
 
 import { useCurrentHousehold } from '../model/useCurrentHousehold';
+import { HouseholdCreateRow } from './HouseholdCreateRow';
 import styles from './householdPageTitle.module.css';
 
 type Props = {
@@ -50,9 +51,7 @@ export const HouseholdPageTitle = ({ subtitle }: Props) => {
     };
   }, [open]);
 
-  const label = isLoading
-    ? '가계부'
-    : (household?.name ?? '가계부 없음');
+  const label = isLoading ? '가계부' : (household?.name ?? '가계부 없음');
   const canOpen = !isLoading && households.length > 0;
 
   return (
@@ -80,11 +79,11 @@ export const HouseholdPageTitle = ({ subtitle }: Props) => {
       <p className={styles.subtitle}>{subtitle}</p>
 
       {open ? (
-        <div className={styles.popover} id={listId} role="listbox">
+        <div className={styles.popover}>
           {households.length === 0 ? (
             <p className={styles.empty}>참여 중인 가계부가 없습니다.</p>
           ) : (
-            <ul className={styles.list}>
+            <ul className={styles.list} id={listId} role="listbox">
               {households.map((item) => {
                 const isActive = item.id === householdId;
 
@@ -107,6 +106,14 @@ export const HouseholdPageTitle = ({ subtitle }: Props) => {
               })}
             </ul>
           )}
+          <div className={styles.createFooter}>
+            <HouseholdCreateRow
+              onCreated={(created) => {
+                setHouseholdId(created.id);
+                setOpen(false);
+              }}
+            />
+          </div>
         </div>
       ) : null}
     </div>

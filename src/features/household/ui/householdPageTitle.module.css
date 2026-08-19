@@ -116,3 +116,116 @@
   font-size: 0.875rem;
   color: var(--color-muted);
 }
+
+.createFooter {
+  margin-top: var(--space-1);
+  padding-top: var(--space-1);
+  border-top: 1px solid var(--color-border);
+}
+
+.createButton {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.75rem 0.875rem;
+  border: 0;
+  border-radius: calc(var(--radius) - 0.125rem);
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-align: left;
+}
+
+.createButton:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.createButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.createForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-1);
+}
+
+.createRow {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.createInput {
+  min-width: 0;
+  flex: 1;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--radius) - 0.125rem);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.createInput:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.createInput:disabled {
+  opacity: 0.7;
+}
+
+.createSubmit {
+  flex-shrink: 0;
+  padding: 0.5rem 0.625rem;
+  border: 0;
+  border-radius: calc(var(--radius) - 0.125rem);
+  background: var(--color-accent);
+  color: var(--color-surface);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.createSubmit:hover:not(:disabled) {
+  opacity: 0.92;
+}
+
+.createSubmit:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.createSubmit:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.createError {
+  margin: 0;
+  padding: 0 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: #b91c1c;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
