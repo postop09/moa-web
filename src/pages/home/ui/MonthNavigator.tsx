@@ -15,12 +15,7 @@ const formatMonthLabel = (date: Date) => {
   return `${date.getFullYear()}년 ${date.getMonth() + 1}월`;
 };
 
-export const MonthNavigator = ({
-  value,
-  onPrev,
-  onNext,
-  canGoNext,
-}: Props) => {
+export const MonthNavigator = ({ value, onPrev, onNext, canGoNext }: Props) => {
   return (
     <div className={styles.monthNavigator}>
       <button

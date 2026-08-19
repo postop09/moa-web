@@ -68,7 +68,9 @@ export const MetricRingCard = ({
       </div>
       <div className={styles.ringBody}>
         <p className={styles.ringLabel}>{label}</p>
-        <p className={`${styles.ringValue} ${negative ? styles.ringNegative : ''}`}>
+        <p
+          className={`${styles.ringValue} ${negative ? styles.ringNegative : ''}`}
+        >
           {valueLabel}
         </p>
       </div>

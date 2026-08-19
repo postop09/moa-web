@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import type { Category } from '@/entities/category';
 import { useListCategories } from '@/features/category';
@@ -27,10 +27,6 @@ export const CategorySection = ({ householdId }: Props) => {
   const closePanel = useCallback(() => {
     setPanel({ type: 'idle' });
   }, []);
-
-  useEffect(() => {
-    setPanel({ type: 'idle' });
-  }, [householdId]);
 
   const categories = data ?? [];
 

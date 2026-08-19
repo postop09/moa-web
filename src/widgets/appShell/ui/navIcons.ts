@@ -1,10 +1,4 @@
-import {
-  Calendar,
-  Home,
-  List,
-  Settings,
-  type LucideIcon,
-} from 'lucide-react';
+import { Calendar, Home, List, Settings, type LucideIcon } from 'lucide-react';
 
 import type { NavItemId } from '@/shared/config';
 

@@ -34,7 +34,9 @@ export const SettingsPage = () => {
         />
       ) : null}
 
-      {householdId ? <CategorySection householdId={householdId} /> : null}
+      {householdId ? (
+        <CategorySection key={householdId} householdId={householdId} />
+      ) : null}
 
       {household && profile ? (
         <HouseholdDangerSection

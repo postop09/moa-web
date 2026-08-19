@@ -16,8 +16,5 @@ export {
   buildMonthlyExpenses,
   type MonthlyExpense,
 } from './lib/buildMonthlyExpenses';
-export {
-  buildAssetTrends,
-  type AssetTrendPoint,
-} from './lib/buildAssetTrends';
+export { buildAssetTrends, type AssetTrendPoint } from './lib/buildAssetTrends';
 export { getMonthRange, getTrailingMonthsRange } from './lib/monthRange';

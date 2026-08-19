@@ -20,10 +20,7 @@ const formatDate = (iso: string) => {
   return `${date.getMonth() + 1}/${date.getDate()}`;
 };
 
-export const RecentTransactionsCard = ({
-  transactions,
-  categories,
-}: Props) => {
+export const RecentTransactionsCard = ({ transactions, categories }: Props) => {
   const categoryNameById = new Map(
     categories.map((category) => [category.id, category.name]),
   );

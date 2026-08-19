@@ -8,8 +8,11 @@ import { TransactionList } from './ui/TransactionList';
 import styles from './ui/history.module.css';
 
 export const HistoryPage = () => {
-  const { householdId, isLoading: householdLoading, error: householdError } =
-    useCurrentHousehold();
+  const {
+    householdId,
+    isLoading: householdLoading,
+    error: householdError,
+  } = useCurrentHousehold();
   const {
     selectedMonth,
     typeFilter,

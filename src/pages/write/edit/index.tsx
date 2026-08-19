@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import { HouseholdPageTitle, useCurrentHousehold } from '@/features/household';
+import { useCurrentHousehold } from '@/features/household';
 import { useGetTransaction } from '@/features/transaction';
 
 import { TransactionDeleteConfirm } from '../ui/TransactionDeleteConfirm';

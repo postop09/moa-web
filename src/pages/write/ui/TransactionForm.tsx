@@ -203,10 +203,10 @@ export const TransactionForm = ({
           카테고리 (선택)
         </span>
         <CategoryPopover
+          key={type}
           categories={filteredCategories}
           value={categoryId}
           disabled={disabled}
-          resetKey={type}
           onChange={setCategoryId}
         />
       </div>

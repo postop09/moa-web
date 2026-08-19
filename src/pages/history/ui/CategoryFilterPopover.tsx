@@ -11,14 +11,12 @@ import styles from './history.module.css';
 type Props = {
   categories: Category[];
   value: CategoryFilter;
-  resetKey?: string;
   onChange: (value: CategoryFilter) => void;
 };
 
 export const CategoryFilterPopover = ({
   categories,
   value,
-  resetKey,
   onChange,
 }: Props) => {
   const [open, setOpen] = useState(false);
@@ -58,14 +56,8 @@ export const CategoryFilterPopover = ({
     };
   }, [open]);
 
-  useEffect(() => {
-    setOpen(false);
-  }, [resetKey]);
-
   const selected =
-    value === 'all'
-      ? null
-      : categories.find((item) => item.id === value);
+    value === 'all' ? null : categories.find((item) => item.id === value);
   const label = selected?.name ?? '전체';
 
   return (

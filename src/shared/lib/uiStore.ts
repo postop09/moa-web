@@ -6,7 +6,14 @@ type UiState = {
   setSidebarOpen: (isOpen: boolean) => void;
 };
 
-export const useUiStore = create<UiState>((set) => ({
+type UiActions = {
+  toggleSidebar: () => void;
+  setSidebarOpen: (isOpen: boolean) => void;
+};
+
+type UiStore = UiState & UiActions;
+
+export const useUiStore = create<UiStore>((set) => ({
   isSidebarOpen: false,
   toggleSidebar: () =>
     set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),

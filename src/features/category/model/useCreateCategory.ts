@@ -2,10 +2,7 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import {
-  createCategory,
-  type CreateCategoryReq,
-} from '@/entities/category';
+import { createCategory, type CreateCategoryReq } from '@/entities/category';
 import { createBrowserClient } from '@/shared/api';
 
 import { categoryQueryKeys } from '../config/queryKeys';

@@ -30,7 +30,9 @@ export const TransactionDeleteConfirm = ({
     }
   };
 
-  const label = transaction.name?.trim() || `${transaction.amount.toLocaleString('ko-KR')}원`;
+  const label =
+    transaction.name?.trim() ||
+    `${transaction.amount.toLocaleString('ko-KR')}원`;
 
   return (
     <Modal title="내역 삭제" onClose={onCancel} closeDisabled={isPending}>

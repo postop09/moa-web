@@ -19,7 +19,14 @@ type CurrentHouseholdState = {
   setHouseholdId: (id: string) => void;
 };
 
-export const useCurrentHouseholdStore = create<CurrentHouseholdState>(
+type CurrentHouseholdActions = {
+  hydrate: () => void;
+  setHouseholdId: (id: string) => void;
+};
+
+type CurrentHouseholdStore = CurrentHouseholdState & CurrentHouseholdActions;
+
+export const useCurrentHouseholdStore = create<CurrentHouseholdStore>(
   (set) => ({
     householdId: null,
     hydrated: false,

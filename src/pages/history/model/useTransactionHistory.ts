@@ -4,10 +4,7 @@ import { useMemo, useState } from 'react';
 
 import { useListCategories } from '@/features/category';
 import { useListProfilesByIds } from '@/features/profile';
-import {
-  getMonthRange,
-  useListTransactions,
-} from '@/features/transaction';
+import { getMonthRange, useListTransactions } from '@/features/transaction';
 import type { TransactionType } from '@/shared/model';
 
 export type TypeFilter = TransactionType | 'all';
@@ -56,7 +53,10 @@ export const useTransactionHistory = (householdId: string | null) => {
   );
   const categoriesQuery = useListCategories(householdId);
 
-  const categories = categoriesQuery.data ?? [];
+  const categories = useMemo(
+    () => categoriesQuery.data ?? [],
+    [categoriesQuery.data],
+  );
 
   const categoryOptions = useMemo(() => {
     if (typeFilter === 'all') {
@@ -73,8 +73,7 @@ export const useTransactionHistory = (householdId: string | null) => {
       }
       const stillValid = categories.some(
         (category) =>
-          category.id === current &&
-          (next === 'all' || category.type === next),
+          category.id === current && (next === 'all' || category.type === next),
       );
       return stillValid ? current : 'all';
     });
@@ -132,7 +131,9 @@ export const useTransactionHistory = (householdId: string | null) => {
   }, [categoryId, transactionsQuery.data, typeFilter]);
 
   const creatorIds = useMemo(
-    () => [...new Set(transactions.map((transaction) => transaction.createdBy))],
+    () => [
+      ...new Set(transactions.map((transaction) => transaction.createdBy)),
+    ],
     [transactions],
   );
 

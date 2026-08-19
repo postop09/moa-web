@@ -5,7 +5,10 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Category } from '@/entities/category';
 import { TRANSACTION_TYPE_LABEL } from '@/shared/model';
 
-import type { CategoryFilter, TypeFilter } from '../model/useTransactionHistory';
+import type {
+  CategoryFilter,
+  TypeFilter,
+} from '../model/useTransactionHistory';
 import { CategoryFilterPopover } from './CategoryFilterPopover';
 import styles from './history.module.css';
 
@@ -71,9 +74,9 @@ export const HistoryFilterBar = ({
         <div className={styles.filterField}>
           <span className={styles.filterLabel}>카테고리</span>
           <CategoryFilterPopover
+            key={typeFilter}
             categories={categoryOptions}
             value={categoryId}
-            resetKey={typeFilter}
             onChange={onCategoryChange}
           />
         </div>
@@ -90,7 +93,9 @@ export const HistoryFilterBar = ({
               <ChevronLeft size={18} aria-hidden />
             </button>
             <p className={styles.monthLabel}>
-              {selectedMonth === null ? '전체' : formatMonthLabel(selectedMonth)}
+              {selectedMonth === null
+                ? '전체'
+                : formatMonthLabel(selectedMonth)}
             </p>
             <button
               type="button"

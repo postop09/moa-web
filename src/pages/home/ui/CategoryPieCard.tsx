@@ -70,7 +70,9 @@ export const CategoryPieCard = ({ items }: Props) => {
     <section className={styles.card}>
       <div className={styles.cardHeader}>
         <h3 className={styles.cardTitle}>지출 구성</h3>
-        <p className={styles.cardMeta}>{selectedTotal.toLocaleString('ko-KR')}원</p>
+        <p className={styles.cardMeta}>
+          {selectedTotal.toLocaleString('ko-KR')}원
+        </p>
       </div>
       {hasData ? (
         <div className={styles.chart}>
@@ -84,7 +86,9 @@ export const CategoryPieCard = ({ items }: Props) => {
               legendselectchanged: (params: LegendselectedParams) => {
                 console.log('legendselectchanged', params);
                 const selected = params.selected;
-                const selectedItems = Object.keys(selected).filter(key => selected[key]);
+                const selectedItems = Object.keys(selected).filter(
+                  (key) => selected[key],
+                );
                 setSelectedItems(selectedItems);
               },
             }}

@@ -2,10 +2,7 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import {
-  updateCategory,
-  type UpdateCategoryReq,
-} from '@/entities/category';
+import { updateCategory, type UpdateCategoryReq } from '@/entities/category';
 import { createBrowserClient } from '@/shared/api';
 
 import { categoryQueryKeys } from '../config/queryKeys';

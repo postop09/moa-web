@@ -39,11 +39,9 @@ export const CategoryBudgetCard = ({ items }: Props) => {
       ) : (
         <ul className={styles.budgetList}>
           {items.map((item) => {
-            const unsetOrZero =
-              item.budget === null || item.budget === 0;
+            const unsetOrZero = item.budget === null || item.budget === 0;
             const over =
-              item.spent > 0 &&
-              (unsetOrZero || (item.ratio ?? 0) > 1);
+              item.spent > 0 && (unsetOrZero || (item.ratio ?? 0) > 1);
             const width = unsetOrZero
               ? item.spent > 0
                 ? 100

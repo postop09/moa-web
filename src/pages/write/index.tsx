@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { HouseholdPageTitle, useCurrentHousehold } from '@/features/household';
+import { useCurrentHousehold } from '@/features/household';
 
 import { TransactionForm } from './ui/TransactionForm';
 import styles from './ui/write.module.css';

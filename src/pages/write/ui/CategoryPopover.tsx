@@ -11,7 +11,6 @@ type Props = {
   categories: Category[];
   value: string;
   disabled?: boolean;
-  resetKey?: string;
   onChange: (value: string) => void;
 };
 
@@ -19,7 +18,6 @@ export const CategoryPopover = ({
   categories,
   value,
   disabled = false,
-  resetKey,
   onChange,
 }: Props) => {
   const [open, setOpen] = useState(false);
@@ -58,10 +56,6 @@ export const CategoryPopover = ({
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [open]);
-
-  useEffect(() => {
-    setOpen(false);
-  }, [resetKey]);
 
   const selected = categories.find((item) => String(item.id) === value);
   const label = selected?.name ?? '선택 안 함';
