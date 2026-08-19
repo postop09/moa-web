@@ -26,7 +26,7 @@ export const SettingsPage = () => {
 
       {householdId && profile ? (
         <MembersSection
-          key={householdId}
+          key={`members-${householdId}`}
           householdId={householdId}
           isOwner={isOwner}
           currentUserId={profile.id}
@@ -35,7 +35,10 @@ export const SettingsPage = () => {
       ) : null}
 
       {householdId ? (
-        <CategorySection key={householdId} householdId={householdId} />
+        <CategorySection
+          key={`category-${householdId}`}
+          householdId={householdId}
+        />
       ) : null}
 
       {household && profile ? (

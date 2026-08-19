@@ -266,7 +266,7 @@
 
 .rowActions {
   display: flex;
-  flex-shrink: 0;
+  align-items: center;
   gap: var(--space-2);
 }
 
@@ -368,7 +368,6 @@
 }
 
 .roleBadge {
-  flex-shrink: 0;
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--color-muted);

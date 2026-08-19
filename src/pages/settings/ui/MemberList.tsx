@@ -55,9 +55,6 @@ export const MemberList = ({
                   </span>
                 </div>
                 <div className={styles.rowActions}>
-                  <span className={styles.roleBadge}>
-                    {HOUSEHOLD_ROLE_LABEL[member.role]}
-                  </span>
                   {canKick ? (
                     <button
                       type="button"
@@ -67,6 +64,9 @@ export const MemberList = ({
                       추방
                     </button>
                   ) : null}
+                  <span className={styles.roleBadge}>
+                    {HOUSEHOLD_ROLE_LABEL[member.role]}
+                  </span>
                 </div>
               </li>
             );
