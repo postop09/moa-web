@@ -1,27 +1,30 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect } from 'react';
 
+import { householdQueryKeys } from '../config/queryKeys';
 import { CURRENT_HOUSEHOLD_STORAGE_KEY } from '../config/storageKeys';
+import { useCurrentHouseholdStore } from './currentHouseholdStore';
 import { useListHouseholds } from './useListHouseholds';
 
-const readStoredHouseholdId = () => {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-
-  return localStorage.getItem(CURRENT_HOUSEHOLD_STORAGE_KEY);
-};
-
 export const useCurrentHousehold = () => {
+  const queryClient = useQueryClient();
   const householdsQuery = useListHouseholds();
-  const [householdId, setHouseholdIdState] = useState<string | null>(null);
-  const [hydrated, setHydrated] = useState(false);
+  const householdId = useCurrentHouseholdStore((state) => state.householdId);
+  const hydrated = useCurrentHouseholdStore((state) => state.hydrated);
+  const hydrate = useCurrentHouseholdStore((state) => state.hydrate);
+  const persistHouseholdId = useCurrentHouseholdStore(
+    (state) => state.setHouseholdId,
+  );
 
   useEffect(() => {
-    setHouseholdIdState(readStoredHouseholdId());
-    setHydrated(true);
-  }, []);
+    if (hydrated) {
+      return;
+    }
+
+    hydrate();
+  }, [hydrate, hydrated]);
 
   const households = householdsQuery.data ?? [];
 
@@ -43,16 +46,35 @@ export const useCurrentHousehold = () => {
     }
 
     if (householdId !== resolvedId) {
-      setHouseholdIdState(resolvedId);
+      persistHouseholdId(resolvedId);
+      return;
     }
 
     localStorage.setItem(CURRENT_HOUSEHOLD_STORAGE_KEY, resolvedId);
-  }, [hydrated, householdId, resolvedId]);
+  }, [hydrated, householdId, persistHouseholdId, resolvedId]);
 
-  const setHouseholdId = useCallback((id: string) => {
-    setHouseholdIdState(id);
-    localStorage.setItem(CURRENT_HOUSEHOLD_STORAGE_KEY, id);
-  }, []);
+  const setHouseholdId = useCallback(
+    (id: string) => {
+      persistHouseholdId(id);
+
+      const listKey = householdQueryKeys.list();
+
+      void queryClient.invalidateQueries({
+        predicate: (query) => {
+          if (
+            query.queryKey.length === listKey.length &&
+            query.queryKey[0] === listKey[0] &&
+            query.queryKey[1] === listKey[1]
+          ) {
+            return false;
+          }
+
+          return query.queryKey.includes(id);
+        },
+      });
+    },
+    [persistHouseholdId, queryClient],
+  );
 
   const household = households.find((item) => item.id === resolvedId) ?? null;
 
