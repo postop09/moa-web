@@ -5,6 +5,7 @@ import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
 
 import type { MonthlyExpense } from '@/features/transaction';
+import { formatAmount } from '@/shared/lib';
 
 import styles from './home.module.css';
 
@@ -34,7 +35,7 @@ export const SpendingOverTimeCard = ({ items }: Props) => {
           }
           const name = 'name' in item ? String(item.name) : '';
           const value = 'value' in item ? Number(item.value) : 0;
-          return `${name}: ${value.toLocaleString('ko-KR')}원`;
+          return `${name}: ${formatAmount(value)}`;
         },
       },
       xAxis: {

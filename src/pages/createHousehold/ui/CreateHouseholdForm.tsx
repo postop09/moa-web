@@ -7,7 +7,7 @@ import { useCreateHousehold } from '@/features/household';
 import { persistAuthGateReadyCookie } from '@/features/onboarding';
 import { GridBackdrop, MoaLogo } from '@/shared/ui';
 
-import styles from './createHousehold.module.css';
+import styles from '@/shared/ui/onboardingForm.module.css';
 
 export const CreateHouseholdForm = () => {
   const router = useRouter();

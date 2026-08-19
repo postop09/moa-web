@@ -6,7 +6,7 @@ import { useState, type FormEvent } from 'react';
 import { useCreateProfile } from '@/features/profile';
 import { GridBackdrop, MoaLogo } from '@/shared/ui';
 
-import styles from './createProfile.module.css';
+import styles from '@/shared/ui/onboardingForm.module.css';
 
 type Props = {
   next?: string | null;

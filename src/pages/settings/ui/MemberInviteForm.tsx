@@ -3,8 +3,8 @@
 import { useState, type FormEvent } from 'react';
 
 import { useCreateHouseholdInvite } from '@/features/householdMember';
+import { Modal } from '@/shared/ui';
 
-import { Modal } from './Modal';
 import styles from '../settings.module.css';
 
 type Props = {

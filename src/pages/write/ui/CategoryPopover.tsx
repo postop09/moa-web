@@ -1,9 +1,10 @@
 'use client';
 
 import { ChevronDown } from 'lucide-react';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 
 import type { Category } from '@/entities/category';
+import { useDismissable } from '@/shared/lib';
 
 import styles from './write.module.css';
 
@@ -23,39 +24,7 @@ export const CategoryPopover = ({
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const listId = useId();
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
-      const target = event.target;
-      if (!(target instanceof Node)) {
-        return;
-      }
-
-      if (!rootRef.current?.contains(target)) {
-        setOpen(false);
-      }
-    };
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('touchstart', handlePointerDown);
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('touchstart', handlePointerDown);
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [open]);
+  useDismissable(open, () => setOpen(false), rootRef);
 
   const selected = categories.find((item) => String(item.id) === value);
   const label = selected?.name ?? '선택 안 함';

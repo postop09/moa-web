@@ -5,6 +5,7 @@ import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
 
 import type { ExpenseByCategory } from '@/features/transaction';
+import { formatAmount } from '@/shared/lib';
 
 import styles from './home.module.css';
 import { EXPENSE_COLORS } from '../config/expenseColors';
@@ -46,7 +47,7 @@ export const TopSpendingsCard = ({ items }: Props) => {
           const name = 'name' in params ? String(params.name) : '';
           const value = 'value' in params ? params.value : null;
           const amount = Array.isArray(value) ? Number(value[2]) : 0;
-          return `${name}: ${amount.toLocaleString('ko-KR')}원`;
+          return `${name}: ${formatAmount(amount)}`;
         },
       },
       xAxis: {

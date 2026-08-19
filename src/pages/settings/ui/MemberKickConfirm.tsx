@@ -1,9 +1,7 @@
 'use client';
 
 import { useKickHouseholdMember } from '@/features/householdMember';
-
-import { Modal } from './Modal';
-import styles from '../settings.module.css';
+import { ConfirmDialog } from '@/shared/ui';
 
 type Props = {
   householdId: string;
@@ -32,37 +30,20 @@ export const MemberKickConfirm = ({
   };
 
   return (
-    <Modal title="멤버 추방" onClose={onCancel} closeDisabled={isPending}>
-      <div className={styles.modalBody}>
-        <p className={styles.confirmText}>
+    <ConfirmDialog
+      title="멤버 추방"
+      message={
+        <>
           <strong>{nickname}</strong> 님을 가계부에서 추방할까요?
-        </p>
-        {error ? (
-          <p className={styles.error}>
-            {error instanceof Error
-              ? error.message
-              : '멤버 추방에 실패했습니다.'}
-          </p>
-        ) : null}
-        <div className={styles.modalActions}>
-          <button
-            type="button"
-            className={styles.secondaryButton}
-            onClick={onCancel}
-            disabled={isPending}
-          >
-            취소
-          </button>
-          <button
-            type="button"
-            className={styles.dangerPrimaryButton}
-            onClick={handleConfirm}
-            disabled={isPending}
-          >
-            {isPending ? '추방 중…' : '추방'}
-          </button>
-        </div>
-      </div>
-    </Modal>
+        </>
+      }
+      confirmLabel="추방"
+      pendingLabel="추방 중…"
+      isPending={isPending}
+      error={error}
+      fallbackError="멤버 추방에 실패했습니다."
+      onCancel={onCancel}
+      onConfirm={handleConfirm}
+    />
   );
 };

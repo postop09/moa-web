@@ -1,6 +1,7 @@
 'use client';
 
 import { TRANSACTION_TYPE_COLOR } from '@/shared/model';
+import { formatAmount } from '@/shared/lib';
 
 import { AssetTrendCard } from './AssetTrendCard';
 import { CategoryBudgetCard } from './CategoryBudgetCard';
@@ -16,10 +17,6 @@ import styles from './home.module.css';
 type Props = {
   householdId: string;
   selectedMonth: Date;
-};
-
-const formatAmount = (amount: number) => {
-  return `${amount.toLocaleString('ko-KR')}원`;
 };
 
 const formatRate = (rate: number | null) => {

@@ -16,13 +16,22 @@ type Props = {
 
 export const WriteEditPage = ({ transactionId }: Props) => {
   const router = useRouter();
+  const isValidId = Number.isFinite(transactionId);
   const { householdId, isLoading: isHouseholdLoading } = useCurrentHousehold();
   const {
     data: transaction,
     isLoading: isTransactionLoading,
     error,
-  } = useGetTransaction(transactionId);
+  } = useGetTransaction(isValidId ? transactionId : null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
+  if (!isValidId) {
+    return (
+      <main className={styles.page}>
+        <p className={styles.error}>올바르지 않은 내역입니다.</p>
+      </main>
+    );
+  }
 
   const isLoading = isHouseholdLoading || isTransactionLoading;
   const isHouseholdMismatch =

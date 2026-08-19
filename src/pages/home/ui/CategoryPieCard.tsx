@@ -5,6 +5,7 @@ import ReactECharts from 'echarts-for-react';
 import { useMemo, useState } from 'react';
 
 import type { ExpenseByCategory } from '@/features/transaction';
+import { formatAmount } from '@/shared/lib';
 
 import styles from './home.module.css';
 import { EXPENSE_COLORS } from '../config/expenseColors';
@@ -70,9 +71,7 @@ export const CategoryPieCard = ({ items }: Props) => {
     <section className={styles.card}>
       <div className={styles.cardHeader}>
         <h3 className={styles.cardTitle}>지출 구성</h3>
-        <p className={styles.cardMeta}>
-          {selectedTotal.toLocaleString('ko-KR')}원
-        </p>
+        <p className={styles.cardMeta}>{formatAmount(selectedTotal)}</p>
       </div>
       {hasData ? (
         <div className={styles.chart}>

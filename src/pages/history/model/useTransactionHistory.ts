@@ -6,6 +6,7 @@ import { useListCategories } from '@/features/category';
 import { useListProfilesByIds } from '@/features/profile';
 import { getMonthRange, useListTransactions } from '@/features/transaction';
 import type { TransactionType } from '@/shared/model';
+import { isSameMonth, shiftMonth, startOfMonth } from '@/shared/lib';
 
 export type TypeFilter = TransactionType | 'all';
 export type CategoryFilter = number | 'all';
@@ -14,18 +15,6 @@ export type HistoryTotals = {
   income: number;
   expense: number;
   saving: number;
-};
-
-const startOfMonth = (date: Date) => {
-  return new Date(date.getFullYear(), date.getMonth(), 1);
-};
-
-const shiftMonth = (date: Date, delta: number) => {
-  return new Date(date.getFullYear(), date.getMonth() + delta, 1);
-};
-
-const isSameMonth = (a: Date, b: Date) => {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
 };
 
 export const useTransactionHistory = (householdId: string | null) => {

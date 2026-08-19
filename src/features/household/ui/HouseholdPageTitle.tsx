@@ -1,7 +1,9 @@
 'use client';
 
 import { ChevronDown } from 'lucide-react';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
+
+import { useDismissable } from '@/shared/lib';
 
 import { useCurrentHousehold } from '../model/useCurrentHousehold';
 import { HouseholdCreateRow } from './HouseholdCreateRow';
@@ -17,39 +19,7 @@ export const HouseholdPageTitle = ({ subtitle }: Props) => {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const listId = useId();
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
-      const target = event.target;
-      if (!(target instanceof Node)) {
-        return;
-      }
-
-      if (!rootRef.current?.contains(target)) {
-        setOpen(false);
-      }
-    };
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('touchstart', handlePointerDown);
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('touchstart', handlePointerDown);
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [open]);
+  useDismissable(open, () => setOpen(false), rootRef);
 
   const label = isLoading ? '가계부' : (household?.name ?? '가계부 없음');
   const canOpen = !isLoading && households.length > 0;

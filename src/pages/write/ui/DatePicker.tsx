@@ -1,11 +1,13 @@
 'use client';
 
 import { Calendar } from 'lucide-react';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { DayPicker } from 'react-day-picker';
 import { ko } from 'react-day-picker/locale';
 
 import 'react-day-picker/style.css';
+
+import { useDismissable } from '@/shared/lib';
 
 import styles from './write.module.css';
 
@@ -61,39 +63,7 @@ export const DatePicker = ({
   const rootRef = useRef<HTMLDivElement>(null);
   const dialogId = useId();
   const selected = toDate(value);
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
-      const target = event.target;
-      if (!(target instanceof Node)) {
-        return;
-      }
-
-      if (!rootRef.current?.contains(target)) {
-        setOpen(false);
-      }
-    };
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('touchstart', handlePointerDown);
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('touchstart', handlePointerDown);
-      window.addEventListener('keydown', handleKeyDown);
-    };
-  }, [open]);
+  useDismissable(open, () => setOpen(false), rootRef);
 
   const handleSelect = (date: Date) => {
     onChange(toValue(date));

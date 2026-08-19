@@ -2,17 +2,7 @@
 
 import { useState } from 'react';
 
-const startOfMonth = (date: Date) => {
-  return new Date(date.getFullYear(), date.getMonth(), 1);
-};
-
-const shiftMonth = (date: Date, delta: number) => {
-  return new Date(date.getFullYear(), date.getMonth() + delta, 1);
-};
-
-const isSameMonth = (a: Date, b: Date) => {
-  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
-};
+import { startOfMonth, shiftMonth, isSameMonth } from '@/shared/lib';
 
 export const useSelectedMonth = () => {
   const [selectedMonth, setSelectedMonth] = useState(() =>

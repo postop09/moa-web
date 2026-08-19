@@ -2,9 +2,7 @@
 
 import type { Category } from '@/entities/category';
 import { useDeleteCategory } from '@/features/category';
-
-import { Modal } from './Modal';
-import styles from '../settings.module.css';
+import { ConfirmDialog } from '@/shared/ui';
 
 type Props = {
   householdId: string;
@@ -31,37 +29,20 @@ export const CategoryDeleteConfirm = ({
   };
 
   return (
-    <Modal title="카테고리 삭제" onClose={onCancel} closeDisabled={isPending}>
-      <div className={styles.modalBody}>
-        <p className={styles.confirmText}>
+    <ConfirmDialog
+      title="카테고리 삭제"
+      message={
+        <>
           <strong>{category.name}</strong> 카테고리를 삭제할까요?
-        </p>
-        {error ? (
-          <p className={styles.error}>
-            {error instanceof Error
-              ? error.message
-              : '카테고리 삭제에 실패했습니다.'}
-          </p>
-        ) : null}
-        <div className={styles.modalActions}>
-          <button
-            type="button"
-            className={styles.secondaryButton}
-            onClick={onCancel}
-            disabled={isPending}
-          >
-            취소
-          </button>
-          <button
-            type="button"
-            className={styles.dangerPrimaryButton}
-            onClick={handleConfirm}
-            disabled={isPending}
-          >
-            {isPending ? '삭제 중…' : '삭제'}
-          </button>
-        </div>
-      </div>
-    </Modal>
+        </>
+      }
+      confirmLabel="삭제"
+      pendingLabel="삭제 중…"
+      isPending={isPending}
+      error={error}
+      fallbackError="카테고리 삭제에 실패했습니다."
+      onCancel={onCancel}
+      onConfirm={handleConfirm}
+    />
   );
 };

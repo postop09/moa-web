@@ -6,15 +6,12 @@ import { useMemo } from 'react';
 
 import type { AssetTrendPoint } from '@/features/transaction';
 import { TRANSACTION_TYPE_COLOR } from '@/shared/model';
+import { formatAmount } from '@/shared/lib';
 
 import styles from './home.module.css';
 
 type Props = {
   items: AssetTrendPoint[];
-};
-
-const formatAmount = (amount: number) => {
-  return `${amount.toLocaleString('ko-KR')}원`;
 };
 
 const hexToRgba = (hex: string, alpha: number) => {
@@ -81,7 +78,7 @@ export const AssetTrendCard = ({ items }: Props) => {
               'seriesName' in item ? String(item.seriesName) : '';
             const value = 'value' in item ? Number(item.value) : 0;
             const marker = 'marker' in item ? String(item.marker) : '';
-            return `${marker}${seriesName}: ${value.toLocaleString('ko-KR')}원`;
+            return `${marker}${seriesName}: ${formatAmount(value)}`;
           });
 
           return [name, ...lines].filter(Boolean).join('<br/>');

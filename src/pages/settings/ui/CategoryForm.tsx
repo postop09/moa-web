@@ -5,8 +5,8 @@ import { useState, type FormEvent } from 'react';
 import type { Category } from '@/entities/category';
 import { useCreateCategory, useUpdateCategory } from '@/features/category';
 import type { TransactionType } from '@/shared/model';
+import { Modal } from '@/shared/ui';
 
-import { Modal } from './Modal';
 import styles from '../settings.module.css';
 
 type Mode = { type: 'create' } | { type: 'edit'; category: Category };

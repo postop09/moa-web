@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useSyncExternalStore, type ReactNode } from 'react';
+import { useEffect, useId, useSyncExternalStore, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
-import styles from '../settings.module.css';
+import styles from './modal.module.css';
 
 const subscribeClient = () => () => {};
 
@@ -20,6 +20,7 @@ export const Modal = ({
   children,
   closeDisabled = false,
 }: Props) => {
+  const titleId = useId();
   const mounted = useSyncExternalStore(
     subscribeClient,
     () => true,
@@ -53,22 +54,22 @@ export const Modal = ({
   }
 
   return createPortal(
-    <div className={styles.modalRoot}>
+    <div className={styles.root}>
       <button
         type="button"
-        className={styles.modalBackdrop}
+        className={styles.backdrop}
         aria-label="닫기"
         disabled={closeDisabled}
         onClick={onClose}
       />
       <div
-        className={styles.modalDialog}
+        className={styles.dialog}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="settings-modal-title"
+        aria-labelledby={titleId}
       >
-        <header className={styles.formHeader}>
-          <h3 id="settings-modal-title" className={styles.formTitle}>
+        <header className={styles.header}>
+          <h3 id={titleId} className={styles.title}>
             {title}
           </h3>
         </header>

@@ -1,13 +1,10 @@
 import type { CategoryBudget } from '@/features/transaction';
+import { formatAmount } from '@/shared/lib';
 
 import styles from './home.module.css';
 
 type Props = {
   items: CategoryBudget[];
-};
-
-const formatAmount = (amount: number) => {
-  return `${amount.toLocaleString('ko-KR')}원`;
 };
 
 const formatBudget = (budget: number | null) => {

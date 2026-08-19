@@ -1,0 +1,117 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: rgba(15, 23, 42, 0.4);
+  cursor: pointer;
+}
+
+.backdrop:disabled {
+  cursor: wait;
+}
+
+.dialog {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  max-width: 24rem;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.confirmText {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.error {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-expense);
+}
+
+.cancelButton,
+.dangerButton {
+  padding: 0.75rem 1rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 500;
+  transition:
+    opacity 0.15s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.cancelButton {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.cancelButton:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.dangerButton {
+  background: #b91c1c;
+  color: #fff;
+}
+
+.dangerButton:hover:not(:disabled) {
+  background: #991b1b;
+}
+
+.cancelButton:disabled,
+.dangerButton:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}

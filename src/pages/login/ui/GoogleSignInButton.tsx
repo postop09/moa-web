@@ -1,6 +1,6 @@
 'use client';
 
-import { useSignInWithGoogle } from '../model/useSignInWithGoogle';
+import { useSignInWithGoogle } from '@/features/auth';
 import styles from './login.module.css';
 
 type Props = {

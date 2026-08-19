@@ -2,6 +2,7 @@
 
 import type { Category } from '@/entities/category';
 import { TRANSACTION_TYPE_LABEL, type TransactionType } from '@/shared/model';
+import { formatAmount } from '@/shared/lib';
 
 import styles from '../settings.module.css';
 
@@ -24,7 +25,7 @@ const formatBudget = (budget: number | null) => {
     return '예산 없음';
   }
 
-  return `${budget.toLocaleString('ko-KR')}원`;
+  return formatAmount(budget);
 };
 
 export const CategoryList = ({ categories, onEdit, onDelete }: Props) => {

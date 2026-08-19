@@ -5,6 +5,7 @@ import Link from 'next/link';
 import type { Category } from '@/entities/category';
 import type { Transaction } from '@/entities/transaction';
 import { TRANSACTION_TYPE_LABEL } from '@/shared/model';
+import { formatAmount } from '@/shared/lib';
 
 import type { HistoryTotals } from '../model/useTransactionHistory';
 import styles from './history.module.css';
@@ -15,10 +16,6 @@ type Props = {
   creatorNameById: Record<string, string>;
   totals: HistoryTotals;
   showBalance?: boolean;
-};
-
-const formatAmount = (amount: number) => {
-  return `${amount.toLocaleString('ko-KR')}원`;
 };
 
 const formatDate = (iso: string) => {

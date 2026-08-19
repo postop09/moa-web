@@ -1,13 +1,11 @@
+import { formatAmount } from '@/shared/lib';
+
 import styles from './home.module.css';
 
 type Props = {
   income: number;
   expense: number;
   saving: number;
-};
-
-const formatAmount = (amount: number) => {
-  return `${amount.toLocaleString('ko-KR')}원`;
 };
 
 export const DashboardHeader = ({ income, expense, saving }: Props) => {
