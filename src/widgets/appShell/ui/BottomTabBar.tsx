@@ -26,7 +26,7 @@ export const BottomTabBar = () => {
             aria-label={item.label}
           >
             <Icon className={styles.icon} size={22} strokeWidth={1.75} />
-            <span className={styles.label}>{item.label}</span>
+            <span className={styles.bottomLabel}>{item.label}</span>
           </Link>
         );
       })}

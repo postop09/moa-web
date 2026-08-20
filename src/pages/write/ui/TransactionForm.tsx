@@ -263,13 +263,6 @@ export const TransactionForm = ({
         </p>
       ) : null}
       <div className={styles.buttonGroup}>
-        <button
-          className={styles.primaryButton}
-          type="submit"
-          disabled={disabled}
-        >
-          {isPending ? '저장 중…' : mode.type === 'create' ? '작성' : '저장'}
-        </button>
         {onDelete ? (
           <button
             type="button"
@@ -280,6 +273,13 @@ export const TransactionForm = ({
             삭제
           </button>
         ) : null}
+        <button
+          className={styles.primaryButton}
+          type="submit"
+          disabled={disabled}
+        >
+          {isPending ? '저장 중…' : mode.type === 'create' ? '작성' : '저장'}
+        </button>
       </div>
     </form>
   );
