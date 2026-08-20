@@ -160,63 +160,25 @@ export const TransactionList = ({
             </thead>
             <tbody>
               {transactions.map((transaction) => (
-                <tr key={transaction.id}>
+                <tr key={transaction.id} className={styles.tableRow}>
                   <td>
                     <Link
                       href={`/write/${transaction.id}`}
-                      className={styles.tableLink}
-                    >
-                      {formatDate(transaction.transactionDt)}
-                    </Link>
+                      className={styles.tableRowLink}
+                      aria-label={`${resolveName(transaction)} 수정`}
+                    />
+                    {formatDate(transaction.transactionDt)}
                   </td>
-                  <td>
-                    <Link
-                      href={`/write/${transaction.id}`}
-                      className={styles.tableLink}
-                    >
-                      {TRANSACTION_TYPE_LABEL[transaction.type]}
-                    </Link>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/write/${transaction.id}`}
-                      className={styles.tableLink}
-                    >
-                      {resolveName(transaction)}
-                    </Link>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/write/${transaction.id}`}
-                      className={styles.tableLink}
-                    >
-                      {resolveCategoryName(transaction)}
-                    </Link>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/write/${transaction.id}`}
-                      className={styles.tableLink}
-                    >
-                      {formatDate(transaction.createdDt)}
-                    </Link>
-                  </td>
-                  <td>
-                    <Link
-                      href={`/write/${transaction.id}`}
-                      className={styles.tableLink}
-                    >
-                      {resolveCreatorName(transaction.createdBy)}
-                    </Link>
-                  </td>
-                  <td className={styles.amountCol}>
-                    <Link
-                      href={`/write/${transaction.id}`}
-                      className={`${styles.tableLink} ${amountClass(transaction.type)}`}
-                    >
-                      {sign(transaction.type)}
-                      {formatAmount(transaction.amount)}
-                    </Link>
+                  <td>{TRANSACTION_TYPE_LABEL[transaction.type]}</td>
+                  <td>{resolveName(transaction)}</td>
+                  <td>{resolveCategoryName(transaction)}</td>
+                  <td>{formatDate(transaction.createdDt)}</td>
+                  <td>{resolveCreatorName(transaction.createdBy)}</td>
+                  <td
+                    className={`${styles.amountCol} ${amountClass(transaction.type)}`}
+                  >
+                    {sign(transaction.type)}
+                    {formatAmount(transaction.amount)}
                   </td>
                 </tr>
               ))}

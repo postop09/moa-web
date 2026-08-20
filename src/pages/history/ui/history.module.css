@@ -376,10 +376,15 @@
   background: color-mix(in srgb, var(--color-accent) 6%, transparent);
 }
 
-.tableLink {
-  color: inherit;
-  text-decoration: none;
-  display: block;
+.tableRow {
+  position: relative;
+  cursor: pointer;
+}
+
+.tableRowLink {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 }
 
 .amountCol {
