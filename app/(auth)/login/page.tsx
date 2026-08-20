@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
-import { resolveAuthGate } from '@/features/onboarding/server';
 import { LoginPage } from '@/pages/login';
+import { createServerClient } from '@/shared/api/server';
 import { getWebApplicationJsonLd } from '@/shared/config';
 import { getAuthCompletePath, getSafeNextPath } from '@/shared/lib';
 
@@ -27,9 +27,12 @@ type Props = {
 const LoginRoutePage = async ({ searchParams }: Props) => {
   const { next } = await searchParams;
   const safeNext = getSafeNextPath(next);
-  const gate = await resolveAuthGate();
+  const supabase = await createServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (gate.status !== 'unauthenticated') {
+  if (user) {
     redirect(getAuthCompletePath(safeNext));
   }
 

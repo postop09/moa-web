@@ -1,6 +1,13 @@
+import { NextResponse } from 'next/server';
+
 import { listHouseholdMembersByUserId } from '@/entities/householdMember';
 import { getProfile } from '@/entities/profile';
 import { createServerClient } from '@/shared/api/server';
+import {
+  AUTH_GATE_COOKIE_NAME,
+  AUTH_GATE_COOKIE_OPTIONS,
+  toAuthGateReadyValue,
+} from '@/shared/config';
 
 import {
   tryClearAuthGateCookie,
@@ -58,4 +65,55 @@ export const resolveAuthGate = async (): Promise<AuthGateResult> => {
   await trySetAuthGateReadyCookie(user.id);
 
   return { status: 'ready', userId: user.id };
+};
+
+const getAuthGateRedirectPath = (gate: AuthGateResult, next: string | null) => {
+  if (gate.status === 'unauthenticated') {
+    return next ? `/login?next=${encodeURIComponent(next)}` : '/login';
+  }
+
+  if (gate.status === 'ready') {
+    return next ?? '/';
+  }
+
+  if (gate.status === 'needsProfile') {
+    return next
+      ? `/onboarding/profile?next=${encodeURIComponent(next)}`
+      : '/onboarding/profile';
+  }
+
+  if (next?.startsWith('/invite/')) {
+    return next;
+  }
+
+  return '/onboarding/household';
+};
+
+const applyAuthGateCookie = (response: NextResponse, gate: AuthGateResult) => {
+  if (gate.status === 'ready') {
+    response.cookies.set(
+      AUTH_GATE_COOKIE_NAME,
+      toAuthGateReadyValue(gate.userId),
+      AUTH_GATE_COOKIE_OPTIONS,
+    );
+    return;
+  }
+
+  response.cookies.delete({
+    name: AUTH_GATE_COOKIE_NAME,
+    path: '/',
+  });
+};
+
+export const redirectForAuthGate = async (
+  origin: string,
+  next: string | null,
+) => {
+  const gate = await resolveAuthGate();
+  const redirectPath = getAuthGateRedirectPath(gate, next);
+  const response = NextResponse.redirect(new URL(redirectPath, origin));
+
+  applyAuthGateCookie(response, gate);
+
+  return response;
 };
