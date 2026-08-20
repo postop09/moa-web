@@ -1,16 +1,38 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { AUTH_GATE_COOKIE_NAME } from '@/shared/config';
+import { AUTH_GATE_COOKIE_NAME, getAuthGateReadyUserId } from '@/shared/config';
 
-const isPublicPath = (pathname: string) => {
-  return pathname === '/login' || pathname.startsWith('/invite/');
+const isPassThroughPath = (pathname: string) => {
+  return pathname.startsWith('/invite/') || pathname.startsWith('/auth/');
+};
+
+const isLoginPath = (pathname: string) => {
+  return pathname === '/login';
+};
+
+const isOnboardingPath = (pathname: string) => {
+  return pathname.startsWith('/onboarding/');
+};
+
+const isAppPath = (pathname: string) => {
+  return (
+    !isPassThroughPath(pathname) &&
+    !isLoginPath(pathname) &&
+    !isOnboardingPath(pathname)
+  );
 };
 
 const copyCookies = (from: NextResponse, to: NextResponse) => {
   from.cookies.getAll().forEach(({ name, value }) => {
     to.cookies.set(name, value);
   });
+};
+
+const redirectWithCookies = (supabaseResponse: NextResponse, url: URL) => {
+  const redirectResponse = NextResponse.redirect(url);
+  copyCookies(supabaseResponse, redirectResponse);
+  return redirectResponse;
 };
 
 export const proxy = async (request: NextRequest) => {
@@ -38,14 +60,18 @@ export const proxy = async (request: NextRequest) => {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  const { pathname } = request.nextUrl;
 
   if (!user) {
-    if (!isPublicPath(request.nextUrl.pathname)) {
+    if (isPassThroughPath(pathname)) {
+      return supabaseResponse;
+    }
+
+    if (!isLoginPath(pathname)) {
       const url = request.nextUrl.clone();
       url.pathname = '/login';
       url.search = '';
-      const redirectResponse = NextResponse.redirect(url);
-      copyCookies(supabaseResponse, redirectResponse);
+      const redirectResponse = redirectWithCookies(supabaseResponse, url);
       redirectResponse.cookies.delete({
         name: AUTH_GATE_COOKIE_NAME,
         path: '/',
@@ -57,6 +83,30 @@ export const proxy = async (request: NextRequest) => {
       name: AUTH_GATE_COOKIE_NAME,
       path: '/',
     });
+    return supabaseResponse;
+  }
+
+  const readyUserId = getAuthGateReadyUserId(
+    request.cookies.get(AUTH_GATE_COOKIE_NAME)?.value,
+  );
+  const isReady = readyUserId === user.id;
+
+  if (isReady) {
+    if (isLoginPath(pathname) || isOnboardingPath(pathname)) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/';
+      url.search = '';
+      return redirectWithCookies(supabaseResponse, url);
+    }
+
+    return supabaseResponse;
+  }
+
+  if (isAppPath(pathname)) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/auth/complete';
+    url.search = `?next=${encodeURIComponent(pathname)}`;
+    return redirectWithCookies(supabaseResponse, url);
   }
 
   return supabaseResponse;
@@ -68,6 +118,7 @@ export const config = {
     '/login',
     '/onboarding/:path*',
     '/invite/:path*',
+    '/auth/:path*',
     '/history',
     '/stats',
     '/write',

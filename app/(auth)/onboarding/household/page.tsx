@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 
 import { resolveAuthGate } from '@/features/onboarding/server';
 import { CreateHouseholdPage } from '@/pages/createHousehold';
+import { getAuthCompletePath } from '@/shared/lib';
 
 export const metadata: Metadata = {
   title: '가계부 만들기',
@@ -24,7 +25,7 @@ const CreateHouseholdRoutePage = async () => {
   }
 
   if (gate.status === 'ready') {
-    redirect('/');
+    redirect(getAuthCompletePath());
   }
 
   return <CreateHouseholdPage />;

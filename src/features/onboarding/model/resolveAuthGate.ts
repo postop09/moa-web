@@ -3,7 +3,6 @@ import { getProfile } from '@/entities/profile';
 import { createServerClient } from '@/shared/api/server';
 
 import {
-  getReadyAuthGateUserId,
   tryClearAuthGateCookie,
   trySetAuthGateReadyCookie,
 } from './authGateCookie';
@@ -22,13 +21,7 @@ export type AuthGateResult =
     }
   | { status: 'ready'; userId: string };
 
-type ResolveAuthGateOptions = {
-  allowReadyCookie?: boolean;
-};
-
-export const resolveAuthGate = async (
-  options?: ResolveAuthGateOptions,
-): Promise<AuthGateResult> => {
+export const resolveAuthGate = async (): Promise<AuthGateResult> => {
   const supabase = await createServerClient();
   const {
     data: { user },
@@ -37,14 +30,6 @@ export const resolveAuthGate = async (
   if (!user) {
     await tryClearAuthGateCookie();
     return { status: 'unauthenticated', redirectTo: '/login' };
-  }
-
-  if (options?.allowReadyCookie) {
-    const readyUserId = await getReadyAuthGateUserId();
-
-    if (readyUserId === user.id) {
-      return { status: 'ready', userId: user.id };
-    }
   }
 
   const [profile, memberships] = await Promise.all([
@@ -73,16 +58,4 @@ export const resolveAuthGate = async (
   await trySetAuthGateReadyCookie(user.id);
 
   return { status: 'ready', userId: user.id };
-};
-
-export const resolveAppAuthGate = async () => {
-  const readyUserId = await getReadyAuthGateUserId();
-  const gate = await resolveAuthGate({ allowReadyCookie: true });
-  const shouldPersistReadyCookie =
-    gate.status === 'ready' && readyUserId !== gate.userId;
-
-  return {
-    gate,
-    shouldPersistReadyCookie,
-  };
 };

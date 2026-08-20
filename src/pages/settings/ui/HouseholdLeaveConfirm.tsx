@@ -2,11 +2,10 @@
 
 import { useRouter } from 'next/navigation';
 
-import { useListHouseholds } from '@/features/household';
+import { useCurrentHousehold, useListHouseholds } from '@/features/household';
 import { useLeaveHousehold } from '@/features/householdMember';
+import { redirectIfNoHouseholds } from '@/features/onboarding';
 import { ConfirmDialog } from '@/shared/ui';
-
-import { redirectIfNoHouseholds } from '../model/redirectIfNoHouseholds';
 
 type Props = {
   householdId: string;
@@ -23,15 +22,26 @@ export const HouseholdLeaveConfirm = ({
 }: Props) => {
   const router = useRouter();
   const { mutateAsync, isPending, error } = useLeaveHousehold(householdId);
+  const { householdId: currentHouseholdId, setHouseholdId } =
+    useCurrentHousehold();
   const { refetch } = useListHouseholds();
 
   const handleConfirm = async () => {
     try {
       await mutateAsync(membershipId);
       const result = await refetch();
-      const redirected = await redirectIfNoHouseholds(result.data, router);
+      const remaining = result.data ?? [];
+      const redirected = await redirectIfNoHouseholds(remaining, router);
 
       if (!redirected) {
+        if (currentHouseholdId === householdId) {
+          const nextHousehold = remaining.find(
+            (item) => item.id !== householdId,
+          );
+          if (nextHousehold) {
+            setHouseholdId(nextHousehold.id);
+          }
+        }
         onCancel();
       }
     } catch {

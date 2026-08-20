@@ -6,6 +6,7 @@ import { createHousehold, type ListHouseholdsRes } from '@/entities/household';
 import { createBrowserClient } from '@/shared/api';
 
 import { householdQueryKeys } from '../config/queryKeys';
+import { setCurrentHouseholdId } from './currentHouseholdStore';
 
 export const useCreateHousehold = () => {
   const queryClient = useQueryClient();
@@ -27,6 +28,7 @@ export const useCreateHousehold = () => {
       });
     },
     onSuccess: (household) => {
+      setCurrentHouseholdId(household.id);
       queryClient.setQueryData<ListHouseholdsRes>(
         householdQueryKeys.list(),
         (current) => {

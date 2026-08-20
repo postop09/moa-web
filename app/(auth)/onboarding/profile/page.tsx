@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 
 import { resolveAuthGate } from '@/features/onboarding/server';
 import { CreateProfilePage } from '@/pages/createProfile';
-import { getSafeNextPath } from '@/shared/lib';
+import { getAuthCompletePath, getSafeNextPath } from '@/shared/lib';
 
 export const metadata: Metadata = {
   title: '프로필 설정',
@@ -33,7 +33,7 @@ const CreateProfileRoutePage = async ({ searchParams }: Props) => {
   }
 
   if (gate.status === 'ready') {
-    redirect(safeNext ?? '/');
+    redirect(getAuthCompletePath(safeNext));
   }
 
   return <CreateProfilePage next={safeNext} />;

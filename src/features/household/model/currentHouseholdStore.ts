@@ -15,13 +15,12 @@ const readStoredHouseholdId = () => {
 type CurrentHouseholdState = {
   householdId: string | null;
   hydrated: boolean;
-  hydrate: () => void;
-  setHouseholdId: (id: string) => void;
 };
 
 type CurrentHouseholdActions = {
   hydrate: () => void;
   setHouseholdId: (id: string) => void;
+  clearHouseholdId: () => void;
 };
 
 type CurrentHouseholdStore = CurrentHouseholdState & CurrentHouseholdActions;
@@ -40,5 +39,17 @@ export const useCurrentHouseholdStore = create<CurrentHouseholdStore>(
       localStorage.setItem(CURRENT_HOUSEHOLD_STORAGE_KEY, id);
       set({ householdId: id });
     },
+    clearHouseholdId: () => {
+      localStorage.removeItem(CURRENT_HOUSEHOLD_STORAGE_KEY);
+      set({ householdId: null });
+    },
   }),
 );
+
+export const clearCurrentHouseholdId = () => {
+  useCurrentHouseholdStore.getState().clearHouseholdId();
+};
+
+export const setCurrentHouseholdId = (id: string) => {
+  useCurrentHouseholdStore.getState().setHouseholdId(id);
+};

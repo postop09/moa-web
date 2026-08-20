@@ -4,18 +4,20 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect } from 'react';
 
 import { householdQueryKeys } from '../config/queryKeys';
-import { CURRENT_HOUSEHOLD_STORAGE_KEY } from '../config/storageKeys';
 import { useCurrentHouseholdStore } from './currentHouseholdStore';
 import { useListHouseholds } from './useListHouseholds';
 
 export const useCurrentHousehold = () => {
   const queryClient = useQueryClient();
   const householdsQuery = useListHouseholds();
-  const householdId = useCurrentHouseholdStore((state) => state.householdId);
+  const storedId = useCurrentHouseholdStore((state) => state.householdId);
   const hydrated = useCurrentHouseholdStore((state) => state.hydrated);
   const hydrate = useCurrentHouseholdStore((state) => state.hydrate);
   const persistHouseholdId = useCurrentHouseholdStore(
     (state) => state.setHouseholdId,
+  );
+  const clearHouseholdId = useCurrentHouseholdStore(
+    (state) => state.clearHouseholdId,
   );
 
   useEffect(() => {
@@ -27,31 +29,60 @@ export const useCurrentHousehold = () => {
   }, [hydrate, hydrated]);
 
   const households = householdsQuery.data ?? [];
+  const hasList = householdsQuery.isSuccess;
 
-  const resolvedId = (() => {
-    if (!hydrated || households.length === 0) {
+  const householdId = (() => {
+    if (!hydrated) {
       return null;
     }
 
-    if (householdId && households.some((item) => item.id === householdId)) {
-      return householdId;
+    if (hasList) {
+      if (households.length === 0) {
+        return null;
+      }
+
+      if (storedId && households.some((item) => item.id === storedId)) {
+        return storedId;
+      }
+
+      return households[0]?.id ?? null;
     }
 
-    return households[0]?.id ?? null;
+    return storedId;
   })();
 
   useEffect(() => {
-    if (!hydrated || !resolvedId) {
+    if (!hydrated || !hasList) {
       return;
     }
 
-    if (householdId !== resolvedId) {
-      persistHouseholdId(resolvedId);
+    const list = householdsQuery.data ?? [];
+
+    if (list.length === 0) {
+      if (storedId) {
+        clearHouseholdId();
+      }
       return;
     }
 
-    localStorage.setItem(CURRENT_HOUSEHOLD_STORAGE_KEY, resolvedId);
-  }, [hydrated, householdId, persistHouseholdId, resolvedId]);
+    const nextId =
+      storedId && list.some((item) => item.id === storedId)
+        ? storedId
+        : (list[0]?.id ?? null);
+
+    if (!nextId || storedId === nextId) {
+      return;
+    }
+
+    persistHouseholdId(nextId);
+  }, [
+    clearHouseholdId,
+    hasList,
+    householdsQuery.data,
+    hydrated,
+    persistHouseholdId,
+    storedId,
+  ]);
 
   const setHouseholdId = useCallback(
     (id: string) => {
@@ -76,14 +107,16 @@ export const useCurrentHousehold = () => {
     [persistHouseholdId, queryClient],
   );
 
-  const household = households.find((item) => item.id === resolvedId) ?? null;
+  const household = households.find((item) => item.id === householdId) ?? null;
 
   return {
     households,
     household,
-    householdId: resolvedId,
+    householdId,
     setHouseholdId,
-    isLoading: householdsQuery.isLoading || !hydrated,
+    isLoading: !householdId && (!hydrated || householdsQuery.isLoading),
+    isHouseholdsLoading: !hydrated || householdsQuery.isLoading,
+    isHouseholdsSuccess: hasList,
     error: householdsQuery.error,
   };
 };

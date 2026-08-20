@@ -1,4 +1,4 @@
-import { clearAuthGateReadyCookie } from '@/features/onboarding';
+import { clearAuthGateReadyCookie } from './authGateCookieActions';
 
 type RouterLike = {
   replace: (href: string) => void;

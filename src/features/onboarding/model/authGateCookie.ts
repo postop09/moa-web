@@ -2,26 +2,9 @@ import { cookies } from 'next/headers';
 
 import {
   AUTH_GATE_COOKIE_NAME,
-  getAuthGateReadyUserId,
+  AUTH_GATE_COOKIE_OPTIONS,
   toAuthGateReadyValue,
 } from '@/shared/config';
-
-const cookieOptions = {
-  httpOnly: true,
-  sameSite: 'lax' as const,
-  path: '/',
-  secure: process.env.NODE_ENV === 'production',
-};
-
-export const getAuthGateCookieValue = async () => {
-  const cookieStore = await cookies();
-
-  return cookieStore.get(AUTH_GATE_COOKIE_NAME)?.value;
-};
-
-export const getReadyAuthGateUserId = async () => {
-  return getAuthGateReadyUserId(await getAuthGateCookieValue());
-};
 
 export const setAuthGateReadyCookie = async (userId: string) => {
   const cookieStore = await cookies();
@@ -29,7 +12,7 @@ export const setAuthGateReadyCookie = async (userId: string) => {
   cookieStore.set(
     AUTH_GATE_COOKIE_NAME,
     toAuthGateReadyValue(userId),
-    cookieOptions,
+    AUTH_GATE_COOKIE_OPTIONS,
   );
 };
 

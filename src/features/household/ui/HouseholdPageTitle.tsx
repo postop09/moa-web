@@ -14,15 +14,21 @@ type Props = {
 };
 
 export const HouseholdPageTitle = ({ subtitle }: Props) => {
-  const { households, household, householdId, setHouseholdId, isLoading } =
-    useCurrentHousehold();
+  const {
+    households,
+    household,
+    householdId,
+    setHouseholdId,
+    isHouseholdsLoading,
+  } = useCurrentHousehold();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const listId = useId();
   useDismissable(open, () => setOpen(false), rootRef);
 
-  const label = isLoading ? '가계부' : (household?.name ?? '가계부 없음');
-  const canOpen = !isLoading && households.length > 0;
+  const label =
+    household?.name ?? (isHouseholdsLoading ? '가계부' : '가계부 없음');
+  const canOpen = !isHouseholdsLoading && households.length > 0;
 
   return (
     <div className={styles.wrap} ref={rootRef}>

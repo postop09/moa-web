@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
-import { type ReactNode, Suspense } from 'react';
+import { type ReactNode } from 'react';
 
-import { AuthReadyGate } from '@/features/onboarding/server';
-import { AppPageFallback, AppShell } from '@/widgets/appShell';
+import { AppShell } from '@/widgets/appShell';
 
 export const metadata: Metadata = {
   robots: {
@@ -16,13 +15,7 @@ type Props = {
 };
 
 const AppLayout = ({ children }: Props) => {
-  return (
-    <AppShell>
-      <Suspense fallback={<AppPageFallback />}>
-        <AuthReadyGate>{children}</AuthReadyGate>
-      </Suspense>
-    </AppShell>
-  );
+  return <AppShell>{children}</AppShell>;
 };
 
 export default AppLayout;

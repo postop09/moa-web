@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { resolveAuthGate } from '@/features/onboarding/server';
 import { LoginPage } from '@/pages/login';
 import { getWebApplicationJsonLd } from '@/shared/config';
-import { getSafeNextPath } from '@/shared/lib';
+import { getAuthCompletePath, getSafeNextPath } from '@/shared/lib';
 
 export const metadata: Metadata = {
   title: '로그인',
@@ -30,7 +30,7 @@ const LoginRoutePage = async ({ searchParams }: Props) => {
   const gate = await resolveAuthGate();
 
   if (gate.status !== 'unauthenticated') {
-    redirect(safeNext ?? '/');
+    redirect(getAuthCompletePath(safeNext));
   }
 
   const jsonLd = getWebApplicationJsonLd();

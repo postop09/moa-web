@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
+import { setCurrentHouseholdId } from '@/features/household';
 import {
   useAcceptHouseholdInvite,
   useGetHouseholdInviteByToken,
@@ -39,6 +40,9 @@ export const AcceptInvitePage = ({ token }: Props) => {
   const handleAccept = async () => {
     try {
       await mutateAsync();
+      if (invite?.householdId) {
+        setCurrentHouseholdId(invite.householdId);
+      }
       try {
         await persistAuthGateReadyCookie();
       } catch {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useSignOut } from '@/features/auth';
+import { clearCurrentHouseholdId } from '@/features/household';
 import { clearAuthGateReadyCookie } from '@/features/onboarding';
 import { useGetProfile } from '@/features/profile';
 
@@ -17,6 +18,7 @@ export const AccountSection = () => {
       } catch {
         // proxy에서도 미인증 시 쿠키를 정리함
       }
+      clearCurrentHouseholdId();
       await signOut();
     } catch {
       // mutation error state에 표시
