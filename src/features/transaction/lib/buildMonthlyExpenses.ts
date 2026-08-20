@@ -1,9 +1,17 @@
+import type { Category } from '@/entities/category';
 import type { Transaction } from '@/entities/transaction';
+
+export type MonthlyExpenseCategory = {
+  id: number | null;
+  name: string;
+  amount: number;
+};
 
 export type MonthlyExpense = {
   key: string;
   label: string;
   amount: number;
+  byCategory: MonthlyExpenseCategory[];
 };
 
 const MONTH_LABELS = [
@@ -21,14 +29,44 @@ const MONTH_LABELS = [
   '12월',
 ] as const;
 
+const getCategoryName = (
+  categoryId: number | null,
+  categoryNameById: Map<number, string>,
+) => {
+  if (categoryId === null) {
+    return '미분류';
+  }
+
+  return categoryNameById.get(categoryId) ?? '미분류';
+};
+
+const getCategoryKey = (
+  categoryId: number | null,
+  categoryNameById: Map<number, string>,
+) => {
+  if (categoryId === null || !categoryNameById.has(categoryId)) {
+    return null;
+  }
+
+  return categoryId;
+};
+
 export const buildMonthlyExpenses = (
   transactions: Transaction[],
+  categories: Category[],
   monthCount: number,
   referenceDate = new Date(),
 ): MonthlyExpense[] => {
   const year = referenceDate.getFullYear();
   const month = referenceDate.getMonth();
-  const buckets: MonthlyExpense[] = [];
+  const categoryNameById = new Map(
+    categories.map((category) => [category.id, category.name]),
+  );
+  const buckets: Array<{
+    key: string;
+    label: string;
+    amountByCategory: Map<number | null, number>;
+  }> = [];
 
   for (let offset = monthCount - 1; offset >= 0; offset -= 1) {
     const date = new Date(year, month - offset, 1);
@@ -36,11 +74,11 @@ export const buildMonthlyExpenses = (
     buckets.push({
       key,
       label: MONTH_LABELS[date.getMonth()],
-      amount: 0,
+      amountByCategory: new Map(),
     });
   }
 
-  const amountByKey = new Map(buckets.map((item) => [item.key, 0]));
+  const bucketByKey = new Map(buckets.map((item) => [item.key, item]));
 
   for (const transaction of transactions) {
     if (transaction.type !== 'expense') {
@@ -49,15 +87,35 @@ export const buildMonthlyExpenses = (
 
     const date = new Date(transaction.transactionDt);
     const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-    if (!amountByKey.has(key)) {
+    const bucket = bucketByKey.get(key);
+    if (!bucket) {
       continue;
     }
 
-    amountByKey.set(key, (amountByKey.get(key) ?? 0) + transaction.amount);
+    const categoryKey = getCategoryKey(
+      transaction.categoryId,
+      categoryNameById,
+    );
+    bucket.amountByCategory.set(
+      categoryKey,
+      (bucket.amountByCategory.get(categoryKey) ?? 0) + transaction.amount,
+    );
   }
 
-  return buckets.map((item) => ({
-    ...item,
-    amount: amountByKey.get(item.key) ?? 0,
-  }));
+  return buckets.map((item) => {
+    const byCategory = [...item.amountByCategory.entries()]
+      .map(([id, amount]) => ({
+        id,
+        name: getCategoryName(id, categoryNameById),
+        amount,
+      }))
+      .sort((a, b) => b.amount - a.amount);
+
+    return {
+      key: item.key,
+      label: item.label,
+      amount: byCategory.reduce((sum, category) => sum + category.amount, 0),
+      byCategory,
+    };
+  });
 };

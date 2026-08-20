@@ -104,6 +104,7 @@ export const useHomeDashboard = (
       categories,
       monthlyExpenses: buildMonthlyExpenses(
         allTransactions,
+        categories,
         MONTH_WINDOW,
         selectedMonth,
       ),
