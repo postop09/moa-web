@@ -39,6 +39,7 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
     recentTransactions,
     categories,
     monthlyExpenses,
+    weeklyExpenses,
     assetTrends,
     isLoading,
     error,
@@ -108,7 +109,10 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
         </div>
 
         <div className={styles.column}>
-          <SpendingOverTimeCard items={monthlyExpenses} />
+          <SpendingOverTimeCard
+            weeklyItems={weeklyExpenses}
+            monthlyItems={monthlyExpenses}
+          />
           <CategoryBudgetCard items={categoryBudgets} />
         </div>
       </div>

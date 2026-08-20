@@ -16,5 +16,10 @@ export {
   type MonthlyExpense,
   type MonthlyExpenseCategory,
 } from './lib/buildMonthlyExpenses';
+export {
+  buildWeeklyExpenses,
+  type WeeklyExpense,
+  type WeeklyExpenseCategory,
+} from './lib/buildWeeklyExpenses';
 export { buildAssetTrends, type AssetTrendPoint } from './lib/buildAssetTrends';
 export { getMonthRange, getTrailingMonthsRange } from './lib/monthRange';

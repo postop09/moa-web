@@ -244,9 +244,41 @@
 
 .cardTitleRow {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
+}
+
+.periodToggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 0.125rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.periodToggleButton {
+  appearance: none;
+  margin: 0;
+  padding: 0.25rem 0.625rem;
+  border: 0;
+  border-radius: calc(var(--radius) - 1px);
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.periodToggleButton[aria-pressed='true'] {
+  background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  color: var(--color-accent);
+}
+
+.periodToggleButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
 }
 
 .cardMeta {

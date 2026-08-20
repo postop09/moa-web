@@ -8,6 +8,7 @@ import {
   buildCategoryBudgets,
   buildExpenseByCategory,
   buildMonthlyExpenses,
+  buildWeeklyExpenses,
   getMonthRange,
   getTrailingMonthsRange,
   useListTransactions,
@@ -106,6 +107,11 @@ export const useHomeDashboard = (
         allTransactions,
         categories,
         MONTH_WINDOW,
+        selectedMonth,
+      ),
+      weeklyExpenses: buildWeeklyExpenses(
+        currentMonthTransactions,
+        categories,
         selectedMonth,
       ),
       assetTrends: buildAssetTrends(
