@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono, Instrument_Serif } from 'next/font/google';
 import { type ReactNode } from 'react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/next';
 
 import { Providers } from '@/app/providers';
 import {
@@ -84,7 +86,11 @@ const RootLayout = ({ children }: Props) => {
       className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable}`}
     >
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <SpeedInsights />
+          <Analytics />
+        </Providers>
       </body>
     </html>
   );
