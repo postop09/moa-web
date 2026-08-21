@@ -5,4 +5,5 @@ export type CreateScheduleReq = {
   endAt: string;
   createdBy: string;
   memo?: string | null;
+  categoryId?: number | null;
 };

@@ -7,6 +7,7 @@ import type { Schedule } from '@/entities/schedule';
 import type { Transaction } from '@/entities/transaction';
 import { formatAmount, isSameDay } from '@/shared/lib';
 
+import { resolveScheduleColor } from '../model/resolveScheduleColor';
 import styles from './calendar.module.css';
 
 type Props = {
@@ -16,6 +17,7 @@ type Props = {
   expenses: Transaction[];
   creatorNameById: Record<string, string>;
   authorColorById: Record<string, string>;
+  categoryColorById: Record<number, string>;
   onAddSchedule: () => void;
   onSelectSchedule: (schedule: Schedule) => void;
 };
@@ -55,6 +57,7 @@ export const DayDetailPanel = ({
   expenses,
   creatorNameById,
   authorColorById,
+  categoryColorById,
   onAddSchedule,
   onSelectSchedule,
 }: Props) => {
@@ -88,9 +91,11 @@ export const DayDetailPanel = ({
                   className={styles.scheduleItem}
                   style={
                     {
-                      '--author-color':
-                        authorColorById[schedule.createdBy] ??
-                        'var(--color-accent)',
+                      '--author-color': resolveScheduleColor(
+                        schedule,
+                        categoryColorById,
+                        authorColorById,
+                      ),
                     } as CSSProperties
                   }
                   onClick={() => onSelectSchedule(schedule)}

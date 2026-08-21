@@ -5,4 +5,5 @@ export type UpdateScheduleReq = {
   startAt?: string;
   endAt?: string;
   memo?: string | null;
+  categoryId?: number | null;
 };

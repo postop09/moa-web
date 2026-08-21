@@ -1,9 +1,12 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import { HouseholdPageTitle, useCurrentHousehold } from '@/features/household';
 
 import { useCalendarPage } from './model/useCalendarPage';
 import { CalendarGrid } from './ui/CalendarGrid';
+import { CalendarSidebar } from './ui/CalendarSidebar';
 import { CalendarToolbar } from './ui/CalendarToolbar';
 import { DayDetailPanel } from './ui/DayDetailPanel';
 import { ScheduleDeleteConfirm } from './ui/ScheduleDeleteConfirm';
@@ -15,6 +18,7 @@ type Props = {
 };
 
 const CalendarContent = ({ householdId }: Props) => {
+  const [filterOpen, setFilterOpen] = useState(false);
   const {
     selectedMonth,
     selectedDay,
@@ -24,6 +28,8 @@ const CalendarContent = ({ householdId }: Props) => {
     authorOptions,
     authorColorById,
     creatorNameById,
+    scheduleCategories,
+    categoryColorById,
     expenseTotalByDayKey,
     filteredSchedules,
     selectedSchedules,
@@ -46,19 +52,50 @@ const CalendarContent = ({ householdId }: Props) => {
     closeDeleteSchedule,
   } = useCalendarPage(householdId);
 
+  useEffect(() => {
+    const media = window.matchMedia('(min-width: 48rem)');
+    const handleChange = () => {
+      if (media.matches) {
+        setFilterOpen(false);
+      }
+    };
+
+    media.addEventListener('change', handleChange);
+    return () => {
+      media.removeEventListener('change', handleChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!filterOpen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setFilterOpen(false);
+      }
+    };
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [filterOpen]);
+
   return (
     <>
       <CalendarToolbar
         selectedMonth={selectedMonth}
-        showExpenses={showExpenses}
-        authorFilter={authorFilter}
-        authorOptions={authorOptions}
+        filterOpen={filterOpen}
         onPrevMonth={goPrevMonth}
         onNextMonth={goNextMonth}
         onPrevYear={goPrevYear}
         onNextYear={goNextYear}
-        onToggleExpenses={setShowExpenses}
-        onAuthorFilterChange={setAuthorFilter}
+        onToggleFilter={() => setFilterOpen((current) => !current)}
       />
 
       {isLoading ? <p className={styles.empty}>불러오는 중…</p> : null}
@@ -71,37 +108,54 @@ const CalendarContent = ({ householdId }: Props) => {
         </p>
       ) : null}
 
-      {!isLoading && !error ? (
-        <>
-          <CalendarGrid
-            month={selectedMonth}
-            selectedDay={selectedDay}
-            days={days}
-            showExpenses={showExpenses}
-            expenseTotalByDayKey={expenseTotalByDayKey}
-            schedules={filteredSchedules}
-            authorColorById={authorColorById}
-            onSelectDay={selectDay}
-            onSelectSchedule={openEditSchedule}
-            onPrevMonth={goPrevMonth}
-            onNextMonth={goNextMonth}
-          />
-          <DayDetailPanel
-            selectedDay={selectedDay}
-            showExpenses={showExpenses}
-            schedules={selectedSchedules}
-            expenses={selectedExpenses}
-            creatorNameById={creatorNameById}
-            authorColorById={authorColorById}
-            onAddSchedule={openCreateSchedule}
-            onSelectSchedule={openEditSchedule}
-          />
-        </>
-      ) : null}
+      <div className={styles.body}>
+        <CalendarSidebar
+          householdId={householdId}
+          open={filterOpen}
+          showExpenses={showExpenses}
+          authorFilter={authorFilter}
+          authorOptions={authorOptions}
+          categories={scheduleCategories}
+          onToggleExpenses={setShowExpenses}
+          onAuthorFilterChange={setAuthorFilter}
+          onClose={() => setFilterOpen(false)}
+        />
+
+        {!isLoading && !error ? (
+          <div className={styles.main}>
+            <CalendarGrid
+              month={selectedMonth}
+              selectedDay={selectedDay}
+              days={days}
+              showExpenses={showExpenses}
+              expenseTotalByDayKey={expenseTotalByDayKey}
+              schedules={filteredSchedules}
+              authorColorById={authorColorById}
+              categoryColorById={categoryColorById}
+              onSelectDay={selectDay}
+              onSelectSchedule={openEditSchedule}
+              onPrevMonth={goPrevMonth}
+              onNextMonth={goNextMonth}
+            />
+            <DayDetailPanel
+              selectedDay={selectedDay}
+              showExpenses={showExpenses}
+              schedules={selectedSchedules}
+              expenses={selectedExpenses}
+              creatorNameById={creatorNameById}
+              authorColorById={authorColorById}
+              categoryColorById={categoryColorById}
+              onAddSchedule={openCreateSchedule}
+              onSelectSchedule={openEditSchedule}
+            />
+          </div>
+        ) : null}
+      </div>
 
       {scheduleFormMode ? (
         <ScheduleForm
           householdId={householdId}
+          categories={scheduleCategories}
           mode={scheduleFormMode}
           onCancel={closeScheduleForm}
           onSuccess={closeScheduleForm}

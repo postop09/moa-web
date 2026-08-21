@@ -2,15 +2,19 @@
 
 import { useState, type FormEvent } from 'react';
 
+import type { ScheduleCategory } from '@/entities/scheduleCategory';
 import { useCreateSchedule, useUpdateSchedule } from '@/features/schedule';
 import { Modal } from '@/shared/ui';
 
 import type { ScheduleFormMode } from '../model/useCalendarPage';
 import { toDayKey } from '../model/visibleRange';
+import { ScheduleCategoryForm } from './ScheduleCategoryForm';
+import { ScheduleCategoryPopover } from './ScheduleCategoryPopover';
 import styles from './calendar.module.css';
 
 type Props = {
   householdId: string;
+  categories: ScheduleCategory[];
   mode: ScheduleFormMode;
   onCancel: () => void;
   onSuccess: () => void;
@@ -39,6 +43,7 @@ const addHours = (date: string, time: string, hours: number) => {
 
 export const ScheduleForm = ({
   householdId,
+  categories,
   mode,
   onCancel,
   onSuccess,
@@ -69,6 +74,12 @@ export const ScheduleForm = ({
   const [memo, setMemo] = useState(
     mode.type === 'edit' ? (mode.schedule.memo ?? '') : '',
   );
+  const [categoryId, setCategoryId] = useState(
+    mode.type === 'edit' && mode.schedule.categoryId !== null
+      ? String(mode.schedule.categoryId)
+      : '',
+  );
+  const [creatingCategory, setCreatingCategory] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const isPending = createSchedule.isPending || updateSchedule.isPending;
@@ -122,6 +133,7 @@ export const ScheduleForm = ({
           startAt,
           endAt,
           memo: memo.trim() || null,
+          categoryId: categoryId === '' ? null : Number(categoryId),
         });
       } else {
         await updateSchedule.mutateAsync({
@@ -130,6 +142,7 @@ export const ScheduleForm = ({
           startAt,
           endAt,
           memo: memo.trim() || null,
+          categoryId: categoryId === '' ? null : Number(categoryId),
         });
       }
 
@@ -140,136 +153,166 @@ export const ScheduleForm = ({
   };
 
   return (
-    <Modal
-      title={mode.type === 'create' ? '일정 추가' : '일정 수정'}
-      onClose={onCancel}
-      closeDisabled={isPending}
-    >
-      <form className={styles.modalBody} onSubmit={handleSubmit}>
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="scheduleTitle">
-            제목
-          </label>
-          <input
-            id="scheduleTitle"
-            className={styles.input}
-            type="text"
-            maxLength={80}
-            required
-            autoFocus
-            value={title}
-            disabled={isPending}
-            onChange={(event) => setTitle(event.target.value)}
-          />
-        </div>
-
-        <div className={styles.rangeGroup}>
-          <span className={styles.label}>시작</span>
-          <div className={styles.timeRow}>
+    <>
+      <Modal
+        title={mode.type === 'create' ? '일정 추가' : '일정 수정'}
+        onClose={onCancel}
+        closeDisabled={isPending || creatingCategory}
+      >
+        <form className={styles.modalBody} onSubmit={handleSubmit}>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="scheduleTitle">
+              제목
+            </label>
             <input
-              id="scheduleStartDate"
+              id="scheduleTitle"
               className={styles.input}
-              type="date"
+              type="text"
+              maxLength={80}
               required
-              aria-label="시작 날짜"
-              value={startDate}
+              autoFocus
+              value={title}
               disabled={isPending}
-              onChange={(event) => handleStartDateChange(event.target.value)}
-            />
-            <input
-              id="scheduleStartTime"
-              className={styles.input}
-              type="time"
-              required
-              aria-label="시작 시간"
-              value={startTime}
-              disabled={isPending}
-              onChange={(event) => handleStartTimeChange(event.target.value)}
+              onChange={(event) => setTitle(event.target.value)}
             />
           </div>
-        </div>
 
-        <div className={styles.rangeGroup}>
-          <span className={styles.label}>종료</span>
-          <div className={styles.timeRow}>
-            <input
-              id="scheduleEndDate"
-              className={styles.input}
-              type="date"
-              required
-              aria-label="종료 날짜"
-              value={endDate}
+          <div className={styles.rangeGroup}>
+            <span className={styles.label}>시작</span>
+            <div className={styles.timeRow}>
+              <input
+                id="scheduleStartDate"
+                className={styles.input}
+                type="date"
+                required
+                aria-label="시작 날짜"
+                value={startDate}
+                disabled={isPending}
+                onChange={(event) => handleStartDateChange(event.target.value)}
+              />
+              <input
+                id="scheduleStartTime"
+                className={styles.input}
+                type="time"
+                required
+                aria-label="시작 시간"
+                value={startTime}
+                disabled={isPending}
+                onChange={(event) => handleStartTimeChange(event.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className={styles.rangeGroup}>
+            <span className={styles.label}>종료</span>
+            <div className={styles.timeRow}>
+              <input
+                id="scheduleEndDate"
+                className={styles.input}
+                type="date"
+                required
+                aria-label="종료 날짜"
+                value={endDate}
+                disabled={isPending}
+                onChange={(event) => setEndDate(event.target.value)}
+              />
+              <input
+                id="scheduleEndTime"
+                className={styles.input}
+                type="time"
+                required
+                aria-label="종료 시간"
+                value={endTime}
+                disabled={isPending}
+                onChange={(event) => setEndTime(event.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className={styles.field}>
+            <span className={styles.label} id="scheduleCategoryLabel">
+              카테고리 (선택)
+            </span>
+            <ScheduleCategoryPopover
+              categories={categories}
+              value={categoryId}
               disabled={isPending}
-              onChange={(event) => setEndDate(event.target.value)}
-            />
-            <input
-              id="scheduleEndTime"
-              className={styles.input}
-              type="time"
-              required
-              aria-label="종료 시간"
-              value={endTime}
-              disabled={isPending}
-              onChange={(event) => setEndTime(event.target.value)}
+              onChange={setCategoryId}
+              onCreate={() => setCreatingCategory(true)}
             />
           </div>
-        </div>
 
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="scheduleMemo">
-            메모 (선택)
-          </label>
-          <input
-            id="scheduleMemo"
-            className={styles.input}
-            type="text"
-            maxLength={200}
-            value={memo}
-            disabled={isPending}
-            onChange={(event) => setMemo(event.target.value)}
-          />
-        </div>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="scheduleMemo">
+              메모 (선택)
+            </label>
+            <input
+              id="scheduleMemo"
+              className={styles.input}
+              type="text"
+              maxLength={200}
+              value={memo}
+              disabled={isPending}
+              onChange={(event) => setMemo(event.target.value)}
+            />
+          </div>
 
-        {validationError ? (
-          <p className={styles.error}>{validationError}</p>
-        ) : null}
+          {validationError ? (
+            <p className={styles.error}>{validationError}</p>
+          ) : null}
 
-        {error ? (
-          <p className={styles.error}>
-            {error instanceof Error
-              ? error.message
-              : '일정 저장에 실패했습니다.'}
-          </p>
-        ) : null}
+          {error ? (
+            <p className={styles.error}>
+              {error instanceof Error
+                ? error.message
+                : '일정 저장에 실패했습니다.'}
+            </p>
+          ) : null}
 
-        <div className={styles.modalActions}>
-          {onDelete ? (
+          <div className={styles.modalActions}>
+            {onDelete ? (
+              <button
+                type="button"
+                className={styles.dangerButton}
+                onClick={onDelete}
+                disabled={isPending}
+              >
+                삭제
+              </button>
+            ) : null}
             <button
               type="button"
-              className={styles.dangerButton}
-              onClick={onDelete}
+              className={styles.secondaryButton}
+              onClick={onCancel}
               disabled={isPending}
             >
-              삭제
+              취소
             </button>
-          ) : null}
-          <button
-            type="button"
-            className={styles.secondaryButton}
-            onClick={onCancel}
-            disabled={isPending}
-          >
-            취소
-          </button>
-          <button
-            className={styles.primaryButton}
-            type="submit"
-            disabled={isPending}
-          >
-            {isPending ? '저장 중…' : mode.type === 'create' ? '추가' : '저장'}
-          </button>
-        </div>
-      </form>
-    </Modal>
+            <button
+              className={styles.primaryButton}
+              type="submit"
+              disabled={isPending}
+            >
+              {isPending
+                ? '저장 중…'
+                : mode.type === 'create'
+                  ? '추가'
+                  : '저장'}
+            </button>
+          </div>
+        </form>
+      </Modal>
+      {creatingCategory ? (
+        <ScheduleCategoryForm
+          householdId={householdId}
+          mode={{ type: 'create' }}
+          onCancel={() => setCreatingCategory(false)}
+          onSuccess={(category) => {
+            setCategoryId(String(category.id));
+            setCreatingCategory(false);
+          }}
+        />
+      ) : null}
+    </>
   );
 };

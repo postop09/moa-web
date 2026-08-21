@@ -5,23 +5,19 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  SlidersHorizontal,
 } from 'lucide-react';
-import type { CSSProperties } from 'react';
 
-import type { AuthorFilter, AuthorOption } from '../model/useCalendarPage';
 import styles from './calendar.module.css';
 
 type Props = {
   selectedMonth: Date;
-  showExpenses: boolean;
-  authorFilter: AuthorFilter;
-  authorOptions: AuthorOption[];
+  filterOpen: boolean;
   onPrevMonth: () => void;
   onNextMonth: () => void;
   onPrevYear: () => void;
   onNextYear: () => void;
-  onToggleExpenses: (value: boolean) => void;
-  onAuthorFilterChange: (value: AuthorFilter) => void;
+  onToggleFilter: () => void;
 };
 
 const formatMonthLabel = (date: Date) => {
@@ -30,18 +26,24 @@ const formatMonthLabel = (date: Date) => {
 
 export const CalendarToolbar = ({
   selectedMonth,
-  showExpenses,
-  authorFilter,
-  authorOptions,
+  filterOpen,
   onPrevMonth,
   onNextMonth,
   onPrevYear,
   onNextYear,
-  onToggleExpenses,
-  onAuthorFilterChange,
+  onToggleFilter,
 }: Props) => {
   return (
     <div className={styles.toolbar}>
+      <button
+        type="button"
+        className={styles.filterButton}
+        aria-expanded={filterOpen}
+        aria-controls="calendar-sidebar"
+        onClick={onToggleFilter}
+      >
+        <SlidersHorizontal size={16} aria-hidden />
+      </button>
       <div className={styles.monthNavigator}>
         <button
           type="button"
@@ -78,47 +80,6 @@ export const CalendarToolbar = ({
         >
           <ChevronsRight size={18} aria-hidden />
         </button>
-      </div>
-
-      <label className={styles.toggleRow}>
-        <span className={styles.toggleLabel}>지출 표시</span>
-        <input
-          className={styles.visuallyHidden}
-          type="checkbox"
-          role="switch"
-          checked={showExpenses}
-          aria-checked={showExpenses}
-          onChange={(event) => onToggleExpenses(event.target.checked)}
-        />
-        <span className={styles.switchTrack} aria-hidden>
-          <span className={styles.switchThumb} />
-        </span>
-      </label>
-
-      <div className={styles.authorGroup} role="group" aria-label="작성자 필터">
-        <button
-          type="button"
-          className={`${styles.authorChip} ${authorFilter === 'all' ? styles.authorChipActive : ''}`}
-          onClick={() => onAuthorFilterChange('all')}
-        >
-          전체
-        </button>
-        {authorOptions.map((option) => (
-          <button
-            key={option.id}
-            type="button"
-            className={`${styles.authorChip} ${authorFilter === option.id ? styles.authorChipActive : ''}`}
-            style={{ '--author-color': option.color } as CSSProperties}
-            onClick={() => onAuthorFilterChange(option.id)}
-          >
-            <span
-              className={styles.authorDot}
-              style={{ background: option.color }}
-              aria-hidden
-            />
-            {option.label}
-          </button>
-        ))}
       </div>
     </div>
   );

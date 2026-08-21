@@ -12,6 +12,7 @@ type Props = {
   onClose: () => void;
   children: ReactNode;
   closeDisabled?: boolean;
+  elevated?: boolean;
 };
 
 export const Modal = ({
@@ -19,6 +20,7 @@ export const Modal = ({
   onClose,
   children,
   closeDisabled = false,
+  elevated = false,
 }: Props) => {
   const titleId = useId();
   const mounted = useSyncExternalStore(
@@ -54,7 +56,7 @@ export const Modal = ({
   }
 
   return createPortal(
-    <div className={styles.root}>
+    <div className={`${styles.root} ${elevated ? styles.rootElevated : ''}`}>
       <button
         type="button"
         className={styles.backdrop}

@@ -6,6 +6,7 @@ import type { Schedule } from '@/entities/schedule';
 import { useListHouseholdMembers } from '@/features/householdMember';
 import { useGetProfile, useListProfilesByIds } from '@/features/profile';
 import { useListSchedules } from '@/features/schedule';
+import { useListScheduleCategories } from '@/features/scheduleCategory';
 import { useListTransactions } from '@/features/transaction';
 import {
   isSameDay,
@@ -77,6 +78,7 @@ export const useCalendarPage = (householdId: string | null) => {
   );
   const membersQuery = useListHouseholdMembers(householdId);
   const profileQuery = useGetProfile();
+  const categoriesQuery = useListScheduleCategories(householdId);
 
   const memberIds = useMemo(
     () => (membersQuery.data ?? []).map((member) => member.userId),
@@ -99,6 +101,19 @@ export const useCalendarPage = (householdId: string | null) => {
     });
     return map;
   }, [membersQuery.data]);
+
+  const scheduleCategories = useMemo(
+    () => categoriesQuery.data ?? [],
+    [categoriesQuery.data],
+  );
+
+  const categoryColorById = useMemo(() => {
+    const map: Record<number, string> = {};
+    for (const category of scheduleCategories) {
+      map[category.id] = category.color;
+    }
+    return map;
+  }, [scheduleCategories]);
 
   const authorOptions = useMemo<AuthorOption[]>(() => {
     const currentUserId = profileQuery.data?.id;
@@ -234,10 +249,14 @@ export const useCalendarPage = (householdId: string | null) => {
   const isLoading =
     transactionsQuery.isLoading ||
     schedulesQuery.isLoading ||
-    membersQuery.isLoading;
+    membersQuery.isLoading ||
+    categoriesQuery.isLoading;
 
   const error =
-    transactionsQuery.error ?? schedulesQuery.error ?? membersQuery.error;
+    transactionsQuery.error ??
+    schedulesQuery.error ??
+    membersQuery.error ??
+    categoriesQuery.error;
 
   return {
     selectedMonth,
@@ -248,6 +267,8 @@ export const useCalendarPage = (householdId: string | null) => {
     authorOptions,
     authorColorById,
     creatorNameById,
+    scheduleCategories,
+    categoryColorById,
     expenseTotalByDayKey,
     filteredSchedules,
     selectedSchedules,

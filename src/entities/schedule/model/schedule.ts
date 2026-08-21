@@ -5,6 +5,7 @@ export type Schedule = {
   memo: string | null;
   startAt: string;
   endAt: string;
+  categoryId: number | null;
   createdBy: string;
   createdDt: string;
   updatedDt: string;

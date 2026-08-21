@@ -7,6 +7,7 @@ import type { Schedule } from '@/entities/schedule';
 import { isSameDay, isSameMonth } from '@/shared/lib';
 
 import { buildEventLanes } from '../model/buildEventLanes';
+import { resolveScheduleColor } from '../model/resolveScheduleColor';
 import { useCalendarSwipe } from '../model/useCalendarSwipe';
 import { parseDayKey, toDayKey, WEEKDAY_LABELS } from '../model/visibleRange';
 import styles from './calendar.module.css';
@@ -19,6 +20,7 @@ type Props = {
   expenseTotalByDayKey: Map<string, number>;
   schedules: Schedule[];
   authorColorById: Record<string, string>;
+  categoryColorById: Record<number, string>;
   onSelectDay: (date: Date) => void;
   onSelectSchedule: (schedule: Schedule) => void;
   onPrevMonth: () => void;
@@ -42,6 +44,7 @@ export const CalendarGrid = ({
   expenseTotalByDayKey,
   schedules,
   authorColorById,
+  categoryColorById,
   onSelectDay,
   onSelectSchedule,
   onPrevMonth,
@@ -193,9 +196,11 @@ export const CalendarGrid = ({
                             style={
                               {
                                 gridColumn: `${segment.startCol + 1} / ${segment.endCol + 2}`,
-                                '--author-color':
-                                  authorColorById[segment.schedule.createdBy] ??
-                                  'var(--color-accent)',
+                                '--author-color': resolveScheduleColor(
+                                  segment.schedule,
+                                  categoryColorById,
+                                  authorColorById,
+                                ),
                               } as CSSProperties
                             }
                             onClick={(event) =>
