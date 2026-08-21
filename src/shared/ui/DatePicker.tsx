@@ -9,14 +9,17 @@ import 'react-day-picker/style.css';
 
 import { useDismissable } from '@/shared/lib';
 
-import styles from './write.module.css';
+import styles from './datePicker.module.css';
 
 type Props = {
   id?: string;
   value: string;
   disabled?: boolean;
   required?: boolean;
+  open?: boolean;
+  ariaLabel?: string;
   onChange: (value: string) => void;
+  onOpenChange?: (open: boolean) => void;
 };
 
 const toDate = (value: string) => {
@@ -57,40 +60,54 @@ export const DatePicker = ({
   value,
   disabled = false,
   required = false,
+  open,
+  ariaLabel,
   onChange,
+  onOpenChange,
 }: Props) => {
-  const [open, setOpen] = useState(false);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const dialogId = useId();
   const selected = toDate(value);
-  useDismissable(open, () => setOpen(false), rootRef);
+  const isOpen = open ?? uncontrolledOpen;
+
+  const setIsOpen = (next: boolean) => {
+    onOpenChange?.(next);
+    if (open === undefined) {
+      setUncontrolledOpen(next);
+    }
+  };
+
+  useDismissable(isOpen, () => setIsOpen(false), rootRef);
 
   const handleSelect = (date: Date) => {
     onChange(toValue(date));
-    setOpen(false);
+    setIsOpen(false);
   };
 
   const handleToday = () => {
     onChange(toValue(new Date()));
-    setOpen(false);
+    setIsOpen(false);
   };
 
   return (
-    <div className={styles.popoverField} ref={rootRef}>
+    <div
+      className={`${styles.field} ${isOpen ? styles.fieldOpen : ''}`}
+      ref={rootRef}
+    >
       <button
         type="button"
         id={id}
-        className={styles.popoverTrigger}
-        aria-expanded={open}
+        className={styles.trigger}
+        aria-label={ariaLabel}
+        aria-expanded={isOpen}
         aria-controls={dialogId}
         aria-haspopup="dialog"
         disabled={disabled}
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={() => setIsOpen(!isOpen)}
       >
-        <span className={styles.popoverTriggerLabel}>
-          {formatDateLabel(value)}
-        </span>
-        <Calendar className={styles.popoverChevron} size={18} aria-hidden />
+        <span className={styles.triggerLabel}>{formatDateLabel(value)}</span>
+        <Calendar className={styles.triggerIcon} size={18} aria-hidden />
       </button>
       <input
         className={styles.visuallyHidden}
@@ -101,9 +118,9 @@ export const DatePicker = ({
         readOnly
         aria-hidden
       />
-      {open ? (
+      {isOpen ? (
         <div
-          className={`${styles.popover} ${styles.datePopover}`}
+          className={styles.panel}
           id={dialogId}
           role="dialog"
           aria-label="날짜 선택"
@@ -120,7 +137,7 @@ export const DatePicker = ({
             className={styles.datePicker}
             formatters={{ formatCaption }}
           />
-          <div className={styles.datePickerFooter}>
+          <div className={styles.footer}>
             <button
               type="button"
               className={styles.textButton}

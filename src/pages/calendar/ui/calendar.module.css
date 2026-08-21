@@ -180,13 +180,6 @@
   color: var(--author-color, var(--color-accent));
 }
 
-.authorDot {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 999px;
-  flex-shrink: 0;
-}
-
 .body {
   display: flex;
   align-items: flex-start;
@@ -781,6 +774,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-3);
+  align-items: start;
 }
 
 .rangeGroup {

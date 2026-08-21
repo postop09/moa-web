@@ -9,9 +9,9 @@ import {
   useUpdateTransaction,
 } from '@/features/transaction';
 import { TRANSACTION_TYPE_LABEL, type TransactionType } from '@/shared/model';
+import { DatePicker } from '@/shared/ui';
 
 import { CategoryPopover } from './CategoryPopover';
-import { DatePicker } from './DatePicker';
 import styles from './write.module.css';
 
 type Mode = { type: 'create' } | { type: 'edit'; transaction: Transaction };

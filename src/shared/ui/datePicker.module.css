@@ -1,0 +1,170 @@
+.field {
+  display: flex;
+  min-width: 0;
+  width: 100%;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.fieldOpen {
+  grid-column: 1 / -1;
+}
+
+.trigger {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 0.75rem 0.875rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.triggerLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.triggerIcon {
+  flex-shrink: 0;
+  color: var(--color-muted);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+}
+
+.datePicker:global(.rdp-root) {
+  --rdp-accent-color: var(--color-accent);
+  --rdp-accent-background-color: color-mix(
+    in srgb,
+    var(--color-accent) 10%,
+    transparent
+  );
+  --rdp-day-height: 2.25rem;
+  --rdp-day-width: 2.25rem;
+  --rdp-day_button-height: 2.25rem;
+  --rdp-day_button-width: 2.25rem;
+  --rdp-day_button-border-radius: var(--radius);
+  --rdp-selected-border: 2px solid var(--color-accent);
+  --rdp-today-color: var(--color-accent);
+  --rdp-outside-opacity: 0.4;
+  --rdp-nav_button-height: 2.25rem;
+  --rdp-nav_button-width: 2.25rem;
+  --rdp-nav-height: 2.25rem;
+  width: 100%;
+  font: inherit;
+}
+
+.datePicker :global(.rdp-months) {
+  max-width: none;
+  width: 100%;
+}
+
+.datePicker :global(.rdp-month),
+.datePicker :global(.rdp-month_grid) {
+  width: 100%;
+}
+
+.datePicker :global(.rdp-day) {
+  width: auto;
+}
+
+.datePicker :global(.rdp-day_button) {
+  margin-inline: auto;
+}
+
+.datePicker :global(.rdp-month_caption),
+.datePicker :global(.rdp-caption_label) {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.datePicker :global(.rdp-button_previous),
+.datePicker :global(.rdp-button_next) {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.datePicker :global(.rdp-weekday) {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-muted);
+  opacity: 1;
+}
+
+.datePicker :global(.rdp-day_button:hover) {
+  background: var(--color-surface);
+}
+
+.datePicker :global(.rdp-selected) {
+  font-size: inherit;
+  font-weight: 600;
+}
+
+.datePicker :global(.rdp-selected .rdp-day_button) {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.datePicker :global(.rdp-selected .rdp-day_button:hover) {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.textButton {
+  padding: 0.25rem 0.375rem;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+.textButton:hover:not(:disabled) {
+  color: var(--color-accent);
+}

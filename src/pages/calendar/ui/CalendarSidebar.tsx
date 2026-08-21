@@ -94,11 +94,6 @@ export const CalendarSidebar = ({
                 style={{ '--author-color': option.color } as CSSProperties}
                 onClick={() => onAuthorFilterChange(option.id)}
               >
-                <span
-                  className={styles.authorDot}
-                  style={{ background: option.color }}
-                  aria-hidden
-                />
                 {option.label}
               </button>
             ))}

@@ -4,7 +4,7 @@ import { useState, type FormEvent } from 'react';
 
 import type { ScheduleCategory } from '@/entities/scheduleCategory';
 import { useCreateSchedule, useUpdateSchedule } from '@/features/schedule';
-import { Modal } from '@/shared/ui';
+import { DatePicker, Modal, TimePicker } from '@/shared/ui';
 
 import type { ScheduleFormMode } from '../model/useCalendarPage';
 import { toDayKey } from '../model/visibleRange';
@@ -20,6 +20,8 @@ type Props = {
   onSuccess: () => void;
   onDelete?: () => void;
 };
+
+type OpenPicker = 'startDate' | 'startTime' | 'endDate' | 'endTime';
 
 const padTime = (value: number) => String(value).padStart(2, '0');
 
@@ -81,6 +83,7 @@ export const ScheduleForm = ({
   );
   const [creatingCategory, setCreatingCategory] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [openPicker, setOpenPicker] = useState<OpenPicker | null>(null);
 
   const isPending = createSchedule.isPending || updateSchedule.isPending;
   const error = createSchedule.error ?? updateSchedule.error;
@@ -180,25 +183,29 @@ export const ScheduleForm = ({
           <div className={styles.rangeGroup}>
             <span className={styles.label}>시작</span>
             <div className={styles.timeRow}>
-              <input
+              <DatePicker
                 id="scheduleStartDate"
-                className={styles.input}
-                type="date"
                 required
-                aria-label="시작 날짜"
+                ariaLabel="시작 날짜"
                 value={startDate}
                 disabled={isPending}
-                onChange={(event) => handleStartDateChange(event.target.value)}
+                open={openPicker === 'startDate'}
+                onOpenChange={(next) =>
+                  setOpenPicker(next ? 'startDate' : null)
+                }
+                onChange={handleStartDateChange}
               />
-              <input
+              <TimePicker
                 id="scheduleStartTime"
-                className={styles.input}
-                type="time"
                 required
-                aria-label="시작 시간"
+                ariaLabel="시작 시간"
                 value={startTime}
                 disabled={isPending}
-                onChange={(event) => handleStartTimeChange(event.target.value)}
+                open={openPicker === 'startTime'}
+                onOpenChange={(next) =>
+                  setOpenPicker(next ? 'startTime' : null)
+                }
+                onChange={handleStartTimeChange}
               />
             </div>
           </div>
@@ -206,25 +213,25 @@ export const ScheduleForm = ({
           <div className={styles.rangeGroup}>
             <span className={styles.label}>종료</span>
             <div className={styles.timeRow}>
-              <input
+              <DatePicker
                 id="scheduleEndDate"
-                className={styles.input}
-                type="date"
                 required
-                aria-label="종료 날짜"
+                ariaLabel="종료 날짜"
                 value={endDate}
                 disabled={isPending}
-                onChange={(event) => setEndDate(event.target.value)}
+                open={openPicker === 'endDate'}
+                onOpenChange={(next) => setOpenPicker(next ? 'endDate' : null)}
+                onChange={setEndDate}
               />
-              <input
+              <TimePicker
                 id="scheduleEndTime"
-                className={styles.input}
-                type="time"
                 required
-                aria-label="종료 시간"
+                ariaLabel="종료 시간"
                 value={endTime}
                 disabled={isPending}
-                onChange={(event) => setEndTime(event.target.value)}
+                open={openPicker === 'endTime'}
+                onOpenChange={(next) => setOpenPicker(next ? 'endTime' : null)}
+                onChange={setEndTime}
               />
             </div>
           </div>
