@@ -19,7 +19,7 @@ const robots = (): MetadataRoute.Robots => {
   return {
     rules: {
       userAgent: '*',
-      allow: '/login',
+      allow: ['/login', '/welcome'],
       disallow: [
         '/history',
         '/calendar',

@@ -56,7 +56,7 @@ export const getWebApplicationJsonLd = () => {
     applicationCategory: 'FinanceApplication',
     operatingSystem: 'Web',
     description,
-    url: `${siteUrl}/login`,
+    url: `${siteUrl}/welcome`,
     inLanguage: 'ko',
     image: `${siteUrl}${ogImage.url}`,
     offers: {

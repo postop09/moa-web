@@ -11,6 +11,10 @@ const isLoginPath = (pathname: string) => {
   return pathname === '/login';
 };
 
+const isWelcomePath = (pathname: string) => {
+  return pathname === '/welcome';
+};
+
 const isOnboardingPath = (pathname: string) => {
   return pathname.startsWith('/onboarding/');
 };
@@ -19,6 +23,7 @@ const isAppPath = (pathname: string) => {
   return (
     !isPassThroughPath(pathname) &&
     !isLoginPath(pathname) &&
+    !isWelcomePath(pathname) &&
     !isOnboardingPath(pathname)
   );
 };
@@ -67,7 +72,7 @@ export const proxy = async (request: NextRequest) => {
       return supabaseResponse;
     }
 
-    if (!isLoginPath(pathname)) {
+    if (!isLoginPath(pathname) && !isWelcomePath(pathname)) {
       const url = request.nextUrl.clone();
       url.pathname = '/login';
       url.search = '';
@@ -116,6 +121,7 @@ export const config = {
   matcher: [
     '/',
     '/login',
+    '/welcome',
     '/onboarding/:path*',
     '/invite/:path*',
     '/auth/:path*',
