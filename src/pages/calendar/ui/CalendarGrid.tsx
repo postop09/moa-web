@@ -1,10 +1,12 @@
 'use client';
 
-import { useRef, type PointerEvent as ReactPointerEvent } from 'react';
+import { useMemo, useRef, type PointerEvent as ReactPointerEvent } from 'react';
+import type { CSSProperties } from 'react';
 
 import type { Schedule } from '@/entities/schedule';
 import { isSameDay, isSameMonth } from '@/shared/lib';
 
+import { buildEventLanes } from '../model/buildEventLanes';
 import { useCalendarSwipe } from '../model/useCalendarSwipe';
 import { parseDayKey, toDayKey, WEEKDAY_LABELS } from '../model/visibleRange';
 import styles from './calendar.module.css';
@@ -15,16 +17,15 @@ type Props = {
   days: Date[];
   showExpenses: boolean;
   expenseTotalByDayKey: Map<string, number>;
-  schedulesByDayKey: Map<string, Schedule[]>;
+  schedules: Schedule[];
   authorColorById: Record<string, string>;
   onSelectDay: (date: Date) => void;
+  onSelectSchedule: (schedule: Schedule) => void;
   onPrevMonth: () => void;
   onNextMonth: () => void;
-  onPrevYear: () => void;
-  onNextYear: () => void;
 };
 
-const MAX_DOTS = 3;
+const DAYS_PER_WEEK = 7;
 
 const formatCompactAmount = (amount: number) => {
   if (amount >= 100_000) {
@@ -39,22 +40,23 @@ export const CalendarGrid = ({
   days,
   showExpenses,
   expenseTotalByDayKey,
-  schedulesByDayKey,
+  schedules,
   authorColorById,
   onSelectDay,
+  onSelectSchedule,
   onPrevMonth,
   onNextMonth,
-  onPrevYear,
-  onNextYear,
 }: Props) => {
   const today = new Date();
   const pendingDayRef = useRef<string | null>(null);
   const { swipeHandlers, hasSwiped } = useCalendarSwipe({
     onSwipeLeft: onNextMonth,
     onSwipeRight: onPrevMonth,
-    onSwipeUp: onNextYear,
-    onSwipeDown: onPrevYear,
   });
+  const weekLanes = useMemo(
+    () => buildEventLanes(days, schedules),
+    [days, schedules],
+  );
 
   const handlePointerDown = (event: ReactPointerEvent<HTMLElement>) => {
     const dayEl = (event.target as HTMLElement).closest('[data-day]');
@@ -90,6 +92,17 @@ export const CalendarGrid = ({
     onSelectDay(date);
   };
 
+  const handleSelectSchedule = (
+    event: { stopPropagation: () => void },
+    schedule: Schedule,
+  ) => {
+    event.stopPropagation();
+    if (hasSwiped()) {
+      return;
+    }
+    onSelectSchedule(schedule);
+  };
+
   return (
     <div
       className={styles.gridWrap}
@@ -106,58 +119,99 @@ export const CalendarGrid = ({
         ))}
       </div>
       <div className={styles.grid} role="grid" aria-label="달력">
-        {days.map((date) => {
-          const key = toDayKey(date);
-          const inMonth = isSameMonth(date, month);
-          const isToday = isSameDay(date, today);
-          const isSelected = isSameDay(date, selectedDay);
-          const expenseTotal = expenseTotalByDayKey.get(key) ?? 0;
-          const schedules = schedulesByDayKey.get(key) ?? [];
-          const dots = schedules
-            .map((schedule) => authorColorById[schedule.createdBy])
-            .filter(
-              (color, index, list) => color && list.indexOf(color) === index,
-            )
-            .slice(0, MAX_DOTS);
-
-          const className = [
-            styles.dayCell,
-            inMonth ? '' : styles.dayCellMuted,
-            isToday ? styles.dayCellToday : '',
-            isSelected ? styles.dayCellSelected : '',
-          ]
-            .filter(Boolean)
-            .join(' ');
+        {weekLanes.map((week, weekIndex) => {
+          const weekDays = days.slice(
+            weekIndex * DAYS_PER_WEEK,
+            weekIndex * DAYS_PER_WEEK + DAYS_PER_WEEK,
+          );
+          const usedLanes = week.segments.reduce(
+            (max, segment) => Math.max(max, segment.lane + 1),
+            0,
+          );
 
           return (
-            <button
-              key={key}
-              type="button"
-              role="gridcell"
-              className={className}
-              aria-selected={isSelected}
-              aria-current={isToday ? 'date' : undefined}
-              data-day={key}
-              onClick={() => handleSelectDay(date)}
-            >
-              <span className={styles.dayNumber}>{date.getDate()}</span>
-              {showExpenses && expenseTotal > 0 ? (
-                <span className={styles.dayExpense}>
-                  {formatCompactAmount(expenseTotal)}
-                </span>
-              ) : null}
-              {dots.length > 0 ? (
-                <span className={styles.dayDots}>
-                  {dots.map((color) => (
-                    <span
-                      key={color}
-                      className={styles.dayDot}
-                      style={{ background: color }}
-                    />
+            <div className={styles.week} key={weekIndex}>
+              <div className={styles.weekDays}>
+                {weekDays.map((date, col) => {
+                  const key = toDayKey(date);
+                  const inMonth = isSameMonth(date, month);
+                  const isToday = isSameDay(date, today);
+                  const isSelected = isSameDay(date, selectedDay);
+                  const expenseTotal = expenseTotalByDayKey.get(key) ?? 0;
+                  const overflow = week.overflowByCol[col] ?? 0;
+
+                  const className = [
+                    styles.dayCell,
+                    inMonth ? '' : styles.dayCellMuted,
+                    isToday ? styles.dayCellToday : '',
+                    isSelected ? styles.dayCellSelected : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' ');
+
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      role="gridcell"
+                      className={className}
+                      aria-selected={isSelected}
+                      aria-current={isToday ? 'date' : undefined}
+                      data-day={key}
+                      onClick={() => handleSelectDay(date)}
+                    >
+                      <span className={styles.dayNumber}>{date.getDate()}</span>
+                      {showExpenses && expenseTotal > 0 ? (
+                        <span className={styles.dayExpense}>
+                          {formatCompactAmount(expenseTotal)}
+                        </span>
+                      ) : null}
+                      {overflow > 0 ? (
+                        <span className={styles.dayOverflow}>+{overflow}</span>
+                      ) : null}
+                    </button>
+                  );
+                })}
+              </div>
+              {usedLanes > 0 ? (
+                <div className={styles.weekEvents}>
+                  {Array.from({ length: usedLanes }, (_, lane) => (
+                    <div className={styles.eventLane} key={lane}>
+                      {week.segments
+                        .filter((segment) => segment.lane === lane)
+                        .map((segment) => (
+                          <button
+                            key={segment.schedule.id}
+                            type="button"
+                            className={[
+                              styles.eventBar,
+                              segment.isStart ? styles.eventBarStart : '',
+                              segment.isEnd ? styles.eventBarEnd : '',
+                            ]
+                              .filter(Boolean)
+                              .join(' ')}
+                            style={
+                              {
+                                gridColumn: `${segment.startCol + 1} / ${segment.endCol + 2}`,
+                                '--author-color':
+                                  authorColorById[segment.schedule.createdBy] ??
+                                  'var(--color-accent)',
+                              } as CSSProperties
+                            }
+                            onClick={(event) =>
+                              handleSelectSchedule(event, segment.schedule)
+                            }
+                          >
+                            {segment.isStart
+                              ? segment.schedule.title
+                              : '\u00a0'}
+                          </button>
+                        ))}
+                    </div>
                   ))}
-                </span>
+                </div>
               ) : null}
-            </button>
+            </div>
           );
         })}
       </div>

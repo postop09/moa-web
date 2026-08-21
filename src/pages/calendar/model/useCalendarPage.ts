@@ -17,6 +17,7 @@ import {
 } from '@/shared/lib';
 
 import { AUTHOR_COLORS } from '../config/authorColors';
+import { scheduleOverlapsDay } from './buildEventLanes';
 import {
   getVisibleCalendarDays,
   getVisibleCalendarRange,
@@ -145,19 +146,14 @@ export const useCalendarPage = (householdId: string | null) => {
     return map;
   }, [filteredExpenses]);
 
-  const schedulesByDayKey = useMemo(() => {
-    const map = new Map<string, Schedule[]>();
-    for (const schedule of filteredSchedules) {
-      const key = toDayKey(new Date(schedule.startAt));
-      const list = map.get(key) ?? [];
-      list.push(schedule);
-      map.set(key, list);
-    }
-    return map;
-  }, [filteredSchedules]);
-
   const selectedDayKey = toDayKey(selectedDay);
-  const selectedSchedules = schedulesByDayKey.get(selectedDayKey) ?? [];
+  const selectedSchedules = useMemo(
+    () =>
+      filteredSchedules.filter((schedule) =>
+        scheduleOverlapsDay(schedule, selectedDay),
+      ),
+    [filteredSchedules, selectedDay],
+  );
   const selectedExpenses = useMemo(
     () =>
       filteredExpenses.filter(
@@ -253,7 +249,7 @@ export const useCalendarPage = (householdId: string | null) => {
     authorColorById,
     creatorNameById,
     expenseTotalByDayKey,
-    schedulesByDayKey,
+    filteredSchedules,
     selectedSchedules,
     selectedExpenses,
     scheduleFormMode,

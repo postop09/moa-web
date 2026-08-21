@@ -17,7 +17,7 @@ export const listSchedules = async (
     .order('startAt', { ascending: true });
 
   if (from) {
-    query = query.gte('startAt', from);
+    query = query.gte('endAt', from);
   }
 
   if (to) {

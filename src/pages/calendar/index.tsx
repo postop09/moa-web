@@ -25,7 +25,7 @@ const CalendarContent = ({ householdId }: Props) => {
     authorColorById,
     creatorNameById,
     expenseTotalByDayKey,
-    schedulesByDayKey,
+    filteredSchedules,
     selectedSchedules,
     selectedExpenses,
     scheduleFormMode,
@@ -79,13 +79,12 @@ const CalendarContent = ({ householdId }: Props) => {
             days={days}
             showExpenses={showExpenses}
             expenseTotalByDayKey={expenseTotalByDayKey}
-            schedulesByDayKey={schedulesByDayKey}
+            schedules={filteredSchedules}
             authorColorById={authorColorById}
             onSelectDay={selectDay}
+            onSelectSchedule={openEditSchedule}
             onPrevMonth={goPrevMonth}
             onNextMonth={goNextMonth}
-            onPrevYear={goPrevYear}
-            onNextYear={goNextYear}
           />
           <DayDetailPanel
             selectedDay={selectedDay}

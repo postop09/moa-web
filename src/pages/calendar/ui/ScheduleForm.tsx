@@ -17,30 +17,24 @@ type Props = {
   onDelete?: () => void;
 };
 
+const padTime = (value: number) => String(value).padStart(2, '0');
+
 const toTimeInputValue = (iso: string) => {
   const date = new Date(iso);
-  return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  return `${padTime(date.getHours())}:${padTime(date.getMinutes())}`;
 };
 
 const fromLocalDateTime = (date: string, time: string) => {
   return new Date(`${date}T${time}:00`).toISOString();
 };
 
-const defaultEndTime = (startTime: string) => {
-  const [hourText, minuteText] = startTime.split(':');
-  const hour = Number(hourText);
-  const minute = Number(minuteText);
-
-  if (!Number.isFinite(hour) || !Number.isFinite(minute)) {
-    return '10:00';
-  }
-
-  const nextHour = hour + 1;
-  if (nextHour >= 24) {
-    return '23:59';
-  }
-
-  return `${String(nextHour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+const addHours = (date: string, time: string, hours: number) => {
+  const next = new Date(`${date}T${time}:00`);
+  next.setHours(next.getHours() + hours);
+  return {
+    date: toDayKey(next),
+    time: `${padTime(next.getHours())}:${padTime(next.getMinutes())}`,
+  };
 };
 
 export const ScheduleForm = ({
@@ -56,13 +50,18 @@ export const ScheduleForm = ({
   const [title, setTitle] = useState(
     mode.type === 'edit' ? mode.schedule.title : '',
   );
-  const [eventDate, setEventDate] = useState(
+  const [startDate, setStartDate] = useState(
     mode.type === 'edit'
       ? toDayKey(new Date(mode.schedule.startAt))
       : toDayKey(mode.date),
   );
   const [startTime, setStartTime] = useState(
     mode.type === 'edit' ? toTimeInputValue(mode.schedule.startAt) : '09:00',
+  );
+  const [endDate, setEndDate] = useState(
+    mode.type === 'edit'
+      ? toDayKey(new Date(mode.schedule.endAt))
+      : toDayKey(mode.date),
   );
   const [endTime, setEndTime] = useState(
     mode.type === 'edit' ? toTimeInputValue(mode.schedule.endAt) : '10:00',
@@ -75,16 +74,26 @@ export const ScheduleForm = ({
   const isPending = createSchedule.isPending || updateSchedule.isPending;
   const error = createSchedule.error ?? updateSchedule.error;
 
+  const ensureEndAfter = (nextStartDate: string, nextStartTime: string) => {
+    const startAt = fromLocalDateTime(nextStartDate, nextStartTime);
+    const currentEnd = fromLocalDateTime(endDate, endTime);
+    if (currentEnd > startAt) {
+      return;
+    }
+
+    const next = addHours(nextStartDate, nextStartTime, 1);
+    setEndDate(next.date);
+    setEndTime(next.time);
+  };
+
+  const handleStartDateChange = (value: string) => {
+    setStartDate(value);
+    ensureEndAfter(value, startTime);
+  };
+
   const handleStartTimeChange = (value: string) => {
     setStartTime(value);
-    setEndTime((current) => {
-      const start = fromLocalDateTime(eventDate, value);
-      const end = fromLocalDateTime(eventDate, current);
-      if (end <= start) {
-        return defaultEndTime(value);
-      }
-      return current;
-    });
+    ensureEndAfter(startDate, value);
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -97,11 +106,11 @@ export const ScheduleForm = ({
       return;
     }
 
-    const startAt = fromLocalDateTime(eventDate, startTime);
-    const endAt = fromLocalDateTime(eventDate, endTime);
+    const startAt = fromLocalDateTime(startDate, startTime);
+    const endAt = fromLocalDateTime(endDate, endTime);
 
     if (endAt <= startAt) {
-      setValidationError('종료 시간은 시작 시간보다 이후여야 합니다.');
+      setValidationError('종료 일시는 시작 일시보다 이후여야 합니다.');
       return;
     }
 
@@ -154,45 +163,51 @@ export const ScheduleForm = ({
           />
         </div>
 
-        <div className={styles.field}>
-          <label className={styles.label} htmlFor="scheduleDate">
-            날짜
-          </label>
-          <input
-            id="scheduleDate"
-            className={styles.input}
-            type="date"
-            required
-            value={eventDate}
-            disabled={isPending}
-            onChange={(event) => setEventDate(event.target.value)}
-          />
-        </div>
-
-        <div className={styles.timeRow}>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="scheduleStartTime">
-              시작
-            </label>
+        <div className={styles.rangeGroup}>
+          <span className={styles.label}>시작</span>
+          <div className={styles.timeRow}>
+            <input
+              id="scheduleStartDate"
+              className={styles.input}
+              type="date"
+              required
+              aria-label="시작 날짜"
+              value={startDate}
+              disabled={isPending}
+              onChange={(event) => handleStartDateChange(event.target.value)}
+            />
             <input
               id="scheduleStartTime"
               className={styles.input}
               type="time"
               required
+              aria-label="시작 시간"
               value={startTime}
               disabled={isPending}
               onChange={(event) => handleStartTimeChange(event.target.value)}
             />
           </div>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="scheduleEndTime">
-              종료
-            </label>
+        </div>
+
+        <div className={styles.rangeGroup}>
+          <span className={styles.label}>종료</span>
+          <div className={styles.timeRow}>
+            <input
+              id="scheduleEndDate"
+              className={styles.input}
+              type="date"
+              required
+              aria-label="종료 날짜"
+              value={endDate}
+              disabled={isPending}
+              onChange={(event) => setEndDate(event.target.value)}
+            />
             <input
               id="scheduleEndTime"
               className={styles.input}
               type="time"
               required
+              aria-label="종료 시간"
               value={endTime}
               disabled={isPending}
               onChange={(event) => setEndTime(event.target.value)}

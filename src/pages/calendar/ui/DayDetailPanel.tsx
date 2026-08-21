@@ -5,7 +5,7 @@ import type { CSSProperties } from 'react';
 
 import type { Schedule } from '@/entities/schedule';
 import type { Transaction } from '@/entities/transaction';
-import { formatAmount } from '@/shared/lib';
+import { formatAmount, isSameDay } from '@/shared/lib';
 
 import styles from './calendar.module.css';
 
@@ -29,6 +29,19 @@ const formatDayHeading = (date: Date) => {
 const formatTime = (iso: string) => {
   const date = new Date(iso);
   return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+};
+
+const formatScheduleRange = (schedule: Schedule) => {
+  const start = new Date(schedule.startAt);
+  const end = new Date(schedule.endAt);
+  const startTime = formatTime(schedule.startAt);
+  const endTime = formatTime(schedule.endAt);
+
+  if (isSameDay(start, end)) {
+    return `${startTime}–${endTime}`;
+  }
+
+  return `${start.getMonth() + 1}/${start.getDate()} ${startTime}–${end.getMonth() + 1}/${end.getDate()} ${endTime}`;
 };
 
 const resolveExpenseName = (transaction: Transaction) => {
@@ -83,7 +96,7 @@ export const DayDetailPanel = ({
                   onClick={() => onSelectSchedule(schedule)}
                 >
                   <span className={styles.scheduleTime}>
-                    {formatTime(schedule.startAt)}–{formatTime(schedule.endAt)}
+                    {formatScheduleRange(schedule)}
                   </span>
                   <span className={styles.scheduleTitle}>{schedule.title}</span>
                   <span className={styles.scheduleAuthor}>

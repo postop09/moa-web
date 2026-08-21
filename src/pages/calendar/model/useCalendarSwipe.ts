@@ -8,18 +8,11 @@ const TRIGGER_PX = 50;
 type Props = {
   onSwipeLeft: () => void;
   onSwipeRight: () => void;
-  onSwipeUp: () => void;
-  onSwipeDown: () => void;
 };
 
 type Axis = 'x' | 'y';
 
-export const useCalendarSwipe = ({
-  onSwipeLeft,
-  onSwipeRight,
-  onSwipeUp,
-  onSwipeDown,
-}: Props) => {
+export const useCalendarSwipe = ({ onSwipeLeft, onSwipeRight }: Props) => {
   const originRef = useRef<{ x: number; y: number } | null>(null);
   const axisRef = useRef<Axis | null>(null);
   const pointerIdRef = useRef<number | null>(null);
@@ -40,7 +33,6 @@ export const useCalendarSwipe = ({
     originRef.current = { x: event.clientX, y: event.clientY };
     axisRef.current = null;
     pointerIdRef.current = event.pointerId;
-    event.currentTarget.setPointerCapture(event.pointerId);
   };
 
   const onPointerMove = (event: ReactPointerEvent<HTMLElement>) => {
@@ -57,6 +49,10 @@ export const useCalendarSwipe = ({
       }
 
       axisRef.current = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+
+      if (axisRef.current === 'x') {
+        event.currentTarget.setPointerCapture(event.pointerId);
+      }
     }
   };
 
@@ -66,7 +62,6 @@ export const useCalendarSwipe = ({
     }
 
     const dx = event.clientX - originRef.current.x;
-    const dy = event.clientY - originRef.current.y;
     const axis = axisRef.current;
     reset();
 
@@ -76,16 +71,6 @@ export const useCalendarSwipe = ({
         onSwipeLeft();
       } else {
         onSwipeRight();
-      }
-      return;
-    }
-
-    if (axis === 'y' && Math.abs(dy) >= TRIGGER_PX) {
-      didSwipeRef.current = true;
-      if (dy < 0) {
-        onSwipeUp();
-      } else {
-        onSwipeDown();
       }
     }
   };
