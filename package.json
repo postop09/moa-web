@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint app src",
     "format": "prettier --write app src",
-    "format:check": "prettier --check app src"
+    "format:check": "prettier --check app src",
+    "og:generate": "tsx scripts/generateOgImage.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

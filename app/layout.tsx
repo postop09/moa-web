@@ -8,7 +8,9 @@ import { Providers } from '@/app/providers';
 import {
   defaultTitle,
   description,
+  getBaseOpenGraph,
   getSiteUrl,
+  getWebSiteJsonLd,
   keywords,
   ogImage,
   siteName,
@@ -42,6 +44,9 @@ export const metadata: Metadata = {
   applicationName: siteName,
   keywords,
   category: 'finance',
+  alternates: {
+    canonical: '/',
+  },
   formatDetection: {
     telephone: false,
   },
@@ -79,15 +84,12 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    type: 'website',
-    locale: 'ko_KR',
-    siteName,
+    ...getBaseOpenGraph(),
     title: defaultTitle,
     description,
-    images: [ogImage],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: defaultTitle,
     description,
     images: [ogImage.url],
@@ -100,6 +102,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: '#f4f6f8',
+  width: 'device-width',
+  initialScale: 1,
 };
 
 type Props = {
@@ -107,6 +111,8 @@ type Props = {
 };
 
 const RootLayout = ({ children }: Props) => {
+  const jsonLd = getWebSiteJsonLd();
+
   return (
     <html
       lang="ko"
@@ -114,6 +120,12 @@ const RootLayout = ({ children }: Props) => {
       style={{ background: '#f4f6f8' }}
     >
       <body style={{ background: '#f4f6f8' }}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
+          }}
+        />
         <Providers>
           {children}
           <SpeedInsights />

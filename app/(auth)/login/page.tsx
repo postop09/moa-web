@@ -3,20 +3,14 @@ import { redirect } from 'next/navigation';
 
 import { LoginPage } from '@/pages/login';
 import { createServerClient } from '@/shared/api/server';
-import { getWebApplicationJsonLd } from '@/shared/config';
 import { getAuthCompletePath, getSafeNextPath } from '@/shared/lib';
 
+// 로그인 화면은 색인할 콘텐츠가 없고 랜딩(/welcome)과 내용이 중복되므로 제외한다.
 export const metadata: Metadata = {
   title: '로그인',
-  alternates: {
-    canonical: '/login',
-  },
   robots: {
-    index: true,
+    index: false,
     follow: true,
-  },
-  openGraph: {
-    url: '/login',
   },
 };
 
@@ -36,19 +30,7 @@ const LoginRoutePage = async ({ searchParams }: Props) => {
     redirect(getAuthCompletePath(safeNext));
   }
 
-  const jsonLd = getWebApplicationJsonLd();
-
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
-        }}
-      />
-      <LoginPage next={safeNext} />
-    </>
-  );
+  return <LoginPage next={safeNext} />;
 };
 
 export default LoginRoutePage;

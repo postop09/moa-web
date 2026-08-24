@@ -7,12 +7,17 @@ export {
   toAuthGateReadyValue,
 } from './authGateCookie';
 export {
+  contactEmail,
   defaultTitle,
   description,
+  getBaseOpenGraph,
   getSiteUrl,
   getWebApplicationJsonLd,
+  getWebSiteJsonLd,
   keywords,
+  logoImage,
   ogImage,
+  operatorName,
   siteName,
   titleTemplate,
 } from './site';

@@ -19,10 +19,12 @@ const robots = (): MetadataRoute.Robots => {
   return {
     rules: {
       userAgent: '*',
-      allow: ['/login', '/welcome'],
+      allow: ['/', '/welcome', '/privacy', '/terms'],
       disallow: [
+        '/login',
         '/history',
         '/calendar',
+        '/stats',
         '/write',
         '/settings',
         '/onboarding',

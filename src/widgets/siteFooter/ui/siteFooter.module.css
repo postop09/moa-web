@@ -1,0 +1,138 @@
+.footer {
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.inner {
+  display: flex;
+  width: 100%;
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 3rem var(--space-4) 2.5rem;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.brandArea {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.tagline {
+  margin: 0;
+  max-width: 22rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  word-break: keep-all;
+}
+
+.contact {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.contact:hover {
+  color: var(--color-accent);
+}
+
+.linkArea {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+
+.linkGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.linkGroupTitle {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--color-text);
+}
+
+.linkList {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.link {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.link:hover {
+  color: var(--color-accent);
+}
+
+.brand:focus-visible,
+.link:focus-visible,
+.contact:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.bottom {
+  border-top: 1px solid var(--color-border);
+}
+
+.bottomInner {
+  display: flex;
+  width: 100%;
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: var(--space-4);
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.copyright,
+.notice {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+  word-break: keep-all;
+}
+
+@media (min-width: 48rem) {
+  .inner {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 4rem;
+  }
+
+  .linkArea {
+    grid-template-columns: repeat(2, minmax(8rem, auto));
+    gap: 4rem;
+  }
+
+  .bottomInner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+  }
+}

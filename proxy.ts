@@ -7,12 +7,14 @@ const isPassThroughPath = (pathname: string) => {
   return pathname.startsWith('/invite/') || pathname.startsWith('/auth/');
 };
 
+const PUBLIC_PATHS = new Set(['/login', '/welcome', '/privacy', '/terms']);
+
 const isLoginPath = (pathname: string) => {
   return pathname === '/login';
 };
 
-const isWelcomePath = (pathname: string) => {
-  return pathname === '/welcome';
+const isPublicPath = (pathname: string) => {
+  return PUBLIC_PATHS.has(pathname);
 };
 
 const isOnboardingPath = (pathname: string) => {
@@ -22,8 +24,7 @@ const isOnboardingPath = (pathname: string) => {
 const isAppPath = (pathname: string) => {
   return (
     !isPassThroughPath(pathname) &&
-    !isLoginPath(pathname) &&
-    !isWelcomePath(pathname) &&
+    !isPublicPath(pathname) &&
     !isOnboardingPath(pathname)
   );
 };
@@ -72,9 +73,10 @@ export const proxy = async (request: NextRequest) => {
       return supabaseResponse;
     }
 
-    if (!isLoginPath(pathname) && !isWelcomePath(pathname)) {
+    if (!isPublicPath(pathname)) {
       const url = request.nextUrl.clone();
-      url.pathname = '/login';
+      // 크롤러는 항상 비로그인 상태이므로 도메인 루트는 랜딩 페이지로 보낸다.
+      url.pathname = pathname === '/' ? '/welcome' : '/login';
       url.search = '';
       const redirectResponse = redirectWithCookies(supabaseResponse, url);
       redirectResponse.cookies.delete({

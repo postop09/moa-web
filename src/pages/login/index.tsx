@@ -21,6 +21,15 @@ export const LoginPage = ({ next }: Props) => {
           모아 소개 보기
         </Link>
       </div>
+      <nav className={styles.policyLinks} aria-label="정책">
+        <Link href="/privacy" className={styles.policyLink}>
+          개인정보처리방침
+        </Link>
+        <span aria-hidden="true">·</span>
+        <Link href="/terms" className={styles.policyLink}>
+          이용약관
+        </Link>
+      </nav>
     </main>
   );
 };

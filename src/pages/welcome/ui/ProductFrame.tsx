@@ -1,13 +1,20 @@
 'use client';
 
 import { Calendar, Home, List, Settings, type LucideIcon } from 'lucide-react';
+import dynamic from 'next/dynamic';
 
-import { formatAmount } from '@/shared/lib';
 import { MoaLogo } from '@/shared/ui';
 
-import { PREVIEW_LATEST_ASSET } from '../config/previewChart';
-import { ProductChart } from './ProductChart';
 import styles from './welcome.module.css';
+
+// echarts는 랜딩 첫 화면의 장식용 목업에만 쓰이므로 초기 번들에서 분리한다.
+const ProductChart = dynamic(
+  () => import('./ProductChart').then((mod) => mod.ProductChart),
+  {
+    ssr: false,
+    loading: () => <div className={styles.desktopChart} />,
+  },
+);
 
 const NAV_ITEMS: Array<{
   id: string;
