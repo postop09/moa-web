@@ -6,9 +6,11 @@ import { MoaLogo } from '@/shared/ui';
 
 import { WELCOME_NAV_SECTIONS } from '../config/sections';
 import { useSectionNav } from '../model/useSectionNav';
+import { useSmoothScroll } from '../model/useSmoothScroll';
 import styles from './welcome.module.css';
 
 export const WelcomeHeader = () => {
+  useSmoothScroll();
   const { activeId } = useSectionNav(WELCOME_NAV_SECTIONS);
 
   return (

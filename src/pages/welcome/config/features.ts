@@ -20,7 +20,7 @@ export const FEATURES: Feature[] = [
     id: 'household',
     title: '함께 쓰는 가계부',
     description:
-      '가족·룸메이트와 같은 가계부를 공유하고 누가 썼는지 구분합니다.',
+      '초대 링크 한 번으로 부르고 카테고리·예산까지 같이 관리합니다.',
   },
   {
     id: 'charts',

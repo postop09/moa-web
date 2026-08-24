@@ -13,6 +13,12 @@ export const HIGHLIGHTS: Highlight[] = [
     href: '#ledger',
   },
   {
+    id: 'share',
+    title: '공유 가계부',
+    description: '가족·룸메이트를 초대해 한 가계부를 같이 씁니다.',
+    href: '#share',
+  },
+  {
     id: 'calendar',
     title: '달력',
     description: '일정과 그날의 지출을 한 화면에서 확인합니다.',

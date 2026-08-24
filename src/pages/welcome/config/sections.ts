@@ -5,6 +5,7 @@ export type WelcomeSection = {
 
 export const WELCOME_NAV_SECTIONS: WelcomeSection[] = [
   { id: 'ledger', label: '가계부' },
+  { id: 'share', label: '공유' },
   { id: 'calendar', label: '달력' },
   { id: 'pwa', label: '웹 앱' },
 ];
@@ -12,6 +13,7 @@ export const WELCOME_NAV_SECTIONS: WelcomeSection[] = [
 export const WELCOME_SECTION_IDS = {
   highlights: 'highlights',
   ledger: 'ledger',
+  share: 'share',
   features: 'features',
   calendar: 'calendar',
   pwa: 'pwa',

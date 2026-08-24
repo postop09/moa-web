@@ -2,10 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useScrollFrame } from './useScrollFrame';
+
 export const useScrollStory = (stepCount: number) => {
   const [activeStep, setActiveStep] = useState(0);
   const [reduceMotion, setReduceMotion] = useState(false);
-  const [attachedCount, setAttachedCount] = useState(0);
   const nodesRef = useRef<Array<Element | null>>(Array(stepCount).fill(null));
 
   useEffect(() => {
@@ -24,60 +25,30 @@ export const useScrollStory = (stepCount: number) => {
 
   const setStepRef = useCallback((index: number) => {
     return (node: Element | null) => {
-      const previous = nodesRef.current[index];
       nodesRef.current[index] = node;
-
-      if (Boolean(previous) === Boolean(node)) {
-        return;
-      }
-
-      setAttachedCount(nodesRef.current.filter((item) => item !== null).length);
     };
   }, []);
 
-  useEffect(() => {
-    if (reduceMotion || attachedCount === 0) {
+  useScrollFrame(() => {
+    if (reduceMotion) {
       return;
     }
 
-    const nodes = nodesRef.current.filter(
-      (node): node is Element => node !== null,
-    );
+    const focusLine = window.innerHeight * 0.45;
+    let nextStep = 0;
 
-    if (nodes.length === 0) {
-      return;
-    }
+    nodesRef.current.forEach((node, index) => {
+      if (!node) {
+        return;
+      }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        const top = visible[0];
+      if (node.getBoundingClientRect().top <= focusLine) {
+        nextStep = index;
+      }
+    });
 
-        if (!top) {
-          return;
-        }
-
-        const index = nodesRef.current.indexOf(top.target);
-
-        if (index >= 0) {
-          setActiveStep(index);
-        }
-      },
-      {
-        root: null,
-        rootMargin: '-28% 0px -40% 0px',
-        threshold: [0, 0.25, 0.5, 0.75, 1],
-      },
-    );
-
-    nodes.forEach((node) => observer.observe(node));
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [attachedCount, reduceMotion, stepCount]);
+    setActiveStep((current) => (current === nextStep ? current : nextStep));
+  });
 
   const resolvedStep = reduceMotion ? Math.max(0, stepCount - 1) : activeStep;
 

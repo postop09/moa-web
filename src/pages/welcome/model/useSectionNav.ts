@@ -1,47 +1,54 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import type { WelcomeSection } from '../config/sections';
+import { useScrollFrame } from './useScrollFrame';
 
 export const useSectionNav = (sections: WelcomeSection[]) => {
   const [activeId, setActiveId] = useState(sections[0]?.id ?? '');
+  const nodesRef = useRef<HTMLElement[]>([]);
 
   useEffect(() => {
-    const nodes = sections
+    nodesRef.current = sections
       .map((section) => document.getElementById(section.id))
       .filter((node): node is HTMLElement => node !== null);
+  }, [sections]);
+
+  useScrollFrame(() => {
+    const nodes = nodesRef.current;
 
     if (nodes.length === 0) {
       return;
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        const top = visible[0];
+    const last = nodes[nodes.length - 1];
+    const atBottom =
+      window.scrollY + window.innerHeight >=
+      document.documentElement.scrollHeight - 2;
 
-        if (!top?.target.id) {
-          return;
-        }
+    if (atBottom && last?.id) {
+      setActiveId((current) => (current === last.id ? current : last.id));
+      return;
+    }
 
-        setActiveId(top.target.id);
-      },
-      {
-        root: null,
-        rootMargin: '-20% 0px -55% 0px',
-        threshold: [0, 0.25, 0.5, 0.75, 1],
-      },
-    );
+    const header = document.querySelector('header');
+    const headerHeight = header?.offsetHeight ?? 56;
+    const focusLine = headerHeight + window.innerHeight * 0.25;
+    let nextId = nodes[0]?.id ?? '';
 
-    nodes.forEach((node) => observer.observe(node));
+    nodes.forEach((node) => {
+      if (node.getBoundingClientRect().top <= focusLine) {
+        nextId = node.id;
+      }
+    });
 
-    return () => {
-      observer.disconnect();
-    };
-  }, [sections]);
+    if (!nextId) {
+      return;
+    }
+
+    setActiveId((current) => (current === nextId ? current : nextId));
+  });
 
   return { activeId };
 };

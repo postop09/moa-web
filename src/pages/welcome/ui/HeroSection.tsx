@@ -16,7 +16,8 @@ export const HeroSection = () => {
             한 달의 돈, 그래프로 끝냅니다
           </h1>
           <p className={styles.heroSupport}>
-            수입·지출·저축을 적으면 남은 예산이 바로 보입니다.
+            수입·지출·저축을 적으면 남은 예산이 바로 보입니다. 혼자도, 가족과
+            함께도 같은 가계부에서.
           </p>
           <div className={styles.heroActions}>
             <Link href="/login" className={styles.ctaButton}>

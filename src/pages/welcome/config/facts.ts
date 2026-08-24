@@ -20,9 +20,4 @@ export const FACTS: Fact[] = [
     value: '2가지',
     label: 'PC·모바일 화면',
   },
-  {
-    id: 'account',
-    value: '1개',
-    label: '계정으로 공유',
-  },
 ];

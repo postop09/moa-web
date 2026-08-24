@@ -60,10 +60,8 @@ export const ProductFrame = ({ className, clipped = false }: Props) => {
           })}
         </aside>
         <div className={styles.desktopMain}>
-          <p className={styles.desktopKicker}>내 예산</p>
-          <p className={styles.desktopBalance}>
-            {formatAmount(PREVIEW_LATEST_ASSET)}
-          </p>
+          <p className={styles.desktopKicker}>내 자산</p>
+          <p className={styles.desktopBalance}>2,400,000원</p>
           <ProductChart />
           <div className={styles.desktopMiniCards}>
             <span className={styles.desktopMiniCard}>수입 300만</span>
