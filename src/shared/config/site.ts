@@ -2,8 +2,7 @@ export const siteName = '모아';
 
 export const operatorName = '모아 운영팀';
 
-// TODO: 실제 문의용 이메일 주소로 교체 필요. 푸터·개인정보처리방침·이용약관이 이 값을 참조합니다.
-export const contactEmail = 'contact@example.com';
+export const contactEmail = 'team_moa@naver.com';
 
 export const defaultTitle = '모아(Moa) — 그래프로 보는 가계부';
 
