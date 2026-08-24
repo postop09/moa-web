@@ -18,8 +18,8 @@ export const WelcomePage = () => {
         <HeroSection />
         <HighlightsSection />
         <LedgerStorySection />
-        <SharedLedgerSection />
         <FeatureGridSection />
+        <SharedLedgerSection />
         <CalendarGuideSection />
         <PwaGuideSection />
         <FactsBand />

@@ -16,7 +16,8 @@ export const WelcomeCta = () => {
           지금 가계부를 만들어 보세요
         </h2>
         <p className={styles.sectionLead}>
-          브라우저만 있으면 됩니다. 설치 없이 바로 사용할 수 있습니다.
+          Google 계정과 브라우저만 있으면 됩니다. 설치 없이 바로 사용할 수
+          있습니다.
         </p>
         <Link href="/login" className={styles.ctaButton}>
           Google로 시작하기

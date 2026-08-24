@@ -15,9 +15,9 @@ const SHARE_POINTS = [
   {
     id: 'author',
     icon: Palette,
-    title: '누가 썼는지 색으로 구분',
+    title: '작성자를 구분',
     description:
-      '거래와 일정에 작성자가 남습니다. 달력에서 작성자별 색으로 보고, 원하는 사람만 골라 볼 수 있습니다.',
+      '거래와 일정에 작성자가 남습니다. 달력에서 원하는 사람만 골라 볼 수 있습니다.',
   },
   {
     id: 'role',
@@ -59,7 +59,7 @@ export const SharedLedgerSection = () => {
   return (
     <section
       id={WELCOME_SECTION_IDS.share}
-      className={styles.section}
+      className={`${styles.section} ${styles.sectionAlt}`}
       aria-labelledby="shared-ledger-title"
     >
       <div className={styles.sectionInner}>
@@ -67,11 +67,11 @@ export const SharedLedgerSection = () => {
           <div className={styles.splitCopy}>
             <p className={styles.eyebrow}>공유</p>
             <h2 id="shared-ledger-title" className={styles.sectionTitle}>
-              한 가계부, 여러 사람
+              하나의 가계부, 여러 사람
             </h2>
             <p className={styles.sectionLead}>
-              가족·룸메이트를 초대하면 거래와 카테고리, 일정까지 같은 가계부에서
-              함께 관리합니다. 각자 적어도 흐름은 하나로 모입니다.
+              가족·친구·연인을 초대하면 거래와 카테고리, 일정까지 같은
+              가계부에서 함께 관리합니다.
             </p>
 
             <div className={styles.filterChips} aria-hidden>

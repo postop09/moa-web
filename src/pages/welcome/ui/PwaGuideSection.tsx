@@ -40,19 +40,19 @@ const DEVICE_POINTS = [
     id: 'desktop',
     icon: Monitor,
     title: '노트북에서는 그래프를 넓게',
-    description: '사이드바와 대시보드로 한 달의 흐름을 한 화면에 펼칩니다.',
+    description: '넓은 화면의 대시보드로 한 달의 흐름을 한 화면에 펼칩니다.',
   },
   {
     id: 'mobile',
     icon: Smartphone,
-    title: '휴대폰에서는 빠르게 기록',
-    description: '하단 탭으로 홈·내역·달력을 오가며 바로 적습니다.',
+    title: '휴대폰에서는 빠르게',
+    description: '설치 없이도 휴대폰에서 내 자산과 소비를 확인하고 기록합니다.',
   },
   {
     id: 'sync',
     icon: RefreshCw,
     title: '같은 가계부가 이어집니다',
-    description: '기기만 바뀌어도 수입·지출·저축 데이터가 그대로입니다.',
+    description: '모든 기기에서 동일한 서비스를 이용합니다.',
   },
 ] as const;
 
@@ -76,7 +76,8 @@ export const PwaGuideSection = () => {
           설치 없이, 어느 기기에서나
         </h2>
         <p className={styles.sectionLead}>
-          브라우저만 있으면 됩니다. 홈 화면에 추가하면 앱처럼 실행됩니다.
+          Google 계정과 브라우저만 있으면 됩니다. 홈 화면에 추가하면 앱처럼
+          실행됩니다.
         </p>
 
         <div className={styles.pwaBlock}>

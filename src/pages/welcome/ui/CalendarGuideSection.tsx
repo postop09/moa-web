@@ -88,8 +88,8 @@ export const CalendarGuideSection = () => {
               일정과 지출을 한눈에
             </h2>
             <p className={styles.sectionLead}>
-              월 달력에서 일정을 깔고, 그날의 지출 합계까지 함께 봅니다. 좌우로
-              밀면 월이 바뀌고, 카테고리·작성자로 걸러 볼 수 있습니다.
+              카테고리를 설정하고, 일정을 기록하고, 그날의 지출까지 함께 봅니다.
+              파트너와 공유, 작성자를 구분하여 볼 수도 있습니다.
             </p>
             <div className={styles.filterChips} aria-hidden>
               {FILTER_CHIPS.map((chip) => (

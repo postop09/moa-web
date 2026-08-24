@@ -10,7 +10,7 @@ export const FactsBand = () => {
       aria-labelledby="facts-title"
     >
       <div className={styles.sectionInner}>
-        <p className={styles.eyebrow}>숫자로 보면</p>
+        <p className={styles.eyebrow}>핵심은</p>
         <h2 id="facts-title" className={styles.sectionTitle}>
           복잡한 조건 없이 바로
         </h2>

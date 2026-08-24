@@ -6,7 +6,7 @@ export const FeatureGridSection = () => {
   return (
     <section
       id={WELCOME_SECTION_IDS.features}
-      className={`${styles.section} ${styles.sectionAlt}`}
+      className={`${styles.section}`}
       aria-labelledby="features-title"
     >
       <div className={styles.sectionInner}>

@@ -25,6 +25,6 @@ export const FEATURES: Feature[] = [
   {
     id: 'charts',
     title: '그래프로 보는 통계',
-    description: '한 달의 흐름을 링·막대·추이 차트로 한눈에 파악합니다.',
+    description: '한 달의 흐름을 다양한 차트로 한눈에 파악합니다.',
   },
 ];

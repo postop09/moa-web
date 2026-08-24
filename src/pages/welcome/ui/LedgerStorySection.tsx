@@ -22,10 +22,10 @@ export const LedgerStorySection = () => {
       <div className={styles.sectionInner}>
         <p className={styles.eyebrow}>가계부</p>
         <h2 id="ledger-story-title" className={styles.sectionTitle}>
-          스크롤할수록 한 달이 쌓입니다
+          내 예산과 자산을 관리합니다
         </h2>
         <p className={styles.sectionLead}>
-          월급이 들어오고, 지출이 빠지고, 저축이 모이면 남은 예산이 바뀝니다.
+          내역과 그래프로 내 자산을 효율적으로 관리합니다.
         </p>
 
         <div className={styles.storyLayout}>

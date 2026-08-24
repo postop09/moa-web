@@ -9,13 +9,13 @@ export const HIGHLIGHTS: Highlight[] = [
   {
     id: 'ledger',
     title: '가계부',
-    description: '수입·지출·저축을 적으면 남은 예산이 바로 보입니다.',
+    description: '월 수입·지출·저축을 적으며 남은 예산과 내 자산을 관리합니다.',
     href: '#ledger',
   },
   {
     id: 'share',
     title: '공유 가계부',
-    description: '가족·룸메이트를 초대해 한 가계부를 같이 씁니다.',
+    description: '가족·친구·연인을 초대해, 한 가계부를 같이 씁니다.',
     href: '#share',
   },
   {

@@ -12,12 +12,12 @@ export const FACTS: Fact[] = [
   },
   {
     id: 'install',
-    value: '0MB',
-    label: '앱 설치 용량',
+    value: '없음',
+    label: '앱 설치',
   },
   {
     id: 'screens',
-    value: '2가지',
-    label: 'PC·모바일 화면',
+    value: '모든 기기',
+    label: '화면 지원',
   },
 ];

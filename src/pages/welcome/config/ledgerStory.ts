@@ -20,15 +20,15 @@ export const LEDGER_STORY_STEPS: LedgerStoryStep[] = [
   {
     id: 'start',
     title: '빈 가계부에서 시작합니다',
-    description: '스크롤하면 수입·지출·저축이 쌓이고 남은 예산이 바뀝니다.',
+    description: '월 마다 금액이 초기화 됩니다.',
     figure: '0',
     event: null,
     showBudgetViz: false,
   },
   {
     id: 'salary',
-    title: '월급 300만 원 입금',
-    description: '수입이 들어오면 잔액이 바로 반영됩니다.',
+    title: '월급 300만 원',
+    description: '수입이 들어오면 잔액에 바로 반영됩니다.',
     figure: '+300만',
     event: {
       id: 'salary',
@@ -54,7 +54,7 @@ export const LEDGER_STORY_STEPS: LedgerStoryStep[] = [
   {
     id: 'transport',
     title: '교통비 10만 원',
-    description: '작은 지출도 한 달의 흐름 안에서 보입니다.',
+    description: '카테고리를 분리하여 내 자산을 효율적으로 관리합니다.',
     figure: '-10만',
     event: {
       id: 'transport',
@@ -67,7 +67,7 @@ export const LEDGER_STORY_STEPS: LedgerStoryStep[] = [
   {
     id: 'saving',
     title: '저축 100만 원',
-    description: '저축은 따로 모아 남은 예산을 분명히 합니다.',
+    description: '저축은 따로 모아 남은 예산과 자산을 분명히 합니다.',
     figure: '+100만',
     event: {
       id: 'saving',
@@ -80,7 +80,7 @@ export const LEDGER_STORY_STEPS: LedgerStoryStep[] = [
   {
     id: 'remain',
     title: '남은 예산 140만 원',
-    description: '수입에서 지출과 저축을 뺀 잔액을 그래프로 확인하세요.',
+    description: '나의 소비 패턴과 내 자산을 통계와 그래프로 확인하세요.',
     figure: '140만',
     event: null,
     showBudgetViz: true,
