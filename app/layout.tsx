@@ -40,6 +40,11 @@ export const metadata: Metadata = {
     default: defaultTitle,
     template: titleTemplate,
   },
+  verification: {
+    other: {
+      'naver-site-verification': '380ba16c8c9016795ae72ecb2dc46a807c9ac787',
+    },
+  },
   description,
   applicationName: siteName,
   keywords,
