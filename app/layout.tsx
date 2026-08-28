@@ -41,9 +41,9 @@ export const metadata: Metadata = {
     template: titleTemplate,
   },
   verification: {
+    google: 'y77pXn9rKS2JKXyWmm226PtyQTng_H49qq99a165Pu8',
     other: {
       'naver-site-verification': '380ba16c8c9016795ae72ecb2dc46a807c9ac787',
-      'google-site-verification': 'y77pXn9rKS2JKXyWmm226PtyQTng_H49qq99a165Pu8',
     },
   },
   description,
