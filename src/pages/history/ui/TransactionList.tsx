@@ -120,7 +120,7 @@ export const TransactionList = ({
           <div className={styles.totalItem}>
             <span className={styles.totalLabel}>잔액</span>
             <span
-              className={`${styles.totalValue} ${balance < 0 ? styles.amountExpense : styles.amountSaving}`}
+              className={`${styles.totalValue} ${balance < 0 ? styles.amountExpense : styles.amountIncome}`}
             >
               {formatAmount(balance)}
             </span>
