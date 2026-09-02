@@ -66,6 +66,12 @@ export const TransactionList = ({
     return creatorNameById[createdBy] ?? '알 수 없음';
   };
 
+  const isRecurringTransaction = (transaction: Transaction) => {
+    return (
+      Boolean(transaction.isRecurring) || transaction.recurringSourceId !== null
+    );
+  };
+
   const amountClass = (type: Transaction['type']) => {
     if (type === 'income') {
       return styles.amountIncome;
@@ -143,7 +149,12 @@ export const TransactionList = ({
                     {formatShortDate(transaction.transactionDt)}
                   </span>
                   <span className={styles.cardName}>
-                    {resolveName(transaction)}
+                    <span className={styles.cardNameText}>
+                      {resolveName(transaction)}
+                    </span>
+                    {isRecurringTransaction(transaction) ? (
+                      <span className={styles.recurringBadge}>반복</span>
+                    ) : null}
                   </span>
                   <span
                     className={`${styles.cardAmount} ${amountClass(transaction.type)}`}
@@ -180,7 +191,14 @@ export const TransactionList = ({
                     {formatDate(transaction.transactionDt)}
                   </td>
                   <td>{TRANSACTION_TYPE_LABEL[transaction.type]}</td>
-                  <td>{resolveName(transaction)}</td>
+                  <td>
+                    <span className={styles.tableNameCell}>
+                      {resolveName(transaction)}
+                      {isRecurringTransaction(transaction) ? (
+                        <span className={styles.recurringBadge}>반복</span>
+                      ) : null}
+                    </span>
+                  </td>
                   <td>{resolveCategoryName(transaction)}</td>
                   <td>{formatDate(transaction.createdDt)}</td>
                   <td>{resolveCreatorName(transaction.createdBy)}</td>

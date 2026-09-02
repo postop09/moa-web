@@ -35,6 +35,11 @@ const fromDateInputValue = (value: string) => {
   return new Date(`${value}T12:00:00`).toISOString();
 };
 
+const dayFromDateInputValue = (value: string) => {
+  const [, , day] = value.split('-');
+  return Number(day);
+};
+
 const todayInputValue = () => toDateInputValue(new Date().toISOString());
 
 const TYPE_OPTIONS: {
@@ -84,6 +89,9 @@ export const TransactionForm = ({
     mode.type === 'edit' ? Boolean(mode.transaction.isRecurring) : false,
   );
 
+  const isRecurringTemplate =
+    mode.type === 'create' || mode.transaction.recurringSourceId === null;
+
   const isPending = createTransaction.isPending || updateTransaction.isPending;
   const error = createTransaction.error ?? updateTransaction.error;
   const filteredCategories = categories.filter((item) => item.type === type);
@@ -92,6 +100,10 @@ export const TransactionForm = ({
   const handleTypeChange = (nextType: TransactionType) => {
     setType(nextType);
     setCategoryId('');
+  };
+
+  const handleRecurringChange = (checked: boolean) => {
+    setIsRecurring(checked);
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -113,7 +125,11 @@ export const TransactionForm = ({
       categoryId: categoryId === '' ? null : Number(categoryId),
       name: name.trim() === '' ? null : name.trim(),
       memo: memo.trim() === '' ? null : memo.trim(),
-      isRecurring,
+      isRecurring: isRecurringTemplate ? isRecurring : false,
+      recurringDay:
+        isRecurringTemplate && isRecurring
+          ? dayFromDateInputValue(transactionDate)
+          : null,
     };
 
     try {
@@ -242,21 +258,31 @@ export const TransactionForm = ({
         />
       </div>
 
-      <label className={styles.toggleRow}>
-        <span className={styles.toggleLabel}>반복 거래</span>
-        <input
-          className={styles.visuallyHidden}
-          type="checkbox"
-          role="switch"
-          checked={isRecurring}
-          disabled={disabled}
-          aria-checked={isRecurring}
-          onChange={(event) => setIsRecurring(event.target.checked)}
-        />
-        <span className={styles.switchTrack} aria-hidden>
-          <span className={styles.switchThumb} />
-        </span>
-      </label>
+      {isRecurringTemplate ? (
+        <div className={styles.field}>
+          <label className={styles.toggleRow}>
+            <span className={styles.toggleLabel}>반복 거래</span>
+            <input
+              className={styles.visuallyHidden}
+              type="checkbox"
+              role="switch"
+              checked={isRecurring}
+              disabled={disabled}
+              aria-checked={isRecurring}
+              onChange={(event) => handleRecurringChange(event.target.checked)}
+            />
+            <span className={styles.switchTrack} aria-hidden>
+              <span className={styles.switchThumb} />
+            </span>
+          </label>
+          {isRecurring ? (
+            <p className={styles.helperText}>
+              매달 {dayFromDateInputValue(transactionDate)}일에 자동으로 거래가
+              생성됩니다. 지정일이 없는 달은 해당 월의 마지막 날에 생성됩니다.
+            </p>
+          ) : null}
+        </div>
+      ) : null}
 
       {error ? (
         <p className={styles.error}>

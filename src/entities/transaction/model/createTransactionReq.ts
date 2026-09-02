@@ -10,4 +10,5 @@ export type CreateTransactionReq = {
   categoryId?: number | null;
   memo?: string | null;
   isRecurring?: boolean | null;
+  recurringDay?: number | null;
 };

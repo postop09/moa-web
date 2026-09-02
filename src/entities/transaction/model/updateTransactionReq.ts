@@ -11,4 +11,5 @@ export type UpdateTransactionReq = {
   categoryId?: number | null;
   memo?: string | null;
   isRecurring?: boolean | null;
+  recurringDay?: number | null;
 };

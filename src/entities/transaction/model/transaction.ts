@@ -7,6 +7,8 @@ export type Transaction = {
   name: string | null;
   amount: number;
   isRecurring: boolean | null;
+  recurringDay: number | null;
+  recurringSourceId: number | null;
   categoryId: number | null;
   memo: string | null;
   createdBy: string;

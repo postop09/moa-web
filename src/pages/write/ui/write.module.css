@@ -276,6 +276,13 @@
   outline-offset: 2px;
 }
 
+.helperText {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+
 .primaryButton,
 .secondaryButton,
 .dangerPrimaryButton {
