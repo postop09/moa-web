@@ -38,7 +38,8 @@ export const TransactionList = ({
   const categoryNameById = new Map(
     categories.map((category) => [category.id, category.name]),
   );
-  const balance = totals.income - totals.expense - totals.saving;
+  const balance =
+    totals.income - totals.expense - totals.saving - totals.insurance;
 
   const resolveName = (transaction: Transaction) => {
     const categoryName =
@@ -72,6 +73,9 @@ export const TransactionList = ({
     if (type === 'saving') {
       return styles.amountSaving;
     }
+    if (type === 'insurance') {
+      return styles.amountInsurance;
+    }
     return styles.amountExpense;
   };
 
@@ -104,6 +108,12 @@ export const TransactionList = ({
           <span className={styles.totalLabel}>저축</span>
           <span className={`${styles.totalValue} ${styles.amountSaving}`}>
             {formatAmount(totals.saving)}
+          </span>
+        </div>
+        <div className={styles.totalItem}>
+          <span className={styles.totalLabel}>보험</span>
+          <span className={`${styles.totalValue} ${styles.amountInsurance}`}>
+            {formatAmount(totals.insurance)}
           </span>
         </div>
         {showBalance ? (

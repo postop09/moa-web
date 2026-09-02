@@ -15,6 +15,7 @@ export type HistoryTotals = {
   income: number;
   expense: number;
   saving: number;
+  insurance: number;
 };
 
 export const useTransactionHistory = (householdId: string | null) => {
@@ -137,7 +138,12 @@ export const useTransactionHistory = (householdId: string | null) => {
   }, [profilesQuery.data]);
 
   const totals = useMemo(() => {
-    const next: HistoryTotals = { income: 0, expense: 0, saving: 0 };
+    const next: HistoryTotals = {
+      income: 0,
+      expense: 0,
+      saving: 0,
+      insurance: 0,
+    };
 
     for (const transaction of transactions) {
       if (transaction.type === 'income') {
@@ -146,6 +152,8 @@ export const useTransactionHistory = (householdId: string | null) => {
         next.expense += transaction.amount;
       } else if (transaction.type === 'saving') {
         next.saving += transaction.amount;
+      } else if (transaction.type === 'insurance') {
+        next.insurance += transaction.amount;
       }
     }
 

@@ -12,12 +12,18 @@ type Props = {
   onDelete: (category: Category) => void;
 };
 
-const TYPE_ORDER: TransactionType[] = ['expense', 'income', 'saving'];
+const TYPE_ORDER: TransactionType[] = [
+  'expense',
+  'income',
+  'saving',
+  'insurance',
+];
 
 const TYPE_TITLE_CLASS: Record<TransactionType, string> = {
   expense: styles.groupTitleExpense,
   income: styles.groupTitleIncome,
   saving: styles.groupTitleSaving,
+  insurance: styles.groupTitleInsurance,
 };
 
 const formatBudget = (budget: number | null) => {
@@ -37,6 +43,7 @@ export const CategoryList = ({ categories, onEdit, onDelete }: Props) => {
     expense: categories.filter((item) => item.type === 'expense'),
     income: categories.filter((item) => item.type === 'income'),
     saving: categories.filter((item) => item.type === 'saving'),
+    insurance: categories.filter((item) => item.type === 'insurance'),
   } as const;
 
   return (

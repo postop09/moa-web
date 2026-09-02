@@ -6,6 +6,7 @@ export type AssetTrendPoint = {
   income: number;
   expense: number;
   saving: number;
+  insurance: number;
   asset: number;
 };
 
@@ -28,6 +29,7 @@ type MonthlyTotals = {
   income: number;
   expense: number;
   saving: number;
+  insurance: number;
 };
 
 export const buildAssetTrends = (
@@ -49,7 +51,10 @@ export const buildAssetTrends = (
   }
 
   const totalsByKey = new Map<string, MonthlyTotals>(
-    buckets.map((item) => [item.key, { income: 0, expense: 0, saving: 0 }]),
+    buckets.map((item) => [
+      item.key,
+      { income: 0, expense: 0, saving: 0, insurance: 0 },
+    ]),
   );
 
   for (const transaction of transactions) {
@@ -66,22 +71,27 @@ export const buildAssetTrends = (
       totals.expense += transaction.amount;
     } else if (transaction.type === 'saving') {
       totals.saving += transaction.amount;
+    } else if (transaction.type === 'insurance') {
+      totals.insurance += transaction.amount;
     }
   }
 
   let cumulativeIncome = 0;
   let cumulativeExpense = 0;
   let cumulativeSaving = 0;
+  let cumulativeInsurance = 0;
 
   return buckets.map((item) => {
     const totals = totalsByKey.get(item.key) ?? {
       income: 0,
       expense: 0,
       saving: 0,
+      insurance: 0,
     };
     cumulativeIncome += totals.income;
     cumulativeExpense += totals.expense;
     cumulativeSaving += totals.saving;
+    cumulativeInsurance += totals.insurance;
 
     return {
       key: item.key,
@@ -89,7 +99,8 @@ export const buildAssetTrends = (
       income: cumulativeIncome,
       expense: cumulativeExpense,
       saving: cumulativeSaving,
-      asset: cumulativeIncome - cumulativeExpense,
+      insurance: cumulativeInsurance,
+      asset: cumulativeIncome - cumulativeExpense - cumulativeInsurance,
     };
   });
 };

@@ -32,8 +32,11 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
     income,
     expense,
     saving,
+    insurance,
+    incomeTotalBudget,
+    expenseRate,
+    insuranceRate,
     savingRate,
-    budgetTotal,
     expenseByCategory,
     categoryBudgets,
     recentTransactions,
@@ -57,21 +60,17 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
     );
   }
 
-  const expenseRatio =
-    budgetTotal && budgetTotal > 0
-      ? (expense / budgetTotal) * 100
-      : income > 0
-        ? (expense / income) * 100
-        : null;
-
-  const incomeRingRatio = income > 0 ? (income / income) * 100 : null;
-
-  const savingRingRatio =
-    savingRate === null ? null : Math.max(0, Math.min(100, savingRate));
+  const incomeRingRatio =
+    income > 0 ? (income / incomeTotalBudget) * 100 : null;
 
   return (
     <div className={styles.dashboard}>
-      <DashboardHeader income={income} expense={expense} saving={saving} />
+      <DashboardHeader
+        income={income}
+        expense={expense}
+        saving={saving}
+        insurance={insurance}
+      />
       <AssetTrendCard items={assetTrends} />
 
       <div className={styles.grid}>
@@ -84,17 +83,23 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
               color={TRANSACTION_TYPE_COLOR.income}
             />
             <MetricRingCard
-              label="지출"
-              valueLabel={formatAmount(expense)}
-              ratio={expenseRatio}
+              label="지출 비율"
+              valueLabel={formatRate(expenseRate)}
+              ratio={expenseRate}
               color={TRANSACTION_TYPE_COLOR.expense}
             />
             <MetricRingCard
               label="저축 비율"
               valueLabel={formatRate(savingRate)}
-              ratio={savingRingRatio}
+              ratio={savingRate}
               negative={savingRate !== null && savingRate < 0}
               color={TRANSACTION_TYPE_COLOR.saving}
+            />
+            <MetricRingCard
+              label="보험 비율"
+              valueLabel={formatRate(insuranceRate)}
+              ratio={insuranceRate}
+              color={TRANSACTION_TYPE_COLOR.insurance}
             />
             <RecentTransactionsCard
               transactions={recentTransactions}

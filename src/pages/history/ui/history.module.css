@@ -41,7 +41,7 @@
   min-width: 6.5rem;
 }
 
-.totalItem:nth-child(4) {
+.totalItem:nth-child(5) {
   margin-left: auto;
 }
 
@@ -107,6 +107,12 @@
   border-color: var(--color-saving);
   background: color-mix(in srgb, var(--color-saving) 12%, transparent);
   color: var(--color-saving);
+}
+
+.typeChipInsurance {
+  border-color: var(--color-insurance);
+  background: color-mix(in srgb, var(--color-insurance) 12%, transparent);
+  color: var(--color-insurance);
 }
 
 .filterRow {
@@ -404,6 +410,10 @@
 
 .amountSaving {
   color: var(--color-saving);
+}
+
+.amountInsurance {
+  color: var(--color-insurance);
 }
 
 @media (min-width: 768px) {

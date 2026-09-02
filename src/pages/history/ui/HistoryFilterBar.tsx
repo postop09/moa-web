@@ -27,9 +27,10 @@ type Props = {
 
 const TYPE_OPTIONS: { value: TypeFilter; label: string }[] = [
   { value: 'all', label: '전체' },
-  { value: 'expense', label: TRANSACTION_TYPE_LABEL.expense },
   { value: 'income', label: TRANSACTION_TYPE_LABEL.income },
+  { value: 'expense', label: TRANSACTION_TYPE_LABEL.expense },
   { value: 'saving', label: TRANSACTION_TYPE_LABEL.saving },
+  { value: 'insurance', label: TRANSACTION_TYPE_LABEL.insurance },
 ];
 
 const TYPE_CHIP_ACTIVE: Record<TypeFilter, string> = {
@@ -37,6 +38,7 @@ const TYPE_CHIP_ACTIVE: Record<TypeFilter, string> = {
   expense: styles.typeChipExpense,
   income: styles.typeChipIncome,
   saving: styles.typeChipSaving,
+  insurance: styles.typeChipInsurance,
 };
 
 const formatMonthLabel = (date: Date) => {

@@ -56,6 +56,7 @@ export const useHomeDashboard = (
     let income = 0;
     let expense = 0;
     let saving = 0;
+    let insurance = 0;
 
     for (const transaction of currentMonthTransactions) {
       if (transaction.type === 'income') {
@@ -64,29 +65,29 @@ export const useHomeDashboard = (
         expense += transaction.amount;
       } else if (transaction.type === 'saving') {
         saving += transaction.amount;
+      } else if (transaction.type === 'insurance') {
+        insurance += transaction.amount;
       }
     }
 
-    const budgetValues = categories
-      .filter(
-        (category) => category.type === 'expense' && category.budget !== null,
-      )
+    const incomeBudgetValues = categories
+      .filter((category) => category.type === 'income' && category.budget)
       .map((category) => category.budget as number);
 
-    const budgetTotal =
-      budgetValues.length === 0
-        ? null
-        : budgetValues.reduce((sum, value) => sum + value, 0);
-
-    const budgetRemaining = budgetTotal === null ? null : budgetTotal - expense;
+    const incomeTotalBudget = incomeBudgetValues.reduce(
+      (sum, value) => sum + value,
+      0,
+    );
 
     return {
       income,
       expense,
       saving,
+      insurance,
+      incomeTotalBudget,
+      expenseRate: income === 0 ? null : (expense / income) * 100,
+      insuranceRate: income === 0 ? null : (insurance / income) * 100,
       savingRate: income === 0 ? null : (saving / income) * 100,
-      budgetTotal,
-      budgetRemaining,
       expenseByCategory: buildExpenseByCategory(
         currentMonthTransactions,
         categories,

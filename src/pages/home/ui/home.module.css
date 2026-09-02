@@ -138,6 +138,10 @@
   background: var(--color-saving);
 }
 
+.legendDotInsurance {
+  background: var(--color-insurance);
+}
+
 .stackBarTrack {
   display: flex;
   width: 100%;
@@ -155,6 +159,11 @@
 .barFillSaving {
   height: 100%;
   background: var(--color-saving);
+}
+
+.barFillInsurance {
+  height: 100%;
+  background: var(--color-insurance);
 }
 
 .grid {
@@ -419,6 +428,10 @@
 
 .recentSaving {
   color: var(--color-saving);
+}
+
+.recentInsurance {
+  color: var(--color-insurance);
 }
 
 .empty {

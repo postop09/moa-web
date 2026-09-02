@@ -44,6 +44,7 @@ const TYPE_OPTIONS: {
   { value: 'expense', activeClass: styles.typeSegmentExpense },
   { value: 'income', activeClass: styles.typeSegmentIncome },
   { value: 'saving', activeClass: styles.typeSegmentSaving },
+  { value: 'insurance', activeClass: styles.typeSegmentInsurance },
 ];
 
 export const TransactionForm = ({

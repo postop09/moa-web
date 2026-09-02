@@ -6,20 +6,32 @@ type Props = {
   income: number;
   expense: number;
   saving: number;
+  insurance: number;
 };
 
-export const DashboardHeader = ({ income, expense, saving }: Props) => {
-  const balance = income - expense - saving;
+export const DashboardHeader = ({
+  income,
+  expense,
+  saving,
+  insurance,
+}: Props) => {
+  const balance = income - expense - saving - insurance;
   const hasIncome = income > 0;
   const expenseShare = hasIncome ? Math.min(100, (expense / income) * 100) : 0;
   const savingShare = hasIncome
     ? Math.max(0, Math.min(100 - expenseShare, (saving / income) * 100))
     : 0;
+  const insuranceShare = hasIncome
+    ? Math.max(
+        0,
+        Math.min(100 - expenseShare - savingShare, (insurance / income) * 100),
+      )
+    : 0;
 
   return (
     <section className={styles.header}>
       <div className={styles.budgetBlock}>
-        <p className={styles.budgetLabel}>잔액 (수입 - 지출 - 저축)</p>
+        <p className={styles.budgetLabel}>잔액 (수입 - 지출 - 저축 - 보험)</p>
         <p
           className={`${styles.budgetValue} ${balance < 0 ? styles.budgetNegative : styles.budgetPositive}`}
         >
@@ -50,12 +62,19 @@ export const DashboardHeader = ({ income, expense, saving }: Props) => {
             />
             저축 {formatAmount(saving)}
           </span>
+          <span className={styles.legendItem}>
+            <span
+              className={`${styles.legendDot} ${styles.legendDotInsurance}`}
+              aria-hidden
+            />
+            보험 {formatAmount(insurance)}
+          </span>
         </div>
 
         <div
           className={styles.stackBarTrack}
           role="img"
-          aria-label={`수입 ${formatAmount(income)}, 지출 ${formatAmount(expense)}, 저축 ${formatAmount(saving)}`}
+          aria-label={`수입 ${formatAmount(income)}, 지출 ${formatAmount(expense)}, 저축 ${formatAmount(saving)}, 보험 ${formatAmount(insurance)}`}
         >
           {hasIncome ? (
             <>
@@ -66,6 +85,10 @@ export const DashboardHeader = ({ income, expense, saving }: Props) => {
               <div
                 className={styles.barFillSaving}
                 style={{ width: `${savingShare}%` }}
+              />
+              <div
+                className={styles.barFillInsurance}
+                style={{ width: `${insuranceShare}%` }}
               />
             </>
           ) : null}

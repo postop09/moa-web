@@ -169,7 +169,7 @@
 
 .typeSegmentGroup {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-2);
 }
 
@@ -213,6 +213,12 @@
   border-color: var(--color-saving);
   background: color-mix(in srgb, var(--color-saving) 12%, transparent);
   color: var(--color-saving);
+}
+
+.typeSegmentInsurance {
+  border-color: var(--color-insurance);
+  background: color-mix(in srgb, var(--color-insurance) 12%, transparent);
+  color: var(--color-insurance);
 }
 
 .toggleRow {

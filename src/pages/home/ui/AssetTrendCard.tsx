@@ -26,6 +26,7 @@ const SERIES = [
   { key: 'income', label: '수입', color: TRANSACTION_TYPE_COLOR.income },
   { key: 'expense', label: '지출', color: TRANSACTION_TYPE_COLOR.expense },
   { key: 'saving', label: '저축', color: TRANSACTION_TYPE_COLOR.saving },
+  { key: 'insurance', label: '보험', color: TRANSACTION_TYPE_COLOR.insurance },
   { key: 'asset', label: '자산', color: '#7c3aed' },
 ] as const;
 
@@ -33,7 +34,10 @@ export const AssetTrendCard = ({ items }: Props) => {
   const latest = items.length > 0 ? items[items.length - 1] : null;
   const hasData =
     latest !== null &&
-    (latest.income !== 0 || latest.expense !== 0 || latest.saving !== 0);
+    (latest.income !== 0 ||
+      latest.expense !== 0 ||
+      latest.saving !== 0 ||
+      latest.insurance !== 0);
 
   const option = useMemo<EChartsOption>(() => {
     return {
@@ -144,7 +148,7 @@ export const AssetTrendCard = ({ items }: Props) => {
   return (
     <section className={styles.card}>
       <div className={styles.cardTitleRow}>
-        <h3 className={styles.cardTitle}>내 자산 동향</h3>
+        <h3 className={styles.cardTitle}>자산 동향</h3>
         <p className={styles.cardMeta}>{formatAmount(latest?.asset ?? 0)}</p>
       </div>
       {hasData ? (

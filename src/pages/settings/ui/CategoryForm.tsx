@@ -4,7 +4,7 @@ import { useState, type FormEvent } from 'react';
 
 import type { Category } from '@/entities/category';
 import { useCreateCategory, useUpdateCategory } from '@/features/category';
-import type { TransactionType } from '@/shared/model';
+import { TRANSACTION_TYPE_LABEL, type TransactionType } from '@/shared/model';
 import { Modal } from '@/shared/ui';
 
 import styles from '../settings.module.css';
@@ -17,6 +17,13 @@ type Props = {
   onCancel: () => void;
   onSuccess: () => void;
 };
+
+const TYPE_ORDER: TransactionType[] = [
+  'expense',
+  'income',
+  'saving',
+  'insurance',
+];
 
 export const CategoryForm = ({
   householdId,
@@ -108,39 +115,19 @@ export const CategoryForm = ({
         <div className={styles.field}>
           <span className={styles.label}>유형</span>
           <div className={styles.typeRow}>
-            <label className={styles.radioLabel}>
-              <input
-                type="radio"
-                name="categoryType"
-                value="expense"
-                checked={type === 'expense'}
-                disabled={isPending}
-                onChange={() => setType('expense')}
-              />
-              지출
-            </label>
-            <label className={styles.radioLabel}>
-              <input
-                type="radio"
-                name="categoryType"
-                value="income"
-                checked={type === 'income'}
-                disabled={isPending}
-                onChange={() => setType('income')}
-              />
-              수입
-            </label>
-            <label className={styles.radioLabel}>
-              <input
-                type="radio"
-                name="categoryType"
-                value="saving"
-                checked={type === 'saving'}
-                disabled={isPending}
-                onChange={() => setType('saving')}
-              />
-              저축
-            </label>
+            {TYPE_ORDER.map((option) => (
+              <label key={option} className={styles.radioLabel}>
+                <input
+                  type="radio"
+                  name="categoryType"
+                  value={option}
+                  checked={type === option}
+                  disabled={isPending}
+                  onChange={() => setType(option)}
+                />
+                {TRANSACTION_TYPE_LABEL[option]}
+              </label>
+            ))}
           </div>
         </div>
 

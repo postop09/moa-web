@@ -163,6 +163,10 @@
   color: var(--color-saving);
 }
 
+.groupTitleInsurance {
+  color: var(--color-insurance);
+}
+
 .groupList {
   margin: 0;
   padding: 0;
