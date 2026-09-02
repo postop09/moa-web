@@ -5,7 +5,6 @@ import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
 
 import type { AssetTrendPoint } from '@/features/transaction';
-import { TRANSACTION_TYPE_COLOR } from '@/shared/model';
 import { formatAmount } from '@/shared/lib';
 
 import styles from './home.module.css';
@@ -14,6 +13,8 @@ type Props = {
   items: AssetTrendPoint[];
 };
 
+const ASSET_COLOR = '#7c3aed';
+
 const hexToRgba = (hex: string, alpha: number) => {
   const value = hex.replace('#', '');
   const r = Number.parseInt(value.slice(0, 2), 16);
@@ -21,14 +22,6 @@ const hexToRgba = (hex: string, alpha: number) => {
   const b = Number.parseInt(value.slice(4, 6), 16);
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
-
-const SERIES = [
-  { key: 'income', label: '수입', color: TRANSACTION_TYPE_COLOR.income },
-  { key: 'expense', label: '지출', color: TRANSACTION_TYPE_COLOR.expense },
-  { key: 'saving', label: '저축', color: TRANSACTION_TYPE_COLOR.saving },
-  { key: 'insurance', label: '보험', color: TRANSACTION_TYPE_COLOR.insurance },
-  { key: 'asset', label: '자산', color: '#7c3aed' },
-] as const;
 
 export const AssetTrendCard = ({ items }: Props) => {
   const latest = items.length > 0 ? items[items.length - 1] : null;
@@ -41,23 +34,10 @@ export const AssetTrendCard = ({ items }: Props) => {
 
   const option = useMemo<EChartsOption>(() => {
     return {
-      legend: {
-        top: 0,
-        right: 0,
-        icon: 'circle',
-        itemWidth: 8,
-        itemHeight: 8,
-        itemGap: 16,
-        textStyle: {
-          color: '#64748b',
-          fontSize: 12,
-        },
-        data: SERIES.map((series) => series.label),
-      },
       grid: {
         left: 8,
         right: 12,
-        top: 36,
+        top: 12,
         bottom: 24,
         containLabel: true,
       },
@@ -74,18 +54,13 @@ export const AssetTrendCard = ({ items }: Props) => {
             first && typeof first === 'object' && 'name' in first
               ? String(first.name)
               : '';
-          const lines = tooltipItems.map((item) => {
-            if (!item || typeof item !== 'object') {
-              return '';
-            }
-            const seriesName =
-              'seriesName' in item ? String(item.seriesName) : '';
-            const value = 'value' in item ? Number(item.value) : 0;
-            const marker = 'marker' in item ? String(item.marker) : '';
-            return `${marker}${seriesName}: ${formatAmount(value)}`;
-          });
-
-          return [name, ...lines].filter(Boolean).join('<br/>');
+          const item = tooltipItems[0];
+          if (!item || typeof item !== 'object') {
+            return name;
+          }
+          const value = 'value' in item ? Number(item.value) : 0;
+          const marker = 'marker' in item ? String(item.marker) : '';
+          return `${name}<br/>${marker}자산: ${formatAmount(value)}`;
         },
       },
       xAxis: {
@@ -115,33 +90,35 @@ export const AssetTrendCard = ({ items }: Props) => {
         },
         splitLine: { lineStyle: { color: '#e2e8f0' } },
       },
-      series: SERIES.map((series) => ({
-        name: series.label,
-        type: 'line' as const,
-        data: items.map((item) => item[series.key]),
-        smooth: true,
-        showSymbol: false,
-        lineStyle: {
-          color: series.color,
-          width: 2,
-        },
-        areaStyle: {
-          color: {
-            type: 'linear' as const,
-            x: 0,
-            y: 0,
-            x2: 0,
-            y2: 1,
-            colorStops: [
-              { offset: 0, color: hexToRgba(series.color, 0.5) },
-              { offset: 1, color: hexToRgba(series.color, 0.1) },
-            ],
+      series: [
+        {
+          name: '자산',
+          type: 'line' as const,
+          data: items.map((item) => item.asset),
+          smooth: true,
+          showSymbol: false,
+          lineStyle: {
+            color: ASSET_COLOR,
+            width: 2,
+          },
+          areaStyle: {
+            color: {
+              type: 'linear' as const,
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [
+                { offset: 0, color: hexToRgba(ASSET_COLOR, 0.5) },
+                { offset: 1, color: hexToRgba(ASSET_COLOR, 0.1) },
+              ],
+            },
+          },
+          itemStyle: {
+            color: ASSET_COLOR,
           },
         },
-        itemStyle: {
-          color: series.color,
-        },
-      })),
+      ],
     };
   }, [items]);
 
