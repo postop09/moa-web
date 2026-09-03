@@ -1,0 +1,1 @@
+../../.cursor/rules/pages-design.mdc

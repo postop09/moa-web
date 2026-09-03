@@ -1,6 +1,7 @@
 ---
 description: pages 레이어 설계 원칙 — 도메인 단위 슬라이스, 슬라이스 내부 세그먼트 분리
-globs: pages/**/*
+globs: src/pages/**/*
+paths: src/pages/**/*
 alwaysApply: false
 ---
 

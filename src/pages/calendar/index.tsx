@@ -30,6 +30,7 @@ const CalendarContent = ({ householdId }: Props) => {
     creatorNameById,
     scheduleCategories,
     categoryColorById,
+    expenseCategoryNameById,
     expenseTotalByDayKey,
     filteredSchedules,
     selectedSchedules,
@@ -145,6 +146,7 @@ const CalendarContent = ({ householdId }: Props) => {
               creatorNameById={creatorNameById}
               authorColorById={authorColorById}
               categoryColorById={categoryColorById}
+              expenseCategoryNameById={expenseCategoryNameById}
               onAddSchedule={openCreateSchedule}
               onSelectSchedule={openEditSchedule}
             />

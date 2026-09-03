@@ -1,6 +1,7 @@
 ---
 description: entities 레이어 설계 원칙 — api/lib/model/config 세그먼트, 단일 요청 파일, Req/Res 타입 규칙
-globs: entities/**/*
+globs: src/entities/**/*
+paths: src/entities/**/*
 alwaysApply: false
 ---
 

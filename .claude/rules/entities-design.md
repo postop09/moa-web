@@ -1,0 +1,1 @@
+../../.cursor/rules/entities-design.mdc

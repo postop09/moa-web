@@ -18,6 +18,7 @@ type Props = {
   creatorNameById: Record<string, string>;
   authorColorById: Record<string, string>;
   categoryColorById: Record<number, string>;
+  expenseCategoryNameById: Record<number, string>;
   onAddSchedule: () => void;
   onSelectSchedule: (schedule: Schedule) => void;
 };
@@ -46,10 +47,6 @@ const formatScheduleRange = (schedule: Schedule) => {
   return `${start.getMonth() + 1}/${start.getDate()} ${startTime}–${end.getMonth() + 1}/${end.getDate()} ${endTime}`;
 };
 
-const resolveExpenseName = (transaction: Transaction) => {
-  return transaction.name?.trim() || '지출';
-};
-
 export const DayDetailPanel = ({
   selectedDay,
   showExpenses,
@@ -58,11 +55,23 @@ export const DayDetailPanel = ({
   creatorNameById,
   authorColorById,
   categoryColorById,
+  expenseCategoryNameById,
   onAddSchedule,
   onSelectSchedule,
 }: Props) => {
   const resolveCreatorName = (createdBy: string) => {
     return creatorNameById[createdBy] ?? '알 수 없음';
+  };
+
+  const resolveExpenseName = (transaction: Transaction) => {
+    if (transaction.categoryId === null) {
+      return '지출';
+    }
+    return (
+      transaction.name?.trim() ||
+      expenseCategoryNameById[transaction.categoryId] ||
+      '지출'
+    );
   };
 
   return (

@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 
 import type { Schedule } from '@/entities/schedule';
+import { useListCategories } from '@/features/category';
 import { useListHouseholdMembers } from '@/features/householdMember';
 import { useGetProfile, useListProfilesByIds } from '@/features/profile';
 import { useListSchedules } from '@/features/schedule';
@@ -79,6 +80,7 @@ export const useCalendarPage = (householdId: string | null) => {
   const membersQuery = useListHouseholdMembers(householdId);
   const profileQuery = useGetProfile();
   const categoriesQuery = useListScheduleCategories(householdId);
+  const transactionCategoriesQuery = useListCategories(householdId);
 
   const memberIds = useMemo(
     () => (membersQuery.data ?? []).map((member) => member.userId),
@@ -114,6 +116,14 @@ export const useCalendarPage = (householdId: string | null) => {
     }
     return map;
   }, [scheduleCategories]);
+
+  const expenseCategoryNameById = useMemo(() => {
+    const map: Record<number, string> = {};
+    for (const category of transactionCategoriesQuery.data ?? []) {
+      map[category.id] = category.name;
+    }
+    return map;
+  }, [transactionCategoriesQuery.data]);
 
   const authorOptions = useMemo<AuthorOption[]>(() => {
     const currentUserId = profileQuery.data?.id;
@@ -250,13 +260,15 @@ export const useCalendarPage = (householdId: string | null) => {
     transactionsQuery.isLoading ||
     schedulesQuery.isLoading ||
     membersQuery.isLoading ||
-    categoriesQuery.isLoading;
+    categoriesQuery.isLoading ||
+    transactionCategoriesQuery.isLoading;
 
   const error =
     transactionsQuery.error ??
     schedulesQuery.error ??
     membersQuery.error ??
-    categoriesQuery.error;
+    categoriesQuery.error ??
+    transactionCategoriesQuery.error;
 
   return {
     selectedMonth,
@@ -269,6 +281,7 @@ export const useCalendarPage = (householdId: string | null) => {
     creatorNameById,
     scheduleCategories,
     categoryColorById,
+    expenseCategoryNameById,
     expenseTotalByDayKey,
     filteredSchedules,
     selectedSchedules,
