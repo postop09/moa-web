@@ -139,7 +139,7 @@ export const useCalendarPage = (householdId: string | null) => {
   }, [creatorNameById, membersQuery.data, profileQuery.data?.id]);
 
   const filteredExpenses = useMemo(() => {
-    const expenses = (transactionsQuery.data ?? []).filter(
+    const expenses = (transactionsQuery.data?.data ?? []).filter(
       (transaction) => transaction.type === 'expense',
     );
 

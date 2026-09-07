@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 
 import { useListCategories } from '@/features/category';
 import { useListProfilesByIds } from '@/features/profile';
-import { getMonthRange, useListTransactions } from '@/features/transaction';
+import { getMonthRange, useInfiniteTransactions } from '@/features/transaction';
 import type { TransactionType } from '@/shared/model';
 import { isSameMonth, shiftMonth, startOfMonth } from '@/shared/lib';
 
@@ -17,6 +17,9 @@ export type HistoryTotals = {
   saving: number;
   insurance: number;
 };
+
+const MONTH_PAGE_SIZE = 500;
+const ALL_PERIOD_PAGE_SIZE = 50;
 
 export const useTransactionHistory = (householdId: string | null) => {
   const [selectedMonth, setSelectedMonth] = useState<Date | null>(() =>
@@ -32,12 +35,17 @@ export const useTransactionHistory = (householdId: string | null) => {
     return getMonthRange(selectedMonth);
   }, [selectedMonth]);
 
-  const transactionsQuery = useListTransactions(
+  const limit = selectedMonth === null ? ALL_PERIOD_PAGE_SIZE : MONTH_PAGE_SIZE;
+
+  const transactionsQuery = useInfiniteTransactions(
     householdId
       ? {
           householdId,
           from: monthRange?.from,
           to: monthRange?.to,
+          type: typeFilter,
+          categoryId,
+          limit,
         }
       : null,
   );
@@ -101,24 +109,10 @@ export const useTransactionHistory = (householdId: string | null) => {
   };
 
   const transactions = useMemo(() => {
-    const list = transactionsQuery.data ?? [];
+    return (transactionsQuery.data?.pages ?? []).flatMap((page) => page.data);
+  }, [transactionsQuery.data]);
 
-    return list
-      .filter((transaction) => {
-        if (typeFilter !== 'all' && transaction.type !== typeFilter) {
-          return false;
-        }
-        if (categoryId !== 'all' && transaction.categoryId !== categoryId) {
-          return false;
-        }
-        return true;
-      })
-      .sort(
-        (a, b) =>
-          new Date(b.transactionDt).getTime() -
-          new Date(a.transactionDt).getTime(),
-      );
-  }, [categoryId, transactionsQuery.data, typeFilter]);
+  const totalCount = transactionsQuery.data?.pages[0]?.count ?? null;
 
   const creatorIds = useMemo(
     () => [
@@ -160,6 +154,11 @@ export const useTransactionHistory = (householdId: string | null) => {
     return next;
   }, [transactions]);
 
+  const retry = () => {
+    void transactionsQuery.refetch();
+    void categoriesQuery.refetch();
+  };
+
   return {
     selectedMonth,
     typeFilter,
@@ -168,6 +167,8 @@ export const useTransactionHistory = (householdId: string | null) => {
     categories,
     transactions,
     totals,
+    totalCount,
+    loadedCount: transactions.length,
     creatorNameById,
     canGoNext,
     goPrevMonth,
@@ -175,6 +176,13 @@ export const useTransactionHistory = (householdId: string | null) => {
     clearMonthFilter,
     setTypeFilter: handleTypeFilterChange,
     setCategoryId,
+    hasNextPage: transactionsQuery.hasNextPage,
+    isFetchingNextPage: transactionsQuery.isFetchingNextPage,
+    isFetchNextPageError: transactionsQuery.isFetchNextPageError,
+    fetchNextPage: () => {
+      void transactionsQuery.fetchNextPage();
+    },
+    retry,
     isLoading: transactionsQuery.isLoading || categoriesQuery.isLoading,
     error: transactionsQuery.error ?? categoriesQuery.error,
   };

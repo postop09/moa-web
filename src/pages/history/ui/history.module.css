@@ -18,6 +18,23 @@
   color: #b91c1c;
 }
 
+.errorCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.errorCardText {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: #b91c1c;
+}
+
 .listSection {
   display: flex;
   flex-direction: column;
@@ -34,6 +51,18 @@
   background: var(--color-surface);
 }
 
+.totalsCaption {
+  display: inline-flex;
+  flex-basis: 100%;
+  padding: 0.125rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-bg);
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  width: fit-content;
+}
+
 .totalItem {
   display: flex;
   flex-direction: column;
@@ -41,7 +70,7 @@
   min-width: 6.5rem;
 }
 
-.totalItem:nth-child(5) {
+.totalItemBalance {
   margin-left: auto;
 }
 
@@ -402,6 +431,10 @@
   border-bottom: 0;
 }
 
+.listTable:has(tfoot) tbody tr:last-child td {
+  border-bottom: 1px solid var(--color-border);
+}
+
 .listTable tbody tr:hover {
   background: color-mix(in srgb, var(--color-accent) 6%, transparent);
 }
@@ -448,4 +481,95 @@
   .listTable {
     display: table;
   }
+}
+
+.listFooterRow {
+  border-top: 1px solid var(--color-border);
+}
+
+.listFooter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 3.5rem;
+  padding: var(--space-2) var(--space-4);
+  overflow-anchor: none;
+}
+
+.listFooterSentinel {
+  width: 100%;
+  height: 1px;
+}
+
+.loadMoreButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0.5rem 1rem;
+  min-width: 8rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.loadMoreButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spinnerIcon {
+  animation: historySpin 0.8s linear infinite;
+}
+
+@keyframes historySpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinnerIcon {
+    animation: none;
+  }
+}
+
+.listFooterEnd {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+}
+
+.listFooterEnd::before,
+.listFooterEnd::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.listFooterError {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.listFooterErrorText {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
 }

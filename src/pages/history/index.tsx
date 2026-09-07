@@ -21,6 +21,7 @@ export const HistoryPage = () => {
     categories,
     transactions,
     totals,
+    loadedCount,
     creatorNameById,
     canGoNext,
     goPrevMonth,
@@ -28,9 +29,16 @@ export const HistoryPage = () => {
     clearMonthFilter,
     setTypeFilter,
     setCategoryId,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetchNextPageError,
+    fetchNextPage,
+    retry,
     isLoading,
     error,
   } = useTransactionHistory(householdId);
+
+  const isFirstPageError = Boolean(error) && transactions.length === 0;
 
   return (
     <main className={styles.page}>
@@ -67,21 +75,37 @@ export const HistoryPage = () => {
 
           {isLoading ? <p className={styles.empty}>불러오는 중…</p> : null}
 
-          {error ? (
-            <p className={styles.error}>
-              {error instanceof Error
-                ? error.message
-                : '거래 내역을 불러오지 못했습니다.'}
-            </p>
+          {!isLoading && isFirstPageError ? (
+            <div className={styles.errorCard} role="alert">
+              <p className={styles.errorCardText}>
+                {error instanceof Error
+                  ? error.message
+                  : '거래 내역을 불러오지 못했습니다.'}
+              </p>
+              <button
+                type="button"
+                className={styles.loadMoreButton}
+                onClick={retry}
+              >
+                다시 시도
+              </button>
+            </div>
           ) : null}
 
-          {!isLoading && !error ? (
+          {!isLoading && !isFirstPageError ? (
             <TransactionList
               transactions={transactions}
               categories={categories}
               creatorNameById={creatorNameById}
               totals={totals}
-              showBalance={typeFilter === 'all'}
+              selectedMonth={selectedMonth}
+              typeFilter={typeFilter}
+              categoryId={categoryId}
+              loadedCount={loadedCount}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              isFetchNextPageError={isFetchNextPageError}
+              onLoadMore={fetchNextPage}
             />
           ) : null}
         </>

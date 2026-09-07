@@ -8,13 +8,14 @@ export const listTransactions = async (
   supabase: SupabaseClient,
   payload: ListTransactionsReq,
 ): Promise<ListTransactionsRes> => {
-  const { householdId, from, to } = payload;
+  const { householdId, from, to, type, categoryId, limit, offset } = payload;
 
   let query = supabase
     .from(TABLE_NAME)
-    .select('*')
+    .select('*', { count: 'exact' })
     .eq('householdId', householdId)
-    .order('transactionDt', { ascending: false });
+    .order('transactionDt', { ascending: false })
+    .order('id', { ascending: false });
 
   if (from) {
     query = query.gte('transactionDt', from);
@@ -24,11 +25,24 @@ export const listTransactions = async (
     query = query.lte('transactionDt', to);
   }
 
-  const { data, error } = await query;
+  if (type) {
+    query = query.eq('type', type);
+  }
+
+  if (categoryId !== undefined) {
+    query = query.eq('categoryId', categoryId);
+  }
+
+  if (limit !== undefined) {
+    const start = offset ?? 0;
+    query = query.range(start, start + limit - 1);
+  }
+
+  const { data, error, count } = await query;
 
   if (error) {
     throw error;
   }
 
-  return data;
+  return { data: data ?? [], count: count ?? null };
 };

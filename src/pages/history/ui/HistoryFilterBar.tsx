@@ -65,6 +65,7 @@ export const HistoryFilterBar = ({
             key={option.value}
             type="button"
             className={`${styles.typeChip} ${typeFilter === option.value ? TYPE_CHIP_ACTIVE[option.value] : ''}`}
+            aria-pressed={typeFilter === option.value}
             onClick={() => onTypeChange(option.value)}
           >
             {option.label}

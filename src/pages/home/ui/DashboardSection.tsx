@@ -3,9 +3,9 @@
 import { TRANSACTION_TYPE_COLOR } from '@/shared/model';
 import { formatAmount } from '@/shared/lib';
 
-import { AssetTrendCard } from './AssetTrendCard';
 import { CategoryBudgetCard } from './CategoryBudgetCard';
 import { CategoryPieCard } from './CategoryPieCard';
+import { DailyExpenseCard } from './DailyExpenseCard';
 import { DashboardHeader } from './DashboardHeader';
 import { MetricRingCard } from './MetricRingCard';
 import { RecentTransactionsCard } from './RecentTransactionsCard';
@@ -43,7 +43,7 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
     categories,
     monthlyExpenses,
     weeklyExpenses,
-    assetTrends,
+    dailyExpenses,
     isLoading,
     error,
   } = useHomeDashboard(householdId, selectedMonth);
@@ -71,7 +71,7 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
         saving={saving}
         insurance={insurance}
       />
-      <AssetTrendCard items={assetTrends} />
+      <DailyExpenseCard items={dailyExpenses} selectedMonth={selectedMonth} />
 
       <div className={styles.grid}>
         <div className={styles.column}>

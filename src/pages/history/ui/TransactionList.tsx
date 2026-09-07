@@ -1,13 +1,19 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useRef } from 'react';
 
 import type { Category } from '@/entities/category';
 import type { Transaction } from '@/entities/transaction';
 import { TRANSACTION_TYPE_LABEL } from '@/shared/model';
 import { formatAmount } from '@/shared/lib';
 
-import type { HistoryTotals } from '../model/useTransactionHistory';
+import type {
+  CategoryFilter,
+  HistoryTotals,
+  TypeFilter,
+} from '../model/useTransactionHistory';
+import { ListFooter } from './ListFooter';
 import styles from './history.module.css';
 
 type Props = {
@@ -15,7 +21,14 @@ type Props = {
   categories: Category[];
   creatorNameById: Record<string, string>;
   totals: HistoryTotals;
-  showBalance?: boolean;
+  selectedMonth: Date | null;
+  typeFilter: TypeFilter;
+  categoryId: CategoryFilter;
+  loadedCount: number;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  isFetchNextPageError: boolean;
+  onLoadMore: () => void;
 };
 
 const formatDate = (iso: string) => {
@@ -33,13 +46,35 @@ export const TransactionList = ({
   categories,
   creatorNameById,
   totals,
-  showBalance = false,
+  selectedMonth,
+  typeFilter,
+  categoryId,
+  loadedCount,
+  hasNextPage,
+  isFetchingNextPage,
+  isFetchNextPageError,
+  onLoadMore,
 }: Props) => {
+  const listSectionRef = useRef<HTMLDivElement>(null);
+  const isFirstRenderRef = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRenderRef.current) {
+      isFirstRenderRef.current = false;
+      return;
+    }
+    listSectionRef.current?.scrollIntoView({ block: 'start' });
+  }, [typeFilter, categoryId]);
+
   const categoryNameById = new Map(
     categories.map((category) => [category.id, category.name]),
   );
   const balance =
     totals.income - totals.expense - totals.saving - totals.insurance;
+
+  const isAllPeriod = selectedMonth === null;
+  const showBalance = !isAllPeriod && typeFilter === 'all';
+  const hasFilter = typeFilter !== 'all' || categoryId !== 'all';
 
   const resolveName = (transaction: Transaction) => {
     const categoryName =
@@ -95,9 +130,38 @@ export const TransactionList = ({
     return '-';
   };
 
+  const renderEmptyMessage = () => {
+    if (hasFilter) {
+      return <p className={styles.empty}>조건에 맞는 거래가 없습니다.</p>;
+    }
+    if (selectedMonth !== null) {
+      return (
+        <p className={styles.empty}>
+          {selectedMonth.getMonth() + 1}월에 등록된 거래가 없습니다.
+        </p>
+      );
+    }
+    return (
+      <p className={styles.empty}>
+        아직 등록된 거래가 없습니다.{' '}
+        <Link href="/write">첫 거래를 기록해 보세요.</Link>
+      </p>
+    );
+  };
+
+  const showFooter = transactions.length > 0;
+
   return (
-    <div className={styles.listSection}>
-      <div className={styles.totals}>
+    <div className={styles.listSection} ref={listSectionRef}>
+      <div
+        className={styles.totals}
+        aria-describedby={isAllPeriod ? 'history-totals-caption' : undefined}
+      >
+        {isAllPeriod ? (
+          <span id="history-totals-caption" className={styles.totalsCaption}>
+            불러온 {loadedCount}건 기준 부분 합계
+          </span>
+        ) : null}
         <div className={styles.totalItem}>
           <span className={styles.totalLabel}>수입</span>
           <span className={`${styles.totalValue} ${styles.amountIncome}`}>
@@ -123,7 +187,7 @@ export const TransactionList = ({
           </span>
         </div>
         {showBalance ? (
-          <div className={styles.totalItem}>
+          <div className={`${styles.totalItem} ${styles.totalItemBalance}`}>
             <span className={styles.totalLabel}>잔액</span>
             <span
               className={`${styles.totalValue} ${balance < 0 ? styles.amountExpense : styles.amountIncome}`}
@@ -135,7 +199,7 @@ export const TransactionList = ({
       </div>
 
       {transactions.length === 0 ? (
-        <p className={styles.empty}>조건에 맞는 거래가 없습니다.</p>
+        renderEmptyMessage()
       ) : (
         <>
           <ul className={styles.listCards}>
@@ -165,6 +229,17 @@ export const TransactionList = ({
                 </Link>
               </li>
             ))}
+            {showFooter ? (
+              <li className={styles.listFooterRow}>
+                <ListFooter
+                  hasNextPage={hasNextPage}
+                  isFetchingNextPage={isFetchingNextPage}
+                  isFetchNextPageError={isFetchNextPageError}
+                  loadedCount={loadedCount}
+                  onLoadMore={onLoadMore}
+                />
+              </li>
+            ) : null}
           </ul>
 
           <table className={styles.listTable}>
@@ -211,6 +286,21 @@ export const TransactionList = ({
                 </tr>
               ))}
             </tbody>
+            {showFooter ? (
+              <tfoot>
+                <tr>
+                  <td colSpan={7}>
+                    <ListFooter
+                      hasNextPage={hasNextPage}
+                      isFetchingNextPage={isFetchingNextPage}
+                      isFetchNextPageError={isFetchNextPageError}
+                      loadedCount={loadedCount}
+                      onLoadMore={onLoadMore}
+                    />
+                  </td>
+                </tr>
+              </tfoot>
+            ) : null}
           </table>
         </>
       )}

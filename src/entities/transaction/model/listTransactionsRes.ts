@@ -1,3 +1,6 @@
 import type { Transaction } from './transaction';
 
-export type ListTransactionsRes = Transaction[];
+export type ListTransactionsRes = {
+  data: Transaction[];
+  count: number | null;
+};

@@ -4,8 +4,8 @@ import { useMemo } from 'react';
 
 import { useListCategories } from '@/features/category';
 import {
-  buildAssetTrends,
   buildCategoryBudgets,
+  buildDailyExpenses,
   buildExpenseByCategory,
   buildMonthlyExpenses,
   buildWeeklyExpenses,
@@ -43,7 +43,7 @@ export const useHomeDashboard = (
   const categoriesQuery = useListCategories(householdId);
 
   const dashboard = useMemo(() => {
-    const allTransactions = transactionsQuery.data ?? [];
+    const allTransactions = transactionsQuery.data?.data ?? [];
     const categories = categoriesQuery.data ?? [];
     const monthFrom = new Date(monthRange.from).getTime();
     const monthTo = new Date(monthRange.to).getTime();
@@ -115,9 +115,9 @@ export const useHomeDashboard = (
         categories,
         selectedMonth,
       ),
-      assetTrends: buildAssetTrends(
-        allTransactions,
-        YEAR_WINDOW,
+      dailyExpenses: buildDailyExpenses(
+        currentMonthTransactions,
+        categories,
         selectedMonth,
       ),
     };
