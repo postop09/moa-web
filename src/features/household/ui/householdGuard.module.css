@@ -1,0 +1,11 @@
+.empty {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+}
+
+.error {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: #b91c1c;
+}

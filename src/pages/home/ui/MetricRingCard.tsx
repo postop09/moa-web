@@ -1,9 +1,10 @@
 'use client';
 
 import type { EChartsOption } from 'echarts';
-import ReactECharts from 'echarts-for-react';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
 import { useMemo } from 'react';
 
+import { echarts } from '@/shared/lib/echarts';
 import { TRANSACTION_TYPE_COLOR } from '@/shared/model';
 
 import styles from './home.module.css';
@@ -58,7 +59,8 @@ export const MetricRingCard = ({
   return (
     <div className={styles.ringCard}>
       <div className={styles.ringChart}>
-        <ReactECharts
+        <ReactEChartsCore
+          echarts={echarts}
           option={option}
           opts={{ renderer: 'canvas' }}
           style={{ height: '100%', width: '100%' }}

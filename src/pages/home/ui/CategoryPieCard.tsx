@@ -1,11 +1,12 @@
 'use client';
 
 import type { EChartsOption } from 'echarts';
-import ReactECharts from 'echarts-for-react';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
 import { useMemo, useState } from 'react';
 
 import type { ExpenseByCategory } from '@/features/transaction';
 import { formatAmount } from '@/shared/lib';
+import { echarts } from '@/shared/lib/echarts';
 
 import styles from './home.module.css';
 import { EXPENSE_COLORS } from '../config/expenseColors';
@@ -75,7 +76,8 @@ export const CategoryPieCard = ({ items }: Props) => {
       </div>
       {hasData ? (
         <div className={styles.chart}>
-          <ReactECharts
+          <ReactEChartsCore
+            echarts={echarts}
             option={option}
             opts={{ renderer: 'canvas' }}
             style={{ height: 240, width: '100%' }}
@@ -83,7 +85,6 @@ export const CategoryPieCard = ({ items }: Props) => {
             lazyUpdate
             onEvents={{
               legendselectchanged: (params: LegendselectedParams) => {
-                console.log('legendselectchanged', params);
                 const selected = params.selected;
                 const selectedItems = Object.keys(selected).filter(
                   (key) => selected[key],

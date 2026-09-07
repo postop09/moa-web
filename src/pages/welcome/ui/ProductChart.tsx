@@ -1,13 +1,14 @@
 'use client';
 
 import type { EChartsOption } from 'echarts';
-import ReactECharts from 'echarts-for-react';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
 import { useEffect, useMemo, useState } from 'react';
 
 import {
   PREVIEW_ASSET_COLOR,
   PREVIEW_ASSET_TREND,
 } from '../config/previewChart';
+import { echarts } from '../lib/echarts';
 import styles from './welcome.module.css';
 
 const hexToRgba = (hex: string, alpha: number) => {
@@ -106,7 +107,8 @@ export const ProductChart = () => {
 
   return (
     <div className={styles.desktopChart}>
-      <ReactECharts
+      <ReactEChartsCore
+        echarts={echarts}
         option={option}
         opts={{ renderer: 'canvas' }}
         style={{ height: 140, width: '100%' }}

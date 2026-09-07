@@ -1,10 +1,11 @@
 'use client';
 
 import type { EChartsOption } from 'echarts';
-import ReactECharts from 'echarts-for-react';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
 import { useMemo, useState } from 'react';
 
 import { formatAmount } from '@/shared/lib';
+import { echarts } from '@/shared/lib/echarts';
 
 import { EXPENSE_COLORS } from '../config/expenseColors';
 import { buildCategorySeries } from '../lib/buildCategorySeries';
@@ -146,7 +147,8 @@ export const SpendingOverTimeCard = ({ weeklyItems, monthlyItems }: Props) => {
       </div>
       {hasData ? (
         <div className={styles.chart}>
-          <ReactECharts
+          <ReactEChartsCore
+            echarts={echarts}
             option={option}
             opts={{ renderer: 'canvas' }}
             style={{ height: 260, width: '100%' }}

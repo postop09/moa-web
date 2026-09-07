@@ -1,18 +1,38 @@
 'use client';
 
+import dynamic from 'next/dynamic';
+
 import { TRANSACTION_TYPE_COLOR } from '@/shared/model';
 import { formatAmount, getErrorMessage } from '@/shared/lib';
 
 import { CategoryBudgetCard } from './CategoryBudgetCard';
-import { CategoryPieCard } from './CategoryPieCard';
-import { DailyExpenseCard } from './DailyExpenseCard';
 import { DashboardHeader } from './DashboardHeader';
-import { MetricRingCard } from './MetricRingCard';
 import { RecentTransactionsCard } from './RecentTransactionsCard';
-import { SpendingOverTimeCard } from './SpendingOverTimeCard';
-import { TopSpendingsCard } from './TopSpendingsCard';
 import { useHomeDashboard } from '../model/useHomeDashboard';
 import styles from './home.module.css';
+
+// echarts를 쓰는 카드들은 dashboard 진입 시에만 별도 청크로 불러온다(다른 라우트의 초기 번들에서 제외).
+const CategoryPieCard = dynamic(
+  () => import('./CategoryPieCard').then((mod) => mod.CategoryPieCard),
+  { ssr: false },
+);
+const DailyExpenseCard = dynamic(
+  () => import('./DailyExpenseCard').then((mod) => mod.DailyExpenseCard),
+  { ssr: false },
+);
+const MetricRingCard = dynamic(
+  () => import('./MetricRingCard').then((mod) => mod.MetricRingCard),
+  { ssr: false },
+);
+const SpendingOverTimeCard = dynamic(
+  () =>
+    import('./SpendingOverTimeCard').then((mod) => mod.SpendingOverTimeCard),
+  { ssr: false },
+);
+const TopSpendingsCard = dynamic(
+  () => import('./TopSpendingsCard').then((mod) => mod.TopSpendingsCard),
+  { ssr: false },
+);
 
 type Props = {
   householdId: string;

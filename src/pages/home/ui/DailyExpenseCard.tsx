@@ -1,11 +1,12 @@
 'use client';
 
 import type { EChartsOption } from 'echarts';
-import ReactECharts from 'echarts-for-react';
+import ReactEChartsCore from 'echarts-for-react/lib/core';
 import { useMemo } from 'react';
 
 import type { DailyExpense } from '@/features/transaction';
 import { formatAmount } from '@/shared/lib';
+import { echarts } from '@/shared/lib/echarts';
 
 import { EXPENSE_COLORS } from '../config/expenseColors';
 import { buildCategorySeries } from '../lib/buildCategorySeries';
@@ -154,7 +155,8 @@ export const DailyExpenseCard = ({ items, selectedMonth }: Props) => {
       {hasData ? (
         <>
           <div className={styles.chart} role="img" aria-label={ariaLabel}>
-            <ReactECharts
+            <ReactEChartsCore
+              echarts={echarts}
               option={option}
               opts={{ renderer: 'canvas' }}
               style={{ height: 240, width: '100%' }}

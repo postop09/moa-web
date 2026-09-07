@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { HouseholdPageTitle, useCurrentHousehold } from '@/features/household';
+import { HouseholdGuard, HouseholdPageTitle } from '@/features/household';
 import { getErrorMessage } from '@/shared/lib';
 
 import { useCalendarPage } from './model/useCalendarPage';
@@ -181,33 +181,13 @@ const CalendarContent = ({ householdId }: Props) => {
 };
 
 export const CalendarPage = () => {
-  const {
-    householdId,
-    isLoading: householdLoading,
-    error: householdError,
-  } = useCurrentHousehold();
-
   return (
     <main className={styles.page}>
       <HouseholdPageTitle subtitle="일정과 지출을 한눈에 확인하세요." />
 
-      {householdLoading ? <p className={styles.empty}>불러오는 중…</p> : null}
-
-      {householdError ? (
-        <p className={styles.error}>
-          {householdError instanceof Error
-            ? householdError.message
-            : '가계부 정보를 불러오지 못했습니다.'}
-        </p>
-      ) : null}
-
-      {!householdLoading && !householdId ? (
-        <p className={styles.empty}>확인할 가계부를 선택해 주세요.</p>
-      ) : null}
-
-      {householdId ? (
-        <CalendarContent key={householdId} householdId={householdId} />
-      ) : null}
+      <HouseholdGuard>
+        {(householdId) => <CalendarContent householdId={householdId} />}
+      </HouseholdGuard>
     </main>
   );
 };
