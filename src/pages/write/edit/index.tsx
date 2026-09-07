@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import { useCurrentHousehold } from '@/features/household';
 import { useGetTransaction } from '@/features/transaction';
+import { getErrorMessage } from '@/shared/lib';
 
 import { TransactionDeleteConfirm } from '../ui/TransactionDeleteConfirm';
 import { TransactionForm } from '../ui/TransactionForm';
@@ -45,9 +46,7 @@ export const WriteEditPage = ({ transactionId }: Props) => {
 
       {error ? (
         <p className={styles.error}>
-          {error instanceof Error
-            ? error.message
-            : '내역을 불러오지 못했습니다.'}
+          {getErrorMessage(error, '내역을 불러오지 못했습니다.')}
         </p>
       ) : null}
 

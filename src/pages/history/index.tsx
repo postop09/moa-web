@@ -1,6 +1,7 @@
 'use client';
 
 import { HouseholdPageTitle, useCurrentHousehold } from '@/features/household';
+import { getErrorMessage } from '@/shared/lib';
 
 import { useTransactionHistory } from './model/useTransactionHistory';
 import { HistoryFilterBar } from './ui/HistoryFilterBar';
@@ -78,9 +79,7 @@ export const HistoryPage = () => {
           {!isLoading && isFirstPageError ? (
             <div className={styles.errorCard} role="alert">
               <p className={styles.errorCardText}>
-                {error instanceof Error
-                  ? error.message
-                  : '거래 내역을 불러오지 못했습니다.'}
+                {getErrorMessage(error, '거래 내역을 불러오지 못했습니다.')}
               </p>
               <button
                 type="button"

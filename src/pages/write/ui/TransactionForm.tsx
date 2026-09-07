@@ -8,6 +8,7 @@ import {
   useCreateTransaction,
   useUpdateTransaction,
 } from '@/features/transaction';
+import { getErrorMessage } from '@/shared/lib';
 import { TRANSACTION_TYPE_LABEL, type TransactionType } from '@/shared/model';
 import { DatePicker } from '@/shared/ui';
 
@@ -286,7 +287,7 @@ export const TransactionForm = ({
 
       {error ? (
         <p className={styles.error}>
-          {error instanceof Error ? error.message : '거래 저장에 실패했습니다.'}
+          {getErrorMessage(error, '거래 저장에 실패했습니다.')}
         </p>
       ) : null}
       <div className={styles.buttonGroup}>

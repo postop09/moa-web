@@ -2,6 +2,8 @@
 
 import type { ReactNode } from 'react';
 
+import { getErrorMessage } from '@/shared/lib';
+
 import { Modal } from './Modal';
 import styles from './modal.module.css';
 
@@ -34,7 +36,7 @@ export const ConfirmDialog = ({
         <p className={styles.confirmText}>{message}</p>
         {error ? (
           <p className={styles.error}>
-            {error instanceof Error ? error.message : fallbackError}
+            {getErrorMessage(error, fallbackError)}
           </p>
         ) : null}
         <div className={styles.actions}>

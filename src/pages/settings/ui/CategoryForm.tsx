@@ -4,6 +4,7 @@ import { useState, type FormEvent } from 'react';
 
 import type { Category } from '@/entities/category';
 import { useCreateCategory, useUpdateCategory } from '@/features/category';
+import { getErrorMessage } from '@/shared/lib';
 import { TRANSACTION_TYPE_LABEL, type TransactionType } from '@/shared/model';
 import { Modal } from '@/shared/ui';
 
@@ -151,9 +152,7 @@ export const CategoryForm = ({
 
         {error ? (
           <p className={styles.error}>
-            {error instanceof Error
-              ? error.message
-              : '카테고리 저장에 실패했습니다.'}
+            {getErrorMessage(error, '카테고리 저장에 실패했습니다.')}
           </p>
         ) : null}
 

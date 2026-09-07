@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 
 import { useCurrentHousehold } from '@/features/household';
+import { getErrorMessage } from '@/shared/lib';
 
 import { TransactionForm } from './ui/TransactionForm';
 import styles from './ui/write.module.css';
@@ -19,9 +20,7 @@ export const WritePage = () => {
 
       {error ? (
         <p className={styles.error}>
-          {error instanceof Error
-            ? error.message
-            : '가계부 정보를 불러오지 못했습니다.'}
+          {getErrorMessage(error, '가계부 정보를 불러오지 못했습니다.')}
         </p>
       ) : null}
 

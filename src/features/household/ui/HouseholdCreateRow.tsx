@@ -4,6 +4,7 @@ import { Plus } from 'lucide-react';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 
 import type { Household } from '@/entities/household';
+import { getErrorMessage } from '@/shared/lib';
 
 import { useCreateHousehold } from '../model/useCreateHousehold';
 import styles from './householdPageTitle.module.css';
@@ -86,9 +87,7 @@ export const HouseholdCreateRow = ({ onCreated }: Props) => {
       </div>
       {error ? (
         <p className={styles.createError}>
-          {error instanceof Error
-            ? error.message
-            : '가계부 생성에 실패했습니다.'}
+          {getErrorMessage(error, '가계부 생성에 실패했습니다.')}
         </p>
       ) : null}
     </form>

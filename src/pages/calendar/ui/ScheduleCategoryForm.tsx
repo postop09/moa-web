@@ -7,6 +7,7 @@ import {
   useCreateScheduleCategory,
   useUpdateScheduleCategory,
 } from '@/features/scheduleCategory';
+import { getErrorMessage } from '@/shared/lib';
 import { Modal } from '@/shared/ui';
 
 import { CATEGORY_COLORS } from '../config/authorColors';
@@ -127,9 +128,7 @@ export const ScheduleCategoryForm = ({
 
         {error ? (
           <p className={styles.error}>
-            {error instanceof Error
-              ? error.message
-              : '카테고리 저장에 실패했습니다.'}
+            {getErrorMessage(error, '카테고리 저장에 실패했습니다.')}
           </p>
         ) : null}
 

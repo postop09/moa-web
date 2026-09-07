@@ -4,6 +4,7 @@ import { useState, type FormEvent } from 'react';
 
 import type { ScheduleCategory } from '@/entities/scheduleCategory';
 import { useCreateSchedule, useUpdateSchedule } from '@/features/schedule';
+import { getErrorMessage } from '@/shared/lib';
 import { DatePicker, Modal, TimePicker } from '@/shared/ui';
 
 import type { ScheduleFormMode } from '../model/useCalendarPage';
@@ -270,9 +271,7 @@ export const ScheduleForm = ({
 
           {error ? (
             <p className={styles.error}>
-              {error instanceof Error
-                ? error.message
-                : '일정 저장에 실패했습니다.'}
+              {getErrorMessage(error, '일정 저장에 실패했습니다.')}
             </p>
           ) : null}
 

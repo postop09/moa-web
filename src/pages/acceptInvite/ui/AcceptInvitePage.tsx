@@ -9,6 +9,7 @@ import {
 } from '@/features/householdMember';
 import { persistAuthGateReadyCookie } from '@/features/onboarding';
 import { useGetProfile } from '@/features/profile';
+import { getErrorMessage } from '@/shared/lib';
 import { GridBackdrop, MoaLogo } from '@/shared/ui';
 
 import styles from './acceptInvite.module.css';
@@ -57,9 +58,7 @@ export const AcceptInvitePage = ({ token }: Props) => {
 
   const message = (() => {
     if (inviteQuery.error) {
-      return inviteQuery.error instanceof Error
-        ? inviteQuery.error.message
-        : '초대를 불러오지 못했습니다.';
+      return getErrorMessage(inviteQuery.error, '초대를 불러오지 못했습니다.');
     }
 
     if (!isLoading && !invite) {
@@ -75,9 +74,7 @@ export const AcceptInvitePage = ({ token }: Props) => {
     }
 
     if (error) {
-      return error instanceof Error
-        ? error.message
-        : '초대 수락에 실패했습니다.';
+      return getErrorMessage(error, '초대 수락에 실패했습니다.');
     }
 
     return null;

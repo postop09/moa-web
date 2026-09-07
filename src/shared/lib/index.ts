@@ -1,5 +1,6 @@
 export { formatAmount } from './formatAmount';
 export { getAuthCompletePath, getSafeNextPath } from './getSafeNextPath';
+export { getErrorMessage } from './getErrorMessage';
 export {
   isSameDay,
   isSameMonth,

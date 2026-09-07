@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from 'react';
 
 import { useCreateHouseholdInvite } from '@/features/householdMember';
+import { getErrorMessage } from '@/shared/lib';
 import { Modal } from '@/shared/ui';
 
 import styles from '../settings.module.css';
@@ -132,8 +133,7 @@ export const MemberInviteForm = ({
         </div>
         {validationError || error ? (
           <p className={styles.error}>
-            {validationError ??
-              (error instanceof Error ? error.message : '초대에 실패했습니다.')}
+            {validationError ?? getErrorMessage(error, '초대에 실패했습니다.')}
           </p>
         ) : null}
         <div className={styles.modalActions}>

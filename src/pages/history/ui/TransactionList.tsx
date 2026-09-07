@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef } from 'react';
 
 import type { Category } from '@/entities/category';
 import type { Transaction } from '@/entities/transaction';
@@ -55,17 +54,6 @@ export const TransactionList = ({
   isFetchNextPageError,
   onLoadMore,
 }: Props) => {
-  const listSectionRef = useRef<HTMLDivElement>(null);
-  const isFirstRenderRef = useRef(true);
-
-  useEffect(() => {
-    if (isFirstRenderRef.current) {
-      isFirstRenderRef.current = false;
-      return;
-    }
-    listSectionRef.current?.scrollIntoView({ block: 'start' });
-  }, [typeFilter, categoryId]);
-
   const categoryNameById = new Map(
     categories.map((category) => [category.id, category.name]),
   );
@@ -152,7 +140,7 @@ export const TransactionList = ({
   const showFooter = transactions.length > 0;
 
   return (
-    <div className={styles.listSection} ref={listSectionRef}>
+    <div className={styles.listSection}>
       <div
         className={styles.totals}
         aria-describedby={isAllPeriod ? 'history-totals-caption' : undefined}

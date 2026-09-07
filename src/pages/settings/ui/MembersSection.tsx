@@ -9,6 +9,7 @@ import {
   useListHouseholdMembers,
 } from '@/features/householdMember';
 import { useListProfilesByIds } from '@/features/profile';
+import { getErrorMessage } from '@/shared/lib';
 
 import { MemberInviteForm } from './MemberInviteForm';
 import { MemberKickConfirm } from './MemberKickConfirm';
@@ -60,9 +61,7 @@ export const MembersSection = ({
     try {
       await cancelInvite.mutateAsync(id);
     } catch (error) {
-      setCancelError(
-        error instanceof Error ? error.message : '초대 취소에 실패했습니다.',
-      );
+      setCancelError(getErrorMessage(error, '초대 취소에 실패했습니다.'));
     }
   };
 
@@ -108,9 +107,7 @@ export const MembersSection = ({
 
       {error ? (
         <p className={styles.error}>
-          {error instanceof Error
-            ? error.message
-            : '멤버 목록을 불러오지 못했습니다.'}
+          {getErrorMessage(error, '멤버 목록을 불러오지 못했습니다.')}
         </p>
       ) : null}
 

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { HouseholdPageTitle, useCurrentHousehold } from '@/features/household';
+import { getErrorMessage } from '@/shared/lib';
 
 import { useCalendarPage } from './model/useCalendarPage';
 import { CalendarGrid } from './ui/CalendarGrid';
@@ -103,9 +104,7 @@ const CalendarContent = ({ householdId }: Props) => {
 
       {error ? (
         <p className={styles.error}>
-          {error instanceof Error
-            ? error.message
-            : '달력 정보를 불러오지 못했습니다.'}
+          {getErrorMessage(error, '달력 정보를 불러오지 못했습니다.')}
         </p>
       ) : null}
 

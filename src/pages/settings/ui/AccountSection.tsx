@@ -4,6 +4,7 @@ import { useSignOut } from '@/features/auth';
 import { clearCurrentHouseholdId } from '@/features/household';
 import { clearAuthGateReadyCookie } from '@/features/onboarding';
 import { useGetProfile } from '@/features/profile';
+import { getErrorMessage } from '@/shared/lib';
 
 import styles from '../settings.module.css';
 
@@ -43,9 +44,7 @@ export const AccountSection = () => {
 
       {error ? (
         <p className={styles.error}>
-          {error instanceof Error
-            ? error.message
-            : '계정 정보를 불러오지 못했습니다.'}
+          {getErrorMessage(error, '계정 정보를 불러오지 못했습니다.')}
         </p>
       ) : null}
 

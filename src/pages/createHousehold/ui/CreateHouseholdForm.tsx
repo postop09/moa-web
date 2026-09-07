@@ -5,6 +5,7 @@ import { useState, type FormEvent } from 'react';
 
 import { useCreateHousehold } from '@/features/household';
 import { persistAuthGateReadyCookie } from '@/features/onboarding';
+import { getErrorMessage } from '@/shared/lib';
 import { GridBackdrop, MoaLogo } from '@/shared/ui';
 
 import styles from '@/shared/ui/onboardingForm.module.css';
@@ -64,9 +65,7 @@ export const CreateHouseholdForm = () => {
           </div>
           {error ? (
             <p className={styles.error}>
-              {error instanceof Error
-                ? error.message
-                : '가계부 생성에 실패했습니다.'}
+              {getErrorMessage(error, '가계부 생성에 실패했습니다.')}
             </p>
           ) : null}
           <button className={styles.submit} type="submit" disabled={isPending}>

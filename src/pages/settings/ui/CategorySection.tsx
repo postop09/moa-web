@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 
 import type { Category } from '@/entities/category';
 import { useListCategories } from '@/features/category';
+import { getErrorMessage } from '@/shared/lib';
 
 import { CategoryDeleteConfirm } from './CategoryDeleteConfirm';
 import { CategoryForm } from './CategoryForm';
@@ -76,9 +77,7 @@ export const CategorySection = ({ householdId }: Props) => {
 
       {error ? (
         <p className={styles.error}>
-          {error instanceof Error
-            ? error.message
-            : '카테고리 목록을 불러오지 못했습니다.'}
+          {getErrorMessage(error, '카테고리 목록을 불러오지 못했습니다.')}
         </p>
       ) : null}
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { TRANSACTION_TYPE_COLOR } from '@/shared/model';
-import { formatAmount } from '@/shared/lib';
+import { formatAmount, getErrorMessage } from '@/shared/lib';
 
 import { CategoryBudgetCard } from './CategoryBudgetCard';
 import { CategoryPieCard } from './CategoryPieCard';
@@ -55,7 +55,7 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
   if (error) {
     return (
       <p className={styles.error}>
-        {error instanceof Error ? error.message : '현황을 불러오지 못했습니다.'}
+        {getErrorMessage(error, '현황을 불러오지 못했습니다.')}
       </p>
     );
   }

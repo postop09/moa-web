@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
 
 import { useCreateProfile } from '@/features/profile';
+import { getErrorMessage } from '@/shared/lib';
 import { GridBackdrop, MoaLogo } from '@/shared/ui';
 
 import styles from '@/shared/ui/onboardingForm.module.css';
@@ -64,9 +65,7 @@ export const CreateProfileForm = ({ next }: Props) => {
           </div>
           {error ? (
             <p className={styles.error}>
-              {error instanceof Error
-                ? error.message
-                : '프로필 생성에 실패했습니다.'}
+              {getErrorMessage(error, '프로필 생성에 실패했습니다.')}
             </p>
           ) : null}
           <button className={styles.submit} type="submit" disabled={isPending}>
