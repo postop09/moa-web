@@ -7,6 +7,7 @@ import { useMemo, useState } from 'react';
 import { formatAmount } from '@/shared/lib';
 
 import { EXPENSE_COLORS } from '../config/expenseColors';
+import { buildCategorySeries } from '../lib/buildCategorySeries';
 import styles from './home.module.css';
 
 type StackedExpenseItem = {
@@ -23,36 +24,6 @@ type Period = 'week' | 'month';
 type Props = {
   weeklyItems: StackedExpenseItem[];
   monthlyItems: StackedExpenseItem[];
-};
-
-type CategorySeries = {
-  name: string;
-  data: number[];
-};
-
-const buildCategorySeries = (items: StackedExpenseItem[]): CategorySeries[] => {
-  const totals = new Map<string, number>();
-
-  for (const item of items) {
-    for (const category of item.byCategory) {
-      totals.set(
-        category.name,
-        (totals.get(category.name) ?? 0) + category.amount,
-      );
-    }
-  }
-
-  return [...totals.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .map(([name]) => ({
-      name,
-      data: items.map((item) => {
-        const matched = item.byCategory.find(
-          (category) => category.name === name,
-        );
-        return matched?.amount ?? 0;
-      }),
-    }));
 };
 
 export const SpendingOverTimeCard = ({ weeklyItems, monthlyItems }: Props) => {

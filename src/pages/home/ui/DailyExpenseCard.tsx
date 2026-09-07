@@ -5,9 +5,10 @@ import ReactECharts from 'echarts-for-react';
 import { useMemo } from 'react';
 
 import type { DailyExpense } from '@/features/transaction';
-import { TRANSACTION_TYPE_COLOR } from '@/shared/model';
 import { formatAmount } from '@/shared/lib';
 
+import { EXPENSE_COLORS } from '../config/expenseColors';
+import { buildCategorySeries } from '../lib/buildCategorySeries';
 import styles from './home.module.css';
 
 type Props = {
@@ -31,26 +32,28 @@ export const DailyExpenseCard = ({ items, selectedMonth }: Props) => {
   const total = items.reduce((sum, item) => sum + item.amount, 0);
   const hasData = total > 0;
   const average = elapsedDays > 0 ? Math.round(total / elapsedDays) : 0;
-
-  const maxItem = useMemo(() => {
-    return items.reduce<DailyExpense | null>((max, item) => {
-      if (!max || item.amount > max.amount) {
-        return item;
-      }
-      return max;
-    }, null);
-  }, [items]);
-
-  const zeroDaysCount = items.filter((item) => item.amount === 0).length;
+  const categorySeries = useMemo(() => buildCategorySeries(items), [items]);
 
   const option = useMemo<EChartsOption>(() => {
     return {
+      color: EXPENSE_COLORS,
       grid: {
         left: 8,
         right: 12,
         top: 12,
-        bottom: 24,
+        bottom: 40,
         containLabel: true,
+      },
+      legend: {
+        bottom: 0,
+        type: 'scroll',
+        icon: 'circle',
+        itemWidth: 8,
+        itemHeight: 8,
+        textStyle: {
+          color: '#64748b',
+          fontSize: 11,
+        },
       },
       tooltip: {
         trigger: 'axis',
@@ -73,12 +76,22 @@ export const DailyExpenseCard = ({ items, selectedMonth }: Props) => {
             item.day,
           );
           const title = `${date.getMonth() + 1}월 ${date.getDate()}일 (${WEEKDAY_LABEL[date.getDay()]})`;
-          const body =
-            item.amount === 0
-              ? '지출 없음'
-              : `지출: ${formatAmount(item.amount)}`;
 
-          return `${title}<br/>${body}`;
+          const lines = tooltipItems
+            .filter((entry) => 'value' in entry && Number(entry.value) > 0)
+            .map((entry) => {
+              const marker = 'marker' in entry ? String(entry.marker) : '';
+              const seriesName =
+                'seriesName' in entry ? String(entry.seriesName) : '';
+              const value = 'value' in entry ? Number(entry.value) : 0;
+              return `${marker}${seriesName}: ${formatAmount(value)}`;
+            });
+
+          if (lines.length === 0) {
+            return `${title}<br/>지출 없음`;
+          }
+
+          return `${title}<br/>${lines.join('<br/>')}<br/>합계: ${formatAmount(item.amount)}`;
         },
       },
       xAxis: {
@@ -109,36 +122,34 @@ export const DailyExpenseCard = ({ items, selectedMonth }: Props) => {
         },
         splitLine: { lineStyle: { color: '#e2e8f0' } },
       },
-      series: [
-        {
-          type: 'bar' as const,
-          data: items.map((item) => item.amount),
-          barMaxWidth: 12,
-          itemStyle: {
-            color: TRANSACTION_TYPE_COLOR.expense,
-            borderRadius: [3, 3, 0, 0],
-          },
-          showBackground: true,
-          backgroundStyle: {
-            color: 'rgba(15, 23, 42, 0.04)',
-          },
+      series: categorySeries.map((category, index, list) => ({
+        name: category.name,
+        type: 'bar' as const,
+        stack: 'expense',
+        data: category.data,
+        barMaxWidth: 12,
+        emphasis: { focus: 'series' as const },
+        itemStyle: {
+          borderColor: '#fff',
+          borderRadius: index === list.length - 1 ? [3, 3, 0, 0] : 0,
         },
-      ],
+        ...(index === list.length - 1
+          ? {
+              showBackground: true,
+              backgroundStyle: { color: 'rgba(15, 23, 42, 0.04)' },
+            }
+          : {}),
+      })),
     };
-  }, [daysInMonth, items, selectedMonth]);
+  }, [categorySeries, daysInMonth, items, selectedMonth]);
 
-  const maxCaptionText =
-    maxItem && maxItem.amount > 0
-      ? `최대 지출일 ${month}월 ${maxItem.day}일 ${formatAmount(maxItem.amount)}.`
-      : '';
-
-  const ariaLabel = `${month}월 일일 지출 막대 그래프. 일평균 ${formatAmount(average)}. ${maxCaptionText} 지출이 없는 날 ${zeroDaysCount}일.`;
+  const ariaLabel = `${month}월 일일 지출 막대 그래프. 일평균 ${formatAmount(average)}.`;
 
   return (
     <section className={styles.card}>
       <div className={styles.cardTitleRow}>
         <h3 className={styles.cardTitle}>일일 지출</h3>
-        <p className={styles.cardMeta}>일평균 {formatAmount(average)}</p>
+        <p className={styles.cardMeta}>평균 {formatAmount(average)}</p>
       </div>
       {hasData ? (
         <>
@@ -151,12 +162,6 @@ export const DailyExpenseCard = ({ items, selectedMonth }: Props) => {
               lazyUpdate
             />
           </div>
-          {maxItem && maxItem.amount > 0 ? (
-            <p className={styles.cardCaption}>
-              최대 지출 {month}월 {maxItem.day}일 ·{' '}
-              {formatAmount(maxItem.amount)}
-            </p>
-          ) : null}
         </>
       ) : (
         <div className={styles.chartEmpty}>
