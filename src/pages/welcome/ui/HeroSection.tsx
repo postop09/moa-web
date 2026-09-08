@@ -16,9 +16,9 @@ export const HeroSection = () => {
             돈 관리, 보면서 하자.
           </h1>
           <p className={styles.heroSupport}>
-            수입·지출·저축을 적으면 남은 예산과 내 자산을 바로 볼 수 있어요.
+            수입·지출·저축을 적으면 남은 예산을 바로 볼 수 있어요.
             <br />
-            혼자, 연인, 가족과 함께 해요.
+            혼자, 커플이나 부부, 가족과 함께 해요.
           </p>
           <div className={styles.heroActions}>
             <Link href="/login" className={styles.ctaButton}>

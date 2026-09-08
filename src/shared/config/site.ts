@@ -9,7 +9,7 @@ export const defaultTitle = '모아(Moa) — 그래프로 보는 가계부';
 export const titleTemplate = '%s | 모아';
 
 export const description =
-  '모아(Moa)는 그래프 중심 가계부입니다. 통계와 그래프로 보는 지출과 수입·저축 흐름을 한눈에 파악하세요.';
+  '모아(Moa)는 그래프 중심 가계부입니다. 커플, 부부, 가족이 함께 쓰는 공유 가계부로 지출과 수입·저축 흐름을 한눈에 파악하세요.';
 
 export const keywords = [
   '가계부',
@@ -23,6 +23,8 @@ export const keywords = [
   '모아 가계부',
   '가계부 공유',
   '공유 가계부',
+  '커플 가계부',
+  '부부 가계부',
   '공유 달력',
 ];
 
@@ -114,7 +116,7 @@ export const getWebApplicationJsonLd = () => {
       '수입·지출·저축 기록',
       '카테고리별 예산 관리',
       '통계와 그래프로 보는 지출 흐름',
-      '가족과 함께 쓰는 공유 가계부',
+      '가족·커플·부부가 함께 쓰는 공유 가계부',
       '일정과 지출을 함께 보는 달력',
     ],
     publisher: { '@id': `${siteUrl}/#organization` },

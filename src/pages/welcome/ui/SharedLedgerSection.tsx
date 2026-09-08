@@ -70,8 +70,8 @@ export const SharedLedgerSection = () => {
               하나의 가계부, 여러 사람
             </h2>
             <p className={styles.sectionLead}>
-              가족·친구·연인을 초대하면 거래와 카테고리, 일정까지 같은
-              가계부에서 함께 관리합니다.
+              커플이든 부부든, 가족이든 친구든 초대해서 거래와 카테고리,
+              일정까지 같은 가계부에서 함께 관리합니다.
             </p>
 
             <div className={styles.filterChips} aria-hidden>

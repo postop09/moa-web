@@ -15,7 +15,8 @@ export const HIGHLIGHTS: Highlight[] = [
   {
     id: 'share',
     title: '공유 가계부',
-    description: '가족·친구·연인을 초대해, 한 가계부를 같이 씁니다.',
+    description:
+      '커플 가계부, 부부 가계부, 가족 가계부까지 — 초대해서 한 가계부를 같이 씁니다.',
     href: '#share',
   },
   {
