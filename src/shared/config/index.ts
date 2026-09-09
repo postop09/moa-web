@@ -10,7 +10,9 @@ export {
   contactEmail,
   defaultTitle,
   description,
+  getArticleJsonLd,
   getBaseOpenGraph,
+  getBreadcrumbJsonLd,
   getSiteUrl,
   getWebApplicationJsonLd,
   getWebSiteJsonLd,
@@ -21,3 +23,4 @@ export {
   siteName,
   titleTemplate,
 } from './site';
+export type { ArticleJsonLdInput, BreadcrumbJsonLdItem } from './site';

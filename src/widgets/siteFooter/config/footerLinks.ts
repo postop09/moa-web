@@ -15,6 +15,7 @@ export const FOOTER_LINK_GROUPS: FooterLinkGroup[] = [
     title: '서비스',
     links: [
       { label: '모아 소개', href: '/welcome' },
+      { label: '가이드', href: '/guide' },
       { label: '시작하기', href: '/login' },
     ],
   },

@@ -1358,8 +1358,12 @@
 }
 
 @media (max-width: 47.99rem) {
-  .localNav {
+  .localNavLinkAnchor {
     display: none;
+  }
+
+  .localNav {
+    justify-content: center;
   }
 
   .headerInner {

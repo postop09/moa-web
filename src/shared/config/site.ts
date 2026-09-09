@@ -26,6 +26,8 @@ export const keywords = [
   '커플 가계부',
   '부부 가계부',
   '공유 달력',
+  '가계부 추천',
+  '커플 가계부 추천',
 ];
 
 // scripts/generateOgImage.ts 로 생성합니다.
@@ -125,5 +127,64 @@ export const getWebApplicationJsonLd = () => {
       price: '0',
       priceCurrency: 'KRW',
     },
+  };
+};
+
+export type ArticleJsonLdInput = {
+  slug: string;
+  title: string;
+  description: string;
+  publishedDate: string;
+  updatedDate?: string;
+  keywords: string[];
+  seriesTitle: string;
+};
+
+export const getArticleJsonLd = (article: ArticleJsonLdInput) => {
+  const siteUrl = getSiteUrl();
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.description,
+    datePublished: article.publishedDate,
+    dateModified: article.updatedDate ?? article.publishedDate,
+    author: {
+      '@type': 'Organization',
+      name: operatorName,
+      url: siteUrl,
+    },
+    publisher: { '@id': `${siteUrl}/#organization` },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${siteUrl}/guide/${article.slug}`,
+    },
+    url: `${siteUrl}/guide/${article.slug}`,
+    image: `${siteUrl}${ogImage.url}`,
+    inLanguage: 'ko',
+    isPartOf: { '@id': `${siteUrl}/#website` },
+    articleSection: article.seriesTitle,
+    keywords: article.keywords.join(', '),
+  };
+};
+
+export type BreadcrumbJsonLdItem = {
+  name: string;
+  path: string;
+};
+
+export const getBreadcrumbJsonLd = (items: BreadcrumbJsonLdItem[]) => {
+  const siteUrl = getSiteUrl();
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: `${siteUrl}${item.path}`,
+    })),
   };
 };
