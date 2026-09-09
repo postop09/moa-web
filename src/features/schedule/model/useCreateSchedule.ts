@@ -2,6 +2,7 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { getCachedUser } from '@/entities/auth';
 import { createSchedule, type CreateScheduleReq } from '@/entities/schedule';
 import { createBrowserClient } from '@/shared/api';
 
@@ -15,9 +16,7 @@ export const useCreateSchedule = () => {
   return useMutation({
     mutationFn: async (payload: CreateScheduleInput) => {
       const supabase = createBrowserClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const user = await getCachedUser(supabase, queryClient);
 
       if (!user) {
         throw new Error('로그인이 필요합니다.');

@@ -2,6 +2,7 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { getCachedUser } from '@/entities/auth';
 import {
   createTransaction,
   type CreateTransactionReq,
@@ -18,9 +19,7 @@ export const useCreateTransaction = () => {
   return useMutation({
     mutationFn: async (payload: CreateTransactionInput) => {
       const supabase = createBrowserClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const user = await getCachedUser(supabase, queryClient);
 
       if (!user) {
         throw new Error('로그인이 필요합니다.');

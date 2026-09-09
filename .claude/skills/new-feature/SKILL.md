@@ -1,10 +1,11 @@
 ---
-description: researcher → planner → ui-ux-designer → frontend-dev 4단계 파이프라인을 순서대로 실행해 새 기능/화면을 개발한다. 각 단계 사이에 사용자 확인을 받는다.
+name: new-feature
+description: researcher → planner → ui-ux-designer → frontend-dev → code-reviewer 5단계 파이프라인을 순서대로 실행해 새 기능/화면을 개발한다. 각 단계 사이에 사용자 확인을 받는다.
 ---
 
 # /new-feature — 신규 기능 개발 파이프라인
 
-인자로 받은 기능/화면 요청(`$ARGUMENTS`)을 아래 4단계 파이프라인으로 순서대로 처리한다. 각 단계는 `Agent` 툴로 전용 서브에이전트(`subagent_type`)를 호출하며, 이전 단계의 산출물 전체를 다음 단계 프롬프트에 그대로 포함시켜 전달한다 (서브에이전트는 매번 새로 시작되므로 이전 대화를 알지 못한다 — 요약하지 말고 원문 그대로 넘길 것).
+인자로 받은 기능/화면 요청(`$ARGUMENTS`)을 아래 5단계 파이프라인으로 순서대로 처리한다. 각 단계는 `Agent` 툴로 전용 서브에이전트(`subagent_type`)를 호출하며, 이전 단계의 산출물 전체를 다음 단계 프롬프트에 그대로 포함시켜 전달한다 (서브에이전트는 매번 새로 시작되므로 이전 대화를 알지 못한다 — 요약하지 말고 원문 그대로 넘길 것).
 
 각 단계가 끝나면 결과를 사용자에게 요약해서 보여주고, 다음 단계로 진행해도 될지 확인받은 뒤에만 다음 단계를 호출한다. 사용자가 수정을 요청하면 같은 단계를 다시 호출하거나 지시에 맞게 조정한다.
 
@@ -32,6 +33,15 @@ description: researcher → planner → ui-ux-designer → frontend-dev 4단계 
 
 - `subagent_type: frontend-dev` 호출. 프롬프트에 3단계 ui-ux-designer의 전체 출력을 포함해서 전달한다.
 - `frontend-dev`는 이미 `permissionMode: acceptEdits`로 설정되어 있어 파일 수정 시 별도 승인 프롬프트 없이 진행된다.
-- 구현 중 `.claude/rules/`의 FSD 규칙(`base`는 상시 적용, `entities-design`/`features-design`/`pages-design`은 각각 `src/entities`, `src/features`, `src/pages` 작업 시 자동 적용)이 이미 자동으로 반영되므로 별도 처리는 필요 없다.
+- 구현 중 `.claude/rules/`의 FSD 규칙(`base`는 상시 적용, `entities-design`/`features-design`/`pages-design`/`widgets-design`은 각각 `src/entities`, `src/features`, `src/pages`, `src/widgets` 작업 시 자동 적용)이 이미 자동으로 반영되므로 별도 처리는 필요 없다.
 - 출력 템플릿: 구현한 파일 목록 / 커버한 상태·엣지케이스 / lint·typecheck·test 결과 / 스펙과의 편차(있다면 이유 포함) / 남은 이슈·후속 작업.
-- 결과를 사용자에게 최종 보고하며 파이프라인을 종료한다.
+- **체크포인트 4**: 결과를 사용자에게 보여주고 "구현된 코드를 code-reviewer로 자체 점검할까요?" 확인을 받는다. 승인 전에는 5단계를 호출하지 않는다 (건너뛰고 바로 종료해도 된다).
+
+## 5단계 — code-reviewer (자체 점검, 선택)
+
+- `subagent_type: code-reviewer` 호출. 프롬프트에 다음을 원문 그대로 포함한다:
+  - 2단계 planner의 스펙(무엇을 만들려 했는지 맥락)
+  - `git status`/`git diff`로 확인한 이번 구현의 변경 사항 전체 (커밋 여부와 무관하게 작업 트리 기준으로 조회)
+- code-reviewer의 리포트를 사용자에게 그대로 보여준다. 이 단계는 리뷰만 하며 코드를 직접 고치지 않는다.
+- High 심각도 문제가 있으면 사용자에게 "frontend-dev로 돌려보내 수정할까요?" 확인 후, 승인 시 4단계를 다시 호출해 수정 지시를 전달한다.
+- 문제가 없거나 사용자가 그대로 두기로 하면, 변경 사항을 커밋하려면 `/commit`을, PR이 이미 있다면 `/pr-review`로 다시 검토할 수 있다고 안내하며 파이프라인을 종료한다.

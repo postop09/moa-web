@@ -1,20 +1,21 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { getCachedUser } from '@/entities/auth';
 import { getProfile } from '@/entities/profile';
 import { createBrowserClient } from '@/shared/api';
 
 import { profileQueryKeys } from '../config/queryKeys';
 
 export const useGetProfile = () => {
+  const queryClient = useQueryClient();
+
   return useQuery({
     queryKey: profileQueryKeys.me(),
     queryFn: async () => {
       const supabase = createBrowserClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const user = await getCachedUser(supabase, queryClient);
 
       if (!user) {
         throw new Error('로그인이 필요합니다.');
