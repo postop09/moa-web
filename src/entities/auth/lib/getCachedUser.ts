@@ -11,7 +11,15 @@ export const getCachedUser = (
 ) => {
   return queryClient.fetchQuery({
     queryKey: authQueryKeys.currentUser(),
-    queryFn: () => getUser(supabase),
+    queryFn: async () => {
+      const user = await getUser(supabase);
+
+      if (!user) {
+        throw new Error('로그인이 필요합니다.');
+      }
+
+      return user;
+    },
     staleTime: Infinity,
   });
 };
