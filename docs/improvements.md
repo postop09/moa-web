@@ -28,7 +28,7 @@
 | 14 | FSD 레이어 규칙이 린트로 강제되지 않음 | 구조 | 🟡 낮음 | - |
 | 15 | import 정렬 규칙 미적용 | 구조 | 🟡 낮음 | - |
 | 16 | ECharts 전체 번들을 정적 import | 성능 | 🟠 중간 | ✅ 완료 |
-| 17 | 뮤테이션마다 `auth.getUser()` 네트워크 왕복 | 성능 | 🟡 낮음 | - |
+| 17 | 뮤테이션마다 `auth.getUser()` 네트워크 왕복 | 성능 | 🟡 낮음 | ✅ 완료 |
 | 18 | 달력의 멤버 → 프로필 조회 워터폴 | 성능 | 🟡 낮음 | - |
 | 19 | 남아 있는 `console.log` | 정리 | 🟡 낮음 | - |
 | 20 | 멤버 색상이 배열 인덱스 기반 | UX | 🟡 낮음 | - |
@@ -282,6 +282,8 @@ const { householdId, isLoading, error } = useCurrentHousehold();
 3. `BrandHero`의 장식 애니메이션은 ECharts를 쓸 이유가 없어 보입니다 — SVG `stroke-dasharray` 애니메이션으로 대체하면 로그인 경로에서 라이브러리를 통째로 걷어낼 수 있습니다
 
 ### 17. 뮤테이션마다 `auth.getUser()` 네트워크 왕복
+
+> **진행 상황 (✅ 완료)** — `src/entities/auth`에 `getUser`(원본 호출 래핑) / `authQueryKeys` / `getCachedUser`(`QueryClient.fetchQuery` 기반, `staleTime: Infinity`)를 추가하고, 6개 호출부(`useCreateTransaction`, `useCreateSchedule`, `useCreateProfile`, `useGetProfile`, `useCreateHousehold`, `useCreateHouseholdInvite`) 모두 `getCachedUser`를 재사용하도록 교체했습니다. 로그아웃 시 `useSignOut`이 이미 `queryClient.clear()`를 호출하므로 이 캐시도 함께 무효화되어 별도 무효화 로직은 필요 없었습니다. `proxy.ts`와 온보딩 인증 게이트(`resolveAuthGate.ts` 등)의 `getUser()` 호출은 의도된 매 요청 재검증이라 그대로 유지했습니다.
 
 **근거** — 브라우저에서 `supabase.auth.getUser()`를 호출하는 곳 6군데: `useCreateTransaction.ts:23`, `useCreateSchedule.ts:20`, `useGetProfile.ts:17`, `useCreateProfile.ts:14`, `useCreateHousehold.ts:19`, `useCreateHouseholdInvite.ts:18`.
 

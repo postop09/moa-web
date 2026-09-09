@@ -2,6 +2,7 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { getCachedUser } from '@/entities/auth';
 import { createHousehold, type ListHouseholdsRes } from '@/entities/household';
 import { createBrowserClient } from '@/shared/api';
 
@@ -14,9 +15,7 @@ export const useCreateHousehold = () => {
   return useMutation({
     mutationFn: async (name: string) => {
       const supabase = createBrowserClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const user = await getCachedUser(supabase, queryClient);
 
       if (!user) {
         throw new Error('로그인이 필요합니다.');
