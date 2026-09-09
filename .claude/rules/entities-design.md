@@ -79,6 +79,7 @@ export type CreateProfileReq = {
 ## config
 
 - 슬라이스 전용 env 키, 테이블명, 쿼리 키 상수 등.
+- 여러 `features` 슬라이스가 공유해야 하는 쿼리 키도 여기 둘 수 있다. `features` 레이어는 서로 import할 수 없으므로(동일 레이어 간 직접 참조 금지, [base](./base.md) 참고), 2개 이상의 feature가 같은 쿼리 키를 써야 하면 그 아래 레이어인 entities가 사실상 유일하게 규칙을 만족하는 위치다.
 
 ## index.ts (public API)
 
