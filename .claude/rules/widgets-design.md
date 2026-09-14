@@ -23,6 +23,7 @@ widgets/
 - 컴포넌트 이름은 슬라이스명과 대응하는 PascalCase (`widgets/chart-panel/ui/ChartPanel.tsx`).
 - **도메인 API를 직접 호출하지 않는다.** 데이터는 상위(`pages`)에서 훅으로 조회해 props로 내려받는다. 데이터 조회가 필요하면 `entities`/`features`의 훅을 widget 내부에서 호출하는 대신, 그 훅을 사용하는 쪽(pages)에서 결과를 props로 전달한다.
 - 로딩/에러/빈 상태처럼 여러 화면에서 반복되는 상태 UI는 widget이 props(`isLoading`, `isError`, `isEmpty` 등)로 받아 처리한다.
+- **예외**: 특정 페이지가 아니라 앱 셸 전체에 걸친 전역 부수효과(예: 가계부가 없으면 온보딩으로 리다이렉트)는 모든 페이지가 각자 props로 내려야 해서 오히려 중복이 커진다. 이런 경우는 `features`의 훅을 widget에서 직접 호출하는 것을 허용한다(레이어 방향 자체는 `widgets → features`로 합법). 예: [`widgets/appShell/ui/NoHouseholdRedirect.tsx`](../../src/widgets/appShell/ui/NoHouseholdRedirect.tsx).
 
 ```tsx
 // ✅ widgets/chart-panel/ui/ChartPanel.tsx
@@ -34,7 +35,13 @@ type Props = {
   children?: ReactNode;
 };
 
-export const ChartPanel = ({ title, isLoading, isError, isEmpty, children }: Props) => {
+export const ChartPanel = ({
+  title,
+  isLoading,
+  isError,
+  isEmpty,
+  children,
+}: Props) => {
   // ...
 };
 ```
@@ -55,11 +62,11 @@ export { ChartPanel } from './ui/ChartPanel';
 
 ## pages vs widgets vs features
 
-| 위치       | 기준                                                             |
-| ---------- | ---------------------------------------------------------------- |
-| `widgets`  | 여러 페이지에서 재사용되는 **레이아웃/조합 UI** (데이터는 props로 받음) |
-| `features` | 여러 화면에서 재사용되는 **비즈니스 로직**(데이터 조회·상태) + 그 UI |
-| `pages/{slice}/ui` | 해당 화면에서만 쓰이는 UI                                  |
+| 위치               | 기준                                                                    |
+| ------------------ | ----------------------------------------------------------------------- |
+| `widgets`          | 여러 페이지에서 재사용되는 **레이아웃/조합 UI** (데이터는 props로 받음) |
+| `features`         | 여러 화면에서 재사용되는 **비즈니스 로직**(데이터 조회·상태) + 그 UI    |
+| `pages/{slice}/ui` | 해당 화면에서만 쓰이는 UI                                               |
 
 같은 UI가 pages에만 있다가 다른 페이지에서도 필요해지면 그때 `widgets`(데이터 없는 조합 UI) 또는 `features`(데이터 로직 포함) 중 알맞은 쪽으로 옮긴다.
 

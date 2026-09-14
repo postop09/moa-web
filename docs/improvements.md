@@ -12,29 +12,29 @@
 
 ## 요약
 
-| # | 항목 | 영역 | 우선순위 |
-| - | ---- | ---- | -------- |
-| 1 | 기본 스키마·RLS·RPC가 저장소에 없음 | DB | 🔴 높음 |
-| 2 | 삭제한 반복 거래가 다음 날 다시 생성됨 | DB | 🔴 높음 |
-| 3 | 반복 거래 배치가 매일 전체 과거를 재순회 | DB | 🔴 높음 |
-| 4 | Supabase 클라이언트가 untyped, api 레이어가 검증 없는 단언 | 타입 | 🔴 높음 |
-| 5 | 홈 대시보드가 12개월 거래 전량을 클라이언트로 내려받음 | 데이터 | 🔴 높음 |
-| 6 | 앱 라우트에 서버 측 인증 검증이 없음 | 보안 | 🔴 높음 |
-| 7 | QueryClient `retry` 미설정, 전역 에러 핸들러 없음 | 데이터 | 🟠 중간 |
-| 8 | 거래·일정 queryKey가 파라미터를 일부만 반영 | 데이터 | 🟠 중간 |
-| 9 | 하드코딩된 queryKey 2곳 | 데이터 | 🟠 중간 |
-| 10 | env 검증 부재 + README가 없는 파일을 안내 | 안정성/DX | 🟠 중간 |
-| 11 | 테스트 0개, CI 없음 | 품질 | 🟠 중간 |
-| 12 | loading.tsx/Suspense/ErrorBoundary 전무 | 안정성 | 🟠 중간 |
-| 13 | 한국어 앱인데 폰트 3종 모두 latin 서브셋만 로드 | 성능 | 🟠 중간 |
-| 14 | 디자인 시스템 부재 (버튼 클래스 103개 중복 등) | 구조 | 🟠 중간 |
-| 15 | 컨벤션 문서 충돌·드리프트 | 구조 | 🟡 낮음 |
-| 16 | Public API deep import 17건 | 구조 | 🟡 낮음 |
-| 17 | widgets 설계 규칙 위반 2건 | 구조 | 🟡 낮음 |
-| 18 | 로딩/에러 문구에 aria-live·role="alert" 누락 | 접근성 | 🟡 낮음 |
-| 19 | 캐시·상태 관리 세부 개선점 | 구조 | 🟡 낮음 |
-| 20 | 에러 타입 부재, 뮤테이션 onError 0건 | 안정성 | 🟡 낮음 |
-| 21 | 기타 정리 항목 | 정리 | 🟡 낮음 |
+| #   | 항목                                                       | 영역      | 우선순위 | 상태          |
+| --- | ---------------------------------------------------------- | --------- | -------- | ------------- |
+| 1   | 기본 스키마·RLS·RPC가 저장소에 없음                        | DB        | 🔴 높음  | -             |
+| 2   | 삭제한 반복 거래가 다음 날 다시 생성됨                     | DB        | 🔴 높음  | -             |
+| 3   | 반복 거래 배치가 매일 전체 과거를 재순회                   | DB        | 🔴 높음  | -             |
+| 4   | Supabase 클라이언트가 untyped, api 레이어가 검증 없는 단언 | 타입      | 🔴 높음  | -             |
+| 5   | 홈 대시보드가 12개월 거래 전량을 클라이언트로 내려받음     | 데이터    | 🔴 높음  | -             |
+| 6   | 앱 라우트에 서버 측 인증 검증이 없음                       | 보안      | 🔴 높음  | -             |
+| 7   | QueryClient `retry` 미설정, 전역 에러 핸들러 없음          | 데이터    | 🟠 중간  | -             |
+| 8   | 거래·일정 queryKey가 파라미터를 일부만 반영                | 데이터    | 🟠 중간  | -             |
+| 9   | 하드코딩된 queryKey 2곳                                    | 데이터    | 🟠 중간  | -             |
+| 10  | env 검증 부재 + README가 없는 파일을 안내                  | 안정성/DX | 🟠 중간  | -             |
+| 11  | 테스트 0개, CI 없음                                        | 품질      | 🟠 중간  | -             |
+| 12  | loading.tsx/Suspense/ErrorBoundary 전무                    | 안정성    | 🟠 중간  | -             |
+| 13  | 한국어 앱인데 폰트 3종 모두 latin 서브셋만 로드            | 성능      | 🟠 중간  | -             |
+| 14  | 디자인 시스템 부재 (버튼 클래스 103개 중복 등)             | 구조      | 🟠 중간  | -             |
+| 15  | 컨벤션 문서 충돌·드리프트                                  | 구조      | 🟡 낮음  | ✅ 완료       |
+| 16  | Public API deep import 17건                                | 구조      | 🟡 낮음  | ✅ 완료       |
+| 17  | widgets 설계 규칙 위반 2건                                 | 구조      | 🟡 낮음  | ✅ 완료(대안) |
+| 18  | 로딩/에러 문구에 aria-live·role="alert" 누락               | 접근성    | 🟡 낮음  | 🟡 부분 완료  |
+| 19  | 캐시·상태 관리 세부 개선점                                 | 구조      | 🟡 낮음  | 🟡 부분 완료  |
+| 20  | 에러 타입 부재, 뮤테이션 onError 0건                       | 안정성    | 🟡 낮음  | 🟡 부분 완료  |
+| 21  | 기타 정리 항목                                             | 정리      | 🟡 낮음  | 🟡 부분 완료  |
 
 ---
 
@@ -184,16 +184,16 @@ defaultOptions: {
 2. 아래 표 순서로 순수 함수 테스트 작성
 3. GitHub Actions에 `lint` + `typecheck` + `test` 추가
 
-| 함수 | 위치 | 비고 |
-| ---- | ---- | ---- |
-| `getSafeNextPath` | `src/shared/lib/getSafeNextPath.ts` | 오픈 리다이렉트 방어 — 보안상 최우선 |
-| `buildMonthlyExpenses`/`buildWeeklyExpenses`/`buildDailyExpenses` | `src/features/transaction/lib/` | 월/주/일 집계, 경계값(월말·연말) |
-| `buildCategoryBudgets`/`buildExpenseByCategory` | `src/features/transaction/lib/` | 카테고리 집계 |
-| `monthRange` | `src/features/transaction/lib/monthRange.ts` | KST 월 경계 계산 |
-| `buildEventLanes` | `src/pages/calendar/model/buildEventLanes.ts` | 일정 레인 배치 |
-| `visibleRange` | `src/pages/calendar/model/visibleRange.ts` | 달력 가시 범위 |
-| `getErrorMessage` | `src/shared/lib/getErrorMessage.ts` | 에러 메시지 추출 |
-| `mapInviteError` | `src/entities/householdInvite/lib/mapInviteError.ts` | 초대 에러 매핑 |
+| 함수                                                              | 위치                                                 | 비고                                 |
+| ----------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------ |
+| `getSafeNextPath`                                                 | `src/shared/lib/getSafeNextPath.ts`                  | 오픈 리다이렉트 방어 — 보안상 최우선 |
+| `buildMonthlyExpenses`/`buildWeeklyExpenses`/`buildDailyExpenses` | `src/features/transaction/lib/`                      | 월/주/일 집계, 경계값(월말·연말)     |
+| `buildCategoryBudgets`/`buildExpenseByCategory`                   | `src/features/transaction/lib/`                      | 카테고리 집계                        |
+| `monthRange`                                                      | `src/features/transaction/lib/monthRange.ts`         | KST 월 경계 계산                     |
+| `buildEventLanes`                                                 | `src/pages/calendar/model/buildEventLanes.ts`        | 일정 레인 배치                       |
+| `visibleRange`                                                    | `src/pages/calendar/model/visibleRange.ts`           | 달력 가시 범위                       |
+| `getErrorMessage`                                                 | `src/shared/lib/getErrorMessage.ts`                  | 에러 메시지 추출                     |
+| `mapInviteError`                                                  | `src/entities/householdInvite/lib/mapInviteError.ts` | 초대 에러 매핑                       |
 
 ### 12. loading.tsx/Suspense/ErrorBoundary 전무
 
@@ -225,6 +225,8 @@ defaultOptions: {
 
 ### 15. 컨벤션 문서 충돌·드리프트
 
+> **진행 상황 (✅ 완료)** — 두 규칙 충돌 모두 "문서를 실제 코드에 맞춘다" 쪽으로 해소했다. `.claude/CLAUDE.md`의 폴더명 규칙을 kebab-case → camelCase로 수정(실제 코드·`.cursor/rules`와 일치). `.claude/rules/pages-design.md`의 `index.ts` re-export 전용 규칙을 다수 패턴(`index.tsx`에 구현 직접 포함)으로 갱신해 `.cursor/rules/pages-design.mdc`와도 일치시켰다 — 이에 따라 `createHousehold`/`createProfile`의 이름 변경 재수출도 더 이상 규칙 위반이 아니게 됐다. `.claude/settings.json`의 npm 명령을 pnpm으로 교체하고, 존재하지 않던 `typecheck` 스크립트 참조를 `npx tsc --noEmit`으로, `PostToolUse` 훅의 `echo` 플레이스홀더를 실제 prettier 연동으로 교체했다(파이프·발화 테스트로 검증). 코드 리네임은 발생하지 않았다.
+
 - `.cursor/rules/base.mdc`: "모든 파일 및 폴더명은 **camelCase**" ↔ `.claude/CLAUDE.md`: "슬라이스·폴더명은 **kebab-case**". 실제 코드는 전부 camelCase(`householdMember`, `scheduleCategory`, `errorFallback`, `acceptInvite`, `appShell`, `siteFooter`, `pwaInstall` 등 12개 슬라이스) → CLAUDE.md 규칙이 코드·Cursor 규칙 양쪽과 불일치한다.
 - `.claude/rules/pages-design.md`는 "`index.ts`는 `ui/{Domain}Page`를 re-export만 한다"고 규정하지만 13개 중 8개 슬라이스가 `index.tsx`에 구현체를 직접 담는다([ARCHITECTURE.md](./ARCHITECTURE.md) 참고). 같은 규칙의 `.cursor/rules/pages-design.mdc`는 반대로 "`index.tsx`가 완성된 페이지를 조립"하도록 규정 — 두 문서가 정면 충돌한다.
 - `.claude/settings.json`의 권한 allowlist가 전부 `Bash(npm run ...)`인데 프로젝트는 pnpm이라 매칭되지 않는다. 존재하지 않는 `npm run typecheck`도 등재돼 있다. `PostToolUse` 훅은 `echo '[hook] ... 교체하세요'`라는 미완성 플레이스홀더다.
@@ -234,6 +236,8 @@ defaultOptions: {
 
 ### 16. Public API deep import 17건
 
+> **진행 상황 (✅ 완료)** — `@/shared/lib/echarts`(5건)와 `@/shared/api/server`·`@/features/onboarding/server`(9건)는 의도된 보조 진입점이므로 `.claude/CLAUDE.md`에 "서버 전용 코드는 `{slice}/server.ts` 보조 진입점을 둘 수 있다"를 명문화했다(코드 변경 없음). 실제 코드 수정이 필요했던 두 건은 해소했다: `@/pages/write/edit` deep import는 `src/pages/write/index.tsx`가 `WriteEditPage`를 re-export하도록 바꿔 제거했고, `onboardingForm.module.css`는 `features/onboarding/ui/OnboardingFormLayout` 공용 컴포넌트로 승격하면서 CSS 자체도 `features/onboarding` 배럴에서 `onboardingFormStyles`로 재수출해 두 페이지가 Public API를 통해서만 접근하도록 정리했다. `eslint-plugin-boundaries` 등 린트 강제 도입은 하지 않았다(향후 과제로 남김).
+
 **근거** — `@/shared/lib/echarts` 5건(홈 대시보드 카드들, 번들 분리 목적 — `shared/lib/index.ts`에는 미export), `@/features/onboarding/server` 5건, `@/shared/api/server` 4건(둘 다 서버 전용 보조 진입점), `@/shared/ui/onboardingForm.module.css` 2건(CSS Module 직접 import), `@/pages/write/edit` 1건(중첩 서브슬라이스). 상세는 [ARCHITECTURE.md](./ARCHITECTURE.md#public-api-규칙).
 
 **문제** — 대부분 의도된 예외이나 CLAUDE.md에 "보조 진입점" 개념이 명문화돼 있지 않아 위반인지 설계인지 구분이 안 된다. `eslint-plugin-boundaries` 등 강제 수단이 없어 앞으로도 같은 패턴이 규칙 없이 늘어날 수 있다.
@@ -242,11 +246,15 @@ defaultOptions: {
 
 ### 17. widgets 설계 규칙 위반 2건
 
+> **진행 상황 (✅ 완료 — 대안 방식)** — `navIcons.ts`는 제안대로 `config/`로 이동했다. `NoHouseholdRedirect`는 처음에 `features/onboarding`으로 옮겼으나 코드 리뷰에서 더 심각한 문제가 드러나 되돌렸다: 이 컴포넌트는 `features/household`(데이터)와 `features/onboarding`(리다이렉트 로직)를 동시에 필요로 해서, 어느 한 features 슬라이스 안에 두면 반드시 다른 features 슬라이스를 직접 참조하게 되어 FSD의 **동일 레이어 참조 금지**(예외 없는 핵심 규칙)를 위반한다. widgets에 남기면 widgets→features 방향이라 레이어 규칙 자체는 지켜지고, 위반되는 것은 "widgets는 도메인 훅을 직접 호출하지 않는다"는 widgets 자체의 스타일 권고뿐이다. 여러 페이지에 걸친 전역 리다이렉트를 매 페이지가 props로 내리는 대안보다 이쪽이 낫다고 판단해, `.claude/rules/widgets-design.md`에 이 경우를 명시적 예외로 문서화하고 컴포넌트를 widgets에 남겼다.
+
 **근거** — [`NoHouseholdRedirect.tsx`](../src/widgets/appShell/ui/NoHouseholdRedirect.tsx)가 widget 내부에서 `useCurrentHousehold`(features)와 `redirectIfNoHouseholds`를 직접 호출한다. `widgets-design.md`는 "데이터는 상위(pages)에서 훅으로 조회해 props로 내려받는다"고 규정한다. [`navIcons.ts`](../src/widgets/appShell/ui/navIcons.ts)(아이콘 상수 맵)가 `config/`가 아니라 `ui/`에 위치한다.
 
 **제안** — `NoHouseholdRedirect`가 필요로 하는 데이터를 `AppShell`이 상위에서 받아 props로 내리거나, 이 컴포넌트를 features 레이어로 옮긴다. `navIcons.ts`는 `config/`로 이동한다.
 
 ### 18. 로딩/에러 문구에 aria-live·role="alert" 누락
+
+> **진행 상황 (✅ 완료 — 범위 한정)** — 전역 로딩/에러 상태 문구 8개 파일(`HouseholdGuard`, `write/edit`, `settings`의 `AccountSection`·`CategorySection`·`MembersSection`, `home/DashboardSection`, `calendar`, `history`)에 로딩은 `role="status"`, 에러는 `role="alert"`를 추가했다(시각적 변화 없음). 폼 필드별 유효성 검증 메시지(`TransactionForm`, `ScheduleForm` 등)는 성격이 다르고 파일 수가 많아 이번 범위에서 제외했다 — 별도 검토 필요. 공통 로딩/에러 컴포넌트로의 승격(중복 방지)은 하지 않았다 — `shared/ui`에 `Button`/`Card` 등을 추가하는 #14(디자인 시스템, Medium)와 함께 처리하는 게 적절하다고 판단해 이번 범위에서는 반복 적용만 했다. 또한 `role` 속성이 조건부로 마운트되는 요소에 붙어 있어(예: `{isLoading ? <p role="status">...</p> : null}`) 아주 짧게 지나가는 로딩 상태에서는 스크린리더가 announce 타이밍을 놓칠 수 있다는 지적이 리뷰에서 나왔다 — 지금 구현으로도 WCAG 4.1.3 요건은 충족하지만, 상시 마운트 + 내용 교체 패턴(`src/pages/history/ui/ListFooter.tsx`가 이미 이 패턴을 씀)으로 개선할 여지가 남아 있다.
 
 **근거** — 로딩 상태가 전부 정적 `<p>불러오는 중…</p>`([`HouseholdGuard.tsx`](../src/features/household/ui/HouseholdGuard.tsx), [`DashboardSection.tsx`](../src/pages/home/ui/DashboardSection.tsx))로 `role="status"`/`aria-live`가 없다. 에러 문구도 `role="alert"`가 없다 — [`AppErrorPage.tsx:19`](../src/pages/errorFallback/ui/AppErrorPage.tsx)는 제대로 붙어 있어 대비된다. ECharts 캔버스 차트 5개는 대체 텍스트·표 형태 대안이 없다.
 
@@ -258,11 +266,15 @@ defaultOptions: {
 
 ### 19. 캐시·상태 관리 세부 개선점
 
+> **진행 상황 (✅ 완료 — 부분)** — 첫 번째·두 번째 항목은 그대로 처리했다: `useCreateHousehold`의 중복 `invalidateQueries` 제거, `useCurrentHousehold`의 predicate를 "두 번째 요소가 `list`/`invites`이고 세 번째 요소가 대상 householdId와 일치"하는 조건으로 좁혔다(household가 다른 feature의 queryKey 팩토리를 import할 수 없어 predicate 방식 자체는 유지, 매칭 조건만 정교화). "저장 id 검증 → 첫 항목 폴백" 중복 로직은 `resolveEffectiveHouseholdId` 헬퍼로 추출해 파생값 계산·`useEffect` 양쪽에서 재사용하도록 정리했다. **세 번째(Zustand `persist` 미들웨어 전환)는 하지 않았다** — 기존 `localStorage` 저장 포맷(원시 문자열)이 `persist`가 기대하는 JSON 포맷과 달라 마이그레이션이 필요하고, 이 항목의 우선순위(낮음) 대비 위험이 크다고 판단했다. 여전히 남은 과제다.
+
 - [`useCreateHousehold.ts`](../src/features/household/model/useCreateHousehold.ts)가 `setQueryData`로 캐시를 직접 갱신한 직후 같은 키를 `invalidateQueries`한다 — 낙관적 삽입이 즉시 네트워크 재요청으로 덮여 의미가 반감된다. 둘 중 하나만 남긴다.
 - [`useCurrentHousehold.ts`](../src/features/household/model/useCurrentHousehold.ts)의 `predicate: (query) => query.queryKey.includes(id)` 무효화는 얕은 비교라 `profileQueryKeys.byIds`처럼 중첩 배열을 담은 키를 못 잡고, 반대로 우연히 같은 문자열을 담은 무관한 키까지 무효화할 수 있다. 각 도메인 팩토리의 `list(householdId)` 키를 명시적으로 무효화하는 편이 예측 가능하다.
 - Zustand `persist` 미들웨어를 쓰지 않고 `localStorage` 수동 읽기/쓰기 + `hydrated` 플래그로 SSR mismatch를 직접 방지한다([`currentHouseholdStore.ts`](../src/features/household/model/currentHouseholdStore.ts)). "저장 id 검증 → 목록 첫 항목 폴백" 로직이 파생값 계산과 `useEffect` 두 곳에 중복 구현돼 있어 드리프트 위험이 있다. `persist` + `skipHydration` + `onRehydrateStorage`로 교체하면 단순해진다.
 
 ### 20. 에러 타입 부재, 뮤테이션 onError 0건
+
+> **진행 상황 (✅ 완료 — 최소 조치)** — `src/shared/lib/getErrorCode.ts`를 추가해 `PostgrestError` 등 `code` 필드를 가진 에러에서 안전하게 코드를 추출할 수 있게 했고, `mapInviteError.ts`가 직접 만들던 코드 추출 로직을 이 유틸로 교체했다(문자열 매칭 동작 자체는 그대로 유지, 회귀 테스트로 고정). **전역 에러 클래스(`AppError`)나 `QueryClient` 전역 `onError` 도입은 하지 않았다** — 이건 #7(Medium, `retry` 설정 등 QueryClient 기본값 정비)과 함께 처리해야 의미가 있어 이번 낮음 우선순위 범위에서는 제외했다. "로그인이 필요합니다." 문자열 4곳 중복도 그대로 남아 있다.
 
 **근거** — 던지는 값이 raw `PostgrestError`(`throw error`)이거나 `new Error('한글 메시지')`뿐이다. [`mapInviteError.ts:11-13`](../src/entities/householdInvite/lib/mapInviteError.ts)은 `message.includes(key)` 문자열 매칭이라 DB의 영문 에러 메시지가 바뀌면 조용히 깨진다. 21개 뮤테이션 중 `onError` 콜백 0건 — 에러는 각 UI가 `mutation.error`를 직접 읽어 렌더한다. "로그인이 필요합니다." 문자열이 4곳(`getCachedUser.ts`, `useCreateTransaction.ts`, `useCreateHousehold.ts`, `mapInviteError.ts`)에 중복되고, `getCachedUser`가 이미 던지므로 호출부의 재확인은 도달 불가 코드다.
 
@@ -270,15 +282,17 @@ defaultOptions: {
 
 ### 21. 기타 정리 항목
 
-- [`app/(app)/stats/page.tsx`](<../app/(app)/stats/page.tsx>)는 `redirect('/history')`만 하는 스텁이면서 `robots.ts`·`proxy.ts` matcher·`PUBLIC_PATHS`에 흔적이 남아 있다. 영구 이동이 확정이면 `next.config.ts`의 `redirects()`로 옮겨 301을 반환하게 하고 흔적을 정리한다.
-- 빈 디렉터리 3개: `src/features/onboarding/ui`, `src/pages/settings/model`, `src/widgets/appShell/model`.
-- `src/shared/ui/.gitkeep` 잔존 — `shared/ui`에 실제 컴포넌트가 6개 있으므로 더 이상 필요 없다.
-- [`src/pages/settings/settings.module.css`](../src/pages/settings/settings.module.css)만 다른 슬라이스와 달리 `ui/` 밖(슬라이스 루트)에 있어 8개 파일이 `'../settings.module.css'`로 상위 참조한다. `ui/settings.module.css`로 이동하는 편이 일관적이다.
-- `png-to-ico` 의존성의 코드 내 사용처가 0건이다(`package.json` devDependencies). 실제로 쓰지 않으면 제거를 검토한다.
-- 커밋 타입이 혼용된다 — `mod:`는 `.claude/rules/git-workflow.md`가 정의한 타입 목록(`feat/fix/refactor/docs/test/chore/perf/style/ci/build`)에 없고, 번들 최적화(`8295958`)가 `fix:`로 기록돼 있다.
-- `public/manifest.json`에 `id`/`scope`/`shortcuts` 필드가 없다. `id`는 설치 아이덴티티 안정성에, `shortcuts`("작성", "달력")는 홈 화면 롱프레스 메뉴에 도움이 된다.
-- [`GlobalErrorPage.tsx`](../src/pages/errorFallback/ui/GlobalErrorPage.tsx)는 `globals.css`를 상속받지 못해 인라인 스타일이 불가피하다는 주석이 있으나, 값 자체(`#f4f6f8`, `#0f172a`, `#64748b`, `#e2e8f0`)가 `globals.css`의 토큰과 중복 하드코딩돼 있다. 토큰 값이 바뀌면 이 파일도 함께 손봐야 한다는 점을 주석에 남긴다.
-- `next dev`는 turbopack, `next build`는 `--webpack`(next-pwa 제약)이라 dev/prod 번들러가 다르다. PWA 관련 프로덕션 전용 버그가 dev에서 재현되지 않을 수 있다는 점을 팀이 인지하고 있어야 한다.
+> **진행 상황 (✅ 대부분 완료)** — 아래 각 항목에 처리 상태를 표시했다. `/stats` 스텁과 커밋 타입 혼용은 그대로 남겨뒀다(전자는 동작에 문제가 없는 스텁이라 리다이렉트 방식 변경이 트레이드오프를 수반해 이번엔 보류, 후자는 과거 커밋이라 소급 수정 대상이 아님). dev/build 번들러 차이는 이미 [ARCHITECTURE.md](./ARCHITECTURE.md)에 문서화돼 있어 별도 조치가 필요 없었다.
+
+- [`app/(app)/stats/page.tsx`](<../app/(app)/stats/page.tsx>)는 `redirect('/history')`만 하는 스텁이면서 `robots.ts`·`proxy.ts` matcher·`PUBLIC_PATHS`에 흔적이 남아 있다. 영구 이동이 확정이면 `next.config.ts`의 `redirects()`로 옮겨 301을 반환하게 하고 흔적을 정리한다. — **미착수**(동작 자체는 정상이라 이번 범위에서 보류)
+- 빈 디렉터리 3개: `src/features/onboarding/ui`, `src/pages/settings/model`, `src/widgets/appShell/model`. — **완료** (`settings/model`, `appShell/model` 삭제. `onboarding/ui`는 이번 작업으로 실제 파일이 생겨 자연히 해소)
+- `src/shared/ui/.gitkeep` 잔존 — `shared/ui`에 실제 컴포넌트가 6개 있으므로 더 이상 필요 없다. — **완료**
+- [`src/pages/settings/settings.module.css`](../src/pages/settings/ui/settings.module.css)만 다른 슬라이스와 달리 `ui/` 밖(슬라이스 루트)에 있어 8개 파일이 `'../settings.module.css'`로 상위 참조한다. `ui/settings.module.css`로 이동하는 편이 일관적이다. — **완료**
+- `png-to-ico` 의존성의 코드 내 사용처가 0건이다(`package.json` devDependencies). 실제로 쓰지 않으면 제거를 검토한다. — **완료** (`pnpm remove png-to-ico`)
+- 커밋 타입이 혼용된다 — `mod:`는 `.claude/rules/git-workflow.md`가 정의한 타입 목록(`feat/fix/refactor/docs/test/chore/perf/style/ci/build`)에 없고, 번들 최적화(`8295958`)가 `fix:`로 기록돼 있다. — **미착수**(과거 커밋이라 소급 수정 대상 아님, 향후 커밋부터 규칙 준수)
+- `public/manifest.json`에 `id`/`scope`/`shortcuts` 필드가 없다. `id`는 설치 아이덴티티 안정성에, `shortcuts`("작성", "달력")는 홈 화면 롱프레스 메뉴에 도움이 된다. — **완료**
+- [`GlobalErrorPage.tsx`](../src/pages/errorFallback/ui/GlobalErrorPage.tsx)는 `globals.css`를 상속받지 못해 인라인 스타일이 불가피하다는 주석이 있으나, 값 자체(`#f4f6f8`, `#0f172a`, `#64748b`, `#e2e8f0`)가 `globals.css`의 토큰과 중복 하드코딩돼 있다. 토큰 값이 바뀌면 이 파일도 함께 손봐야 한다는 점을 주석에 남긴다. — **완료**
+- `next dev`는 turbopack, `next build`는 `--webpack`(next-pwa 제약)이라 dev/prod 번들러가 다르다. PWA 관련 프로덕션 전용 버그가 dev에서 재현되지 않을 수 있다는 점을 팀이 인지하고 있어야 한다. — **완료**(ARCHITECTURE.md에 이미 문서화됨, 추가 조치 불필요)
 
 ---
 
