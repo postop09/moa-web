@@ -8,7 +8,7 @@ import {
   useUpdateScheduleCategory,
 } from '@/features/scheduleCategory';
 import { getErrorMessage } from '@/shared/lib';
-import { Modal } from '@/shared/ui';
+import { Button, Modal } from '@/shared/ui';
 
 import { CATEGORY_COLORS } from '../config/authorColors';
 import styles from './calendar.module.css';
@@ -133,21 +133,17 @@ export const ScheduleCategoryForm = ({
         ) : null}
 
         <div className={styles.modalActions}>
-          <button
-            type="button"
-            className={styles.secondaryButton}
-            onClick={onCancel}
-            disabled={isPending}
-          >
+          <Button variant="secondary" onClick={onCancel} disabled={isPending}>
             취소
-          </button>
-          <button
-            className={styles.primaryButton}
+          </Button>
+          <Button
+            variant="primary"
             type="submit"
-            disabled={isPending}
+            loading={isPending}
+            loadingLabel="저장 중…"
           >
-            {isPending ? '저장 중…' : mode.type === 'create' ? '추가' : '저장'}
-          </button>
+            {mode.type === 'create' ? '추가' : '저장'}
+          </Button>
         </div>
       </form>
     </Modal>

@@ -9,6 +9,7 @@ import 'react-day-picker/style.css';
 
 import { useDismissable } from '@/shared/lib';
 
+import { Button } from './Button';
 import styles from './datePicker.module.css';
 
 type Props = {
@@ -138,13 +139,9 @@ export const DatePicker = ({
             formatters={{ formatCaption }}
           />
           <div className={styles.footer}>
-            <button
-              type="button"
-              className={styles.textButton}
-              onClick={handleToday}
-            >
+            <Button variant="text" size="sm" onClick={handleToday}>
               오늘
-            </button>
+            </Button>
           </div>
         </div>
       ) : null}

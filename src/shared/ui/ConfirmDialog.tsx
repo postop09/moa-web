@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 
 import { getErrorMessage } from '@/shared/lib';
 
+import { Button } from './Button';
 import { Modal } from './Modal';
 import styles from './modal.module.css';
 
@@ -40,22 +41,17 @@ export const ConfirmDialog = ({
           </p>
         ) : null}
         <div className={styles.actions}>
-          <button
-            type="button"
-            className={styles.cancelButton}
-            onClick={onCancel}
-            disabled={isPending}
-          >
+          <Button variant="secondary" onClick={onCancel} disabled={isPending}>
             취소
-          </button>
-          <button
-            type="button"
-            className={styles.dangerButton}
+          </Button>
+          <Button
+            variant="danger"
             onClick={onConfirm}
-            disabled={isPending}
+            loading={isPending}
+            loadingLabel={pendingLabel}
           >
-            {isPending ? pendingLabel : confirmLabel}
-          </button>
+            {confirmLabel}
+          </Button>
         </div>
       </div>
     </Modal>

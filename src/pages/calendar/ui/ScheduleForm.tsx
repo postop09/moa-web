@@ -5,7 +5,7 @@ import { useState, type FormEvent } from 'react';
 import type { ScheduleCategory } from '@/entities/scheduleCategory';
 import { useCreateSchedule, useUpdateSchedule } from '@/features/schedule';
 import { getErrorMessage } from '@/shared/lib';
-import { DatePicker, Modal, TimePicker } from '@/shared/ui';
+import { Button, DatePicker, Modal, TimePicker } from '@/shared/ui';
 
 import type { ScheduleFormMode } from '../model/useCalendarPage';
 import { toDayKey } from '../model/visibleRange';
@@ -277,34 +277,26 @@ export const ScheduleForm = ({
 
           <div className={styles.modalActions}>
             {onDelete ? (
-              <button
-                type="button"
-                className={styles.dangerButton}
+              <Button
+                variant="danger"
+                className={styles.deleteAction}
                 onClick={onDelete}
                 disabled={isPending}
               >
                 삭제
-              </button>
+              </Button>
             ) : null}
-            <button
-              type="button"
-              className={styles.secondaryButton}
-              onClick={onCancel}
-              disabled={isPending}
-            >
+            <Button variant="secondary" onClick={onCancel} disabled={isPending}>
               취소
-            </button>
-            <button
-              className={styles.primaryButton}
+            </Button>
+            <Button
+              variant="primary"
               type="submit"
-              disabled={isPending}
+              loading={isPending}
+              loadingLabel="저장 중…"
             >
-              {isPending
-                ? '저장 중…'
-                : mode.type === 'create'
-                  ? '추가'
-                  : '저장'}
-            </button>
+              {mode.type === 'create' ? '추가' : '저장'}
+            </Button>
           </div>
         </form>
       </Modal>

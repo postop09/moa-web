@@ -141,30 +141,15 @@
 
 .datePicker :global(.rdp-selected .rdp-day_button) {
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 
 .datePicker :global(.rdp-selected .rdp-day_button:hover) {
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 
 .footer {
   display: flex;
   justify-content: flex-end;
-}
-
-.textButton {
-  padding: 0.25rem 0.375rem;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  font: inherit;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--color-muted);
-}
-
-.textButton:hover:not(:disabled) {
-  color: var(--color-accent);
 }

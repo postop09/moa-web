@@ -225,7 +225,7 @@
 }
 
 .ringNegative {
-  color: #b91c1c;
+  color: var(--color-danger);
 }
 
 .card {
@@ -455,7 +455,7 @@
 .error {
   margin: 0;
   font-size: 0.8125rem;
-  color: #b91c1c;
+  color: var(--color-danger);
 }
 
 @media (min-width: 640px) {

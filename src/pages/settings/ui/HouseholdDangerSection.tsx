@@ -3,6 +3,7 @@
 import { useCallback, useState } from 'react';
 
 import { useListHouseholdMembers } from '@/features/householdMember';
+import { Button } from '@/shared/ui';
 
 import { HouseholdDeleteConfirm } from './HouseholdDeleteConfirm';
 import { HouseholdLeaveConfirm } from './HouseholdLeaveConfirm';
@@ -66,13 +67,12 @@ export const HouseholdDangerSection = ({
                 가계부와 거래, 카테고리가 모두 삭제됩니다.
               </p>
             </div>
-            <button
-              type="button"
-              className={styles.dangerPrimaryButton}
+            <Button
+              variant="danger"
               onClick={() => setPanel({ type: 'delete' })}
             >
               가계부 삭제
-            </button>
+            </Button>
           </>
         ) : (
           <>
@@ -82,14 +82,13 @@ export const HouseholdDangerSection = ({
                 이 가계부에서 나가고 더 이상 내역을 볼 수 없습니다.
               </p>
             </div>
-            <button
-              type="button"
-              className={styles.dangerPrimaryButton}
+            <Button
+              variant="danger"
               onClick={() => setPanel({ type: 'leave' })}
               disabled={membershipId === undefined}
             >
               가계부 나가기
-            </button>
+            </Button>
           </>
         )}
       </div>
