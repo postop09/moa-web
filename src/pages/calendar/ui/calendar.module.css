@@ -15,7 +15,7 @@
 .error {
   margin: 0;
   font-size: 0.9375rem;
-  color: #b91c1c;
+  color: var(--color-danger);
 }
 
 .toolbar {
@@ -200,7 +200,7 @@
   z-index: 39;
   display: none;
   border: 0;
-  background: rgba(15, 23, 42, 0.4);
+  background: var(--color-scrim);
   cursor: pointer;
 }
 
@@ -335,7 +335,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   background: var(--color-surface);
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  box-shadow: var(--shadow-sm);
 }
 
 .popoverList {
@@ -468,7 +468,7 @@
 }
 
 .textDangerButton:hover {
-  color: #991b1b;
+  color: var(--color-danger-hover);
 }
 
 .gridWrap {
@@ -539,7 +539,7 @@
   border: 0;
   border-radius: 0;
   background: var(--author-color, var(--color-accent));
-  color: #fff;
+  color: var(--color-on-accent);
   font-size: 0.625rem;
   font-weight: 600;
   line-height: 1.125rem;
@@ -586,7 +586,7 @@
   height: 1.5rem;
   border-radius: 999px;
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 
 .dayCellSelected {
@@ -813,7 +813,7 @@
 
 .primaryButton {
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 
 .primaryButton:hover:not(:disabled) {
@@ -833,12 +833,12 @@
 
 .dangerButton {
   margin-right: auto;
-  background: #b91c1c;
-  color: #fff;
+  background: var(--color-danger);
+  color: var(--color-on-accent);
 }
 
 .dangerButton:hover:not(:disabled) {
-  background: #991b1b;
+  background: var(--color-danger-hover);
 }
 
 .primaryButton:disabled,

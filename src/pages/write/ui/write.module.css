@@ -115,7 +115,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   background: var(--color-surface);
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  box-shadow: var(--shadow-sm);
 }
 
 .popoverList {
@@ -302,7 +302,7 @@
 
 .primaryButton {
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 
 .primaryButton:hover:not(:disabled) {
@@ -322,11 +322,11 @@
 
 .dangerPrimaryButton {
   background: var(--color-expense);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 
 .dangerPrimaryButton:hover:not(:disabled) {
-  background: #991b1b;
+  background: var(--color-danger-hover);
 }
 
 .primaryButton:disabled,

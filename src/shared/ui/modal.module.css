@@ -17,7 +17,7 @@
   inset: 0;
   border: 0;
   padding: 0;
-  background: rgba(15, 23, 42, 0.4);
+  background: var(--color-scrim);
   cursor: pointer;
 }
 
@@ -40,7 +40,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   background: var(--color-surface);
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+  box-shadow: var(--shadow-md);
 }
 
 .header {
@@ -109,12 +109,12 @@
 }
 
 .dangerButton {
-  background: #b91c1c;
-  color: #fff;
+  background: var(--color-danger);
+  color: var(--color-on-accent);
 }
 
 .dangerButton:hover:not(:disabled) {
-  background: #991b1b;
+  background: var(--color-danger-hover);
 }
 
 .cancelButton:disabled,

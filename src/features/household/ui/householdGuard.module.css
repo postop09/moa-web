@@ -7,5 +7,5 @@
 .error {
   margin: 0;
   font-size: 0.9375rem;
-  color: #b91c1c;
+  color: var(--color-danger);
 }

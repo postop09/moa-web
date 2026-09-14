@@ -233,7 +233,7 @@
 
 .primaryButton {
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 
 .primaryButton:hover:not(:disabled) {
@@ -252,12 +252,12 @@
 }
 
 .dangerPrimaryButton {
-  background: #b91c1c;
-  color: #fff;
+  background: var(--color-danger);
+  color: var(--color-on-accent);
 }
 
 .dangerPrimaryButton:hover:not(:disabled) {
-  background: #991b1b;
+  background: var(--color-danger-hover);
 }
 
 .primaryButton:disabled,
@@ -291,7 +291,7 @@
 }
 
 .dangerButton:hover:not(:disabled) {
-  color: #991b1b;
+  color: var(--color-danger-hover);
 }
 
 .textButton:disabled,

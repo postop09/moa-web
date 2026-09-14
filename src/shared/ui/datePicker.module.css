@@ -141,12 +141,12 @@
 
 .datePicker :global(.rdp-selected .rdp-day_button) {
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 
 .datePicker :global(.rdp-selected .rdp-day_button:hover) {
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-on-accent);
 }
 
 .footer {
