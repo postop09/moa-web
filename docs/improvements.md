@@ -201,6 +201,8 @@ supabase gen types typescript --project-id <id> > src/shared/api/database.types.
 
 ### 11. 테스트 0개, CI 없음
 
+> **진행 상황** — Vitest 5(`vitest.config.mts`) + `@testing-library/react`/`jest-dom` 도입 완료(`pnpm test`). 아래 지적된 테스트 파일 자체는 아직 작성되지 않았다.
+
 **근거** — `*.test.*` / `*.spec.*` 0건, `.github/` 디렉터리 없음.
 
 **문제** — 특히 순수 함수로 잘 분리해 둔 계산 로직이 무방비입니다. `buildAssetTrends`, `buildWeeklyExpenses`, `buildMonthlyExpenses`, `buildCategoryBudgets`, `buildExpenseByCategory`, `buildEventLanes`, `monthRange` — 전부 입력/출력이 명확해서 테스트하기 아주 쉬운데 하나도 없습니다. 위 #5, #6 같은 경계 조건 버그는 정확히 이 레이어에서 잡힙니다.

@@ -1,8 +1,5 @@
 ---
-description: features 레이어 설계 원칙 — TanStack Query 훅 배치, entities·pages와의 역할 분리
-globs: src/features/**/*
 paths: src/features/**/*
-alwaysApply: false
 ---
 
 # features 설계 원칙
