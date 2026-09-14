@@ -1,3 +1,4 @@
+export { Button } from './Button';
 export { ConfirmDialog } from './ConfirmDialog';
 export { DatePicker } from './DatePicker';
 export { GridBackdrop } from './GridBackdrop';
