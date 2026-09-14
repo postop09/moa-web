@@ -562,6 +562,13 @@
   color: var(--color-on-accent);
 }
 
+/* .dayCellToday .dayNumber와 특정도가 같고 이 규칙이 뒤에 선언돼 있어,
+   오늘이면서 공휴일인 날은 CalendarGrid에서 이 클래스 자체를 붙이지
+   않는 방식으로 충돌을 피한다(오늘 표시 우선). */
+.dayCellHoliday .dayNumber {
+  color: var(--color-expense);
+}
+
 .dayCellSelected {
   border-color: var(--color-accent);
   background: color-mix(in srgb, var(--color-accent) 8%, transparent);
