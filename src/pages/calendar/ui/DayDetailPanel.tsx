@@ -6,6 +6,7 @@ import type { CSSProperties } from 'react';
 import type { Schedule } from '@/entities/schedule';
 import type { Transaction } from '@/entities/transaction';
 import { formatAmount, isSameDay } from '@/shared/lib';
+import { Button } from '@/shared/ui';
 
 import { resolveScheduleColor } from '../model/resolveScheduleColor';
 import styles from './calendar.module.css';
@@ -78,13 +79,9 @@ export const DayDetailPanel = ({
     <section className={styles.detail} aria-label="선택한 날 상세">
       <header className={styles.detailHeader}>
         <h3 className={styles.detailTitle}>{formatDayHeading(selectedDay)}</h3>
-        <button
-          type="button"
-          className={styles.primaryButton}
-          onClick={onAddSchedule}
-        >
+        <Button variant="primary" onClick={onAddSchedule}>
           일정 추가
-        </button>
+        </Button>
       </header>
 
       <div className={styles.detailSection}>

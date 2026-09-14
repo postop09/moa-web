@@ -3,6 +3,8 @@
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
+import { Button } from '@/shared/ui';
+
 import { usePwaInstallPrompt } from '../model/usePwaInstallPrompt';
 import styles from './pwaInstallPrompt.module.css';
 
@@ -67,29 +69,17 @@ export const PwaInstallPrompt = () => {
             </p>
           ) : null}
           <div className={styles.actions}>
-            <button
-              type="button"
-              className={styles.secondaryButton}
-              onClick={dismiss}
-            >
+            <Button variant="secondary" onClick={dismiss}>
               나중에
-            </button>
+            </Button>
             {platform === 'installable' ? (
-              <button
-                type="button"
-                className={styles.primaryButton}
-                onClick={promptInstall}
-              >
+              <Button variant="primary" onClick={promptInstall}>
                 홈 화면에 추가
-              </button>
+              </Button>
             ) : (
-              <button
-                type="button"
-                className={styles.primaryButton}
-                onClick={dismiss}
-              >
+              <Button variant="primary" onClick={dismiss}>
                 확인
-              </button>
+              </Button>
             )}
           </div>
         </div>

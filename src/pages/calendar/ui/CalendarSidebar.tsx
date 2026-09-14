@@ -3,6 +3,7 @@
 import { useState, type CSSProperties } from 'react';
 
 import type { ScheduleCategory } from '@/entities/scheduleCategory';
+import { Button } from '@/shared/ui';
 
 import type { AuthorFilter, AuthorOption } from '../model/useCalendarPage';
 import { ScheduleCategoryDeleteConfirm } from './ScheduleCategoryDeleteConfirm';
@@ -117,20 +118,20 @@ export const CalendarSidebar = ({
                     {category.name}
                   </span>
                   <div className={styles.categoryManageActions}>
-                    <button
-                      type="button"
-                      className={styles.textButton}
+                    <Button
+                      variant="text"
+                      size="sm"
                       onClick={() => setPanel({ type: 'edit', category })}
                     >
                       수정
-                    </button>
-                    <button
-                      type="button"
-                      className={styles.textDangerButton}
+                    </Button>
+                    <Button
+                      variant="dangerText"
+                      size="sm"
                       onClick={() => setPanel({ type: 'delete', category })}
                     >
                       삭제
-                    </button>
+                    </Button>
                   </div>
                 </li>
               ))}

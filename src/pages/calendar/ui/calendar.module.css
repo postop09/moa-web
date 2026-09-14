@@ -444,33 +444,6 @@
   gap: var(--space-2);
 }
 
-.textButton,
-.textDangerButton {
-  padding: 0.25rem 0.375rem;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  font: inherit;
-  font-size: 0.8125rem;
-  font-weight: 500;
-}
-
-.textButton {
-  color: var(--color-muted);
-}
-
-.textButton:hover {
-  color: var(--color-accent);
-}
-
-.textDangerButton {
-  color: var(--color-expense);
-}
-
-.textDangerButton:hover {
-  color: var(--color-danger-hover);
-}
-
 .gridWrap {
   touch-action: pan-y;
   user-select: none;
@@ -795,57 +768,8 @@
   gap: var(--space-2);
 }
 
-.primaryButton,
-.secondaryButton,
-.dangerButton {
-  padding: 0.75rem 1rem;
-  border: 1px solid transparent;
-  border-radius: var(--radius);
-  cursor: pointer;
-  font: inherit;
-  font-weight: 500;
-  transition:
-    opacity 0.15s ease,
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease;
-}
-
-.primaryButton {
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-}
-
-.primaryButton:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--color-accent) 88%, #000);
-}
-
-.secondaryButton {
-  border-color: var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text);
-}
-
-.secondaryButton:hover:not(:disabled) {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-}
-
-.dangerButton {
+.deleteAction {
   margin-right: auto;
-  background: var(--color-danger);
-  color: var(--color-on-accent);
-}
-
-.dangerButton:hover:not(:disabled) {
-  background: var(--color-danger-hover);
-}
-
-.primaryButton:disabled,
-.secondaryButton:disabled,
-.dangerButton:disabled {
-  cursor: wait;
-  opacity: 0.65;
 }
 
 @media (min-width: 48rem) {

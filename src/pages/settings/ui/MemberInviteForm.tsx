@@ -4,7 +4,7 @@ import { useState, type FormEvent } from 'react';
 
 import { useCreateHouseholdInvite } from '@/features/householdMember';
 import { getErrorMessage } from '@/shared/lib';
-import { Modal } from '@/shared/ui';
+import { Button, Modal } from '@/shared/ui';
 
 import styles from './settings.module.css';
 
@@ -91,22 +91,17 @@ export const MemberInviteForm = ({
           </p>
           <p className={styles.linkBox}>{inviteUrl}</p>
           <div className={styles.modalActions}>
-            <button
-              type="button"
-              className={styles.secondaryButton}
+            <Button
+              variant="secondary"
               onClick={() => {
                 window.location.href = mailtoHref;
               }}
             >
               메일 앱으로 보내기
-            </button>
-            <button
-              type="button"
-              className={styles.primaryButton}
-              onClick={handleCopy}
-            >
+            </Button>
+            <Button variant="primary" onClick={handleCopy}>
               {copied ? '복사됨' : '링크 복사'}
-            </button>
+            </Button>
           </div>
         </div>
       </Modal>
@@ -137,21 +132,17 @@ export const MemberInviteForm = ({
           </p>
         ) : null}
         <div className={styles.modalActions}>
-          <button
-            type="button"
-            className={styles.secondaryButton}
-            onClick={onClose}
-            disabled={isPending}
-          >
+          <Button variant="secondary" onClick={onClose} disabled={isPending}>
             취소
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="primary"
             type="submit"
-            className={styles.primaryButton}
-            disabled={isPending}
+            loading={isPending}
+            loadingLabel="초대 중…"
           >
-            {isPending ? '초대 중…' : '초대 링크 만들기'}
-          </button>
+            초대 링크 만들기
+          </Button>
         </div>
       </form>
     </Modal>

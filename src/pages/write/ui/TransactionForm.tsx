@@ -10,7 +10,7 @@ import {
 } from '@/features/transaction';
 import { getErrorMessage } from '@/shared/lib';
 import { TRANSACTION_TYPE_LABEL, type TransactionType } from '@/shared/model';
-import { DatePicker } from '@/shared/ui';
+import { Button, DatePicker } from '@/shared/ui';
 
 import { CategoryPopover } from './CategoryPopover';
 import styles from './write.module.css';
@@ -292,22 +292,26 @@ export const TransactionForm = ({
       ) : null}
       <div className={styles.buttonGroup}>
         {onDelete ? (
-          <button
-            type="button"
-            className={styles.dangerPrimaryButton}
+          <Button
+            variant="danger"
+            fullWidth
             onClick={onDelete}
             disabled={disabled}
           >
             삭제
-          </button>
+          </Button>
         ) : null}
-        <button
-          className={styles.primaryButton}
+        {/* disabled는 카테고리 로딩까지 포함, loading은 제출 중만 */}
+        <Button
+          variant="primary"
+          fullWidth
           type="submit"
           disabled={disabled}
+          loading={isPending}
+          loadingLabel="저장 중…"
         >
-          {isPending ? '저장 중…' : mode.type === 'create' ? '작성' : '저장'}
-        </button>
+          {mode.type === 'create' ? '작성' : '저장'}
+        </Button>
       </div>
     </form>
   );

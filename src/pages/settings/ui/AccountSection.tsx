@@ -5,6 +5,7 @@ import { clearCurrentHouseholdId } from '@/features/household';
 import { clearAuthGateReadyCookie } from '@/features/onboarding';
 import { useGetProfile } from '@/features/profile';
 import { getErrorMessage } from '@/shared/lib';
+import { Button } from '@/shared/ui';
 
 import styles from './settings.module.css';
 
@@ -30,14 +31,15 @@ export const AccountSection = () => {
     <section className={styles.section}>
       <header className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>계정</h2>
-        <button
-          type="button"
-          className={styles.dangerButton}
+        <Button
+          variant="dangerText"
+          size="sm"
           onClick={handleSignOut}
-          disabled={isPending}
+          loading={isPending}
+          loadingLabel="로그아웃 중…"
         >
-          {isPending ? '로그아웃 중…' : '로그아웃'}
-        </button>
+          로그아웃
+        </Button>
       </header>
 
       {isLoading ? (

@@ -283,59 +283,6 @@
   line-height: 1.4;
 }
 
-.primaryButton,
-.secondaryButton,
-.dangerPrimaryButton {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid transparent;
-  border-radius: var(--radius);
-  cursor: pointer;
-  font: inherit;
-  font-weight: 500;
-  transition:
-    opacity 0.15s ease,
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease;
-}
-
-.primaryButton {
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-}
-
-.primaryButton:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--color-accent) 88%, #000);
-}
-
-.secondaryButton {
-  border-color: var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text);
-}
-
-.secondaryButton:hover:not(:disabled) {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-}
-
-.dangerPrimaryButton {
-  background: var(--color-expense);
-  color: var(--color-on-accent);
-}
-
-.dangerPrimaryButton:hover:not(:disabled) {
-  background: var(--color-danger-hover);
-}
-
-.primaryButton:disabled,
-.secondaryButton:disabled,
-.dangerPrimaryButton:disabled {
-  cursor: wait;
-  opacity: 0.65;
-}
-
 .empty {
   margin: 0;
   font-size: 0.9375rem;
