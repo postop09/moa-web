@@ -4,11 +4,12 @@ import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
 
 import { useCreateHousehold } from '@/features/household';
-import { persistAuthGateReadyCookie } from '@/features/onboarding';
+import {
+  OnboardingFormLayout,
+  onboardingFormStyles as styles,
+  persistAuthGateReadyCookie,
+} from '@/features/onboarding';
 import { getErrorMessage } from '@/shared/lib';
-import { GridBackdrop, MoaLogo } from '@/shared/ui';
-
-import styles from '@/shared/ui/onboardingForm.module.css';
 
 export const CreateHouseholdForm = () => {
   const router = useRouter();
@@ -37,42 +38,37 @@ export const CreateHouseholdForm = () => {
   };
 
   return (
-    <main className={styles.page}>
-      <GridBackdrop />
-      <div className={styles.panel}>
-        <header className={styles.hero}>
-          <MoaLogo variant="black" size={72} className={styles.brand} />
-          <h1 className={styles.headline}>가계부를 만들어 주세요</h1>
-          <p className={styles.support}>함께 관리할 가계부 이름을 정합니다.</p>
-        </header>
-        <form className={styles.form} onSubmit={handleSubmit}>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="householdName">
-              가계부 이름
-            </label>
-            <input
-              id="householdName"
-              className={styles.input}
-              name="householdName"
-              type="text"
-              autoComplete="off"
-              maxLength={40}
-              required
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              disabled={isPending}
-            />
-          </div>
-          {error ? (
-            <p className={styles.error}>
-              {getErrorMessage(error, '가계부 생성에 실패했습니다.')}
-            </p>
-          ) : null}
-          <button className={styles.submit} type="submit" disabled={isPending}>
-            {isPending ? '만드는 중…' : '시작하기'}
-          </button>
-        </form>
-      </div>
-    </main>
+    <OnboardingFormLayout
+      headline="가계부를 만들어 주세요"
+      description="함께 관리할 가계부 이름을 정합니다."
+    >
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="householdName">
+            가계부 이름
+          </label>
+          <input
+            id="householdName"
+            className={styles.input}
+            name="householdName"
+            type="text"
+            autoComplete="off"
+            maxLength={40}
+            required
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            disabled={isPending}
+          />
+        </div>
+        {error ? (
+          <p className={styles.error}>
+            {getErrorMessage(error, '가계부 생성에 실패했습니다.')}
+          </p>
+        ) : null}
+        <button className={styles.submit} type="submit" disabled={isPending}>
+          {isPending ? '만드는 중…' : '시작하기'}
+        </button>
+      </form>
+    </OnboardingFormLayout>
   );
 };

@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { isNavItemActive, navItems } from '@/shared/config';
 import { MoaLogo } from '@/shared/ui';
 
-import { navIcons } from './navIcons';
+import { navIcons } from '../config/navIcons';
 import styles from './appShell.module.css';
 
 export const Sidebar = () => {

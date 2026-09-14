@@ -7,6 +7,8 @@ import { HouseholdGuard } from '@/features/household';
 import { TransactionForm } from './ui/TransactionForm';
 import styles from './ui/write.module.css';
 
+export { WriteEditPage } from './edit';
+
 export const WritePage = () => {
   const router = useRouter();
 

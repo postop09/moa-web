@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { WriteEditPage } from '@/pages/write/edit';
+import { WriteEditPage } from '@/pages/write';
 
 export const metadata: Metadata = {
   title: '수정하기',
