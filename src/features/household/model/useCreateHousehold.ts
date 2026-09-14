@@ -42,9 +42,6 @@ export const useCreateHousehold = () => {
           return [...current, household];
         },
       );
-      void queryClient.invalidateQueries({
-        queryKey: householdQueryKeys.list(),
-      });
     },
   });
 };

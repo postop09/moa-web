@@ -1,3 +1,5 @@
+import { getErrorCode } from '@/shared/lib';
+
 const MESSAGE_MAP: Record<string, string> = {
   'not authenticated': '로그인이 필요합니다.',
   'invite not found': '초대를 찾을 수 없습니다.',
@@ -20,7 +22,7 @@ export const mapInviteError = (error: unknown) => {
     return new Error('초대 처리에 실패했습니다.');
   }
 
-  const code = 'code' in error ? String(error.code) : '';
+  const code = getErrorCode(error) ?? '';
   const message = 'message' in error ? String(error.message) : '';
 
   if (code === '23505') {

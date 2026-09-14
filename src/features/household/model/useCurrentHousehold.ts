@@ -3,7 +3,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect } from 'react';
 
-import { householdQueryKeys } from '../config/queryKeys';
+import { resolveEffectiveHouseholdId } from './resolveEffectiveHouseholdId';
 import { useCurrentHouseholdStore } from './currentHouseholdStore';
 import { useListHouseholds } from './useListHouseholds';
 
@@ -37,15 +37,7 @@ export const useCurrentHousehold = () => {
     }
 
     if (hasList) {
-      if (households.length === 0) {
-        return null;
-      }
-
-      if (storedId && households.some((item) => item.id === storedId)) {
-        return storedId;
-      }
-
-      return households[0]?.id ?? null;
+      return resolveEffectiveHouseholdId(storedId, households);
     }
 
     return storedId;
@@ -65,10 +57,7 @@ export const useCurrentHousehold = () => {
       return;
     }
 
-    const nextId =
-      storedId && list.some((item) => item.id === storedId)
-        ? storedId
-        : (list[0]?.id ?? null);
+    const nextId = resolveEffectiveHouseholdId(storedId, list);
 
     if (!nextId || storedId === nextId) {
       return;
@@ -88,19 +77,19 @@ export const useCurrentHousehold = () => {
     (id: string) => {
       persistHouseholdId(id);
 
-      const listKey = householdQueryKeys.list();
-
+      // household feature는 FSD 규칙상 다른 feature(transaction, schedule,
+      // householdInvite 등)의 queryKey 팩토리를 직접 import할 수 없다(동일 레이어
+      // 참조 금지). 그래서 queryKey 구조를 '두 번째 요소가 list/invites이고
+      // 세 번째 요소가 householdId'라는 암묵적 규약으로 취급해 predicate로 판별한다.
+      // householdQueryKeys.list()(['households', 'list'])는 세 번째 요소가 없어
+      // keyHouseholdId가 항상 undefined이므로 이 predicate 자체로 이미 제외된다.
       void queryClient.invalidateQueries({
         predicate: (query) => {
-          if (
-            query.queryKey.length === listKey.length &&
-            query.queryKey[0] === listKey[0] &&
-            query.queryKey[1] === listKey[1]
-          ) {
-            return false;
-          }
+          const [, marker, keyHouseholdId] = query.queryKey;
 
-          return query.queryKey.includes(id);
+          return (
+            (marker === 'list' || marker === 'invites') && keyHouseholdId === id
+          );
         },
       });
     },
