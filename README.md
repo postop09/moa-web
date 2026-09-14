@@ -7,7 +7,7 @@ Next.js App Router + Feature-Sliced Design(`src/`) + Supabase 클라이언트입
 ## Features
 
 - **거래 기록** — 수입·지출·저축·보험, 카테고리·예산, 매달 지정일 반복 거래
-- **대시보드** — 잔액, 자산 추이, 카테고리 비율, 주간·월간 지출 차트
+- **대시보드** — 잔액, 일일 지출, 카테고리 비율, 주간·월간 지출 차트
 - **내역** — 유형·카테고리·월 필터, 합계와 잔액
 - **달력** — 일정과 일별 지출을 한 화면에서 관리
 - **공유 가계부** — 멤버 초대, 역할(소유자/멤버), 가계부 전환
@@ -24,8 +24,10 @@ Next.js App Router + Feature-Sliced Design(`src/`) + Supabase 클라이언트입
 
 ```bash
 pnpm install
-cp .env.local.example .env.local
-# anon key 채우기
+# .env 파일을 만들고 아래 값을 채운다
+#   NEXT_PUBLIC_SUPABASE_URL=
+#   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+#   NEXT_PUBLIC_SITE_URL=  (선택, 배포 도메인)
 pnpm dev
 ```
 
@@ -38,5 +40,7 @@ pnpm dev
 
 ## Docs
 
-- [프로젝트 상세](docs/overview.md)
+- [제품 요구사항 (PRD)](docs/PRD.md)
+- [아키텍처](docs/ARCHITECTURE.md)
 - [인증 및 온보딩](docs/authOnboarding.md)
+- [개선 과제](docs/improvements.md)
