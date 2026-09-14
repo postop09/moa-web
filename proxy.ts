@@ -7,7 +7,9 @@ const isPassThroughPath = (pathname: string) => {
   return pathname.startsWith('/invite/') || pathname.startsWith('/auth/');
 };
 
-const PUBLIC_PATHS = new Set(['/login', '/welcome', '/privacy', '/terms']);
+// matcher(하단 config.matcher)에 없는 경로는 proxy가 아예 실행되지 않는다.
+// '/privacy', '/terms'는 matcher에 없어(항상 공개) 이 Set에 넣어도 도달하지 않는다.
+const PUBLIC_PATHS = new Set(['/login', '/welcome']);
 
 const isLoginPath = (pathname: string) => {
   return pathname === '/login';

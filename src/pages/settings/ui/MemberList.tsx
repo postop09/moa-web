@@ -5,7 +5,7 @@ import type { HouseholdMember } from '@/entities/householdMember';
 import type { Profile } from '@/entities/profile';
 import { HOUSEHOLD_ROLE_LABEL } from '@/shared/model';
 
-import styles from '../settings.module.css';
+import styles from './settings.module.css';
 
 type Props = {
   members: HouseholdMember[];

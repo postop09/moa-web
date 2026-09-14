@@ -41,7 +41,7 @@
 
 ### 폴더 및 파일 관리
 
-- 슬라이스·폴더명은 **kebab-case** (`event-detail/`, `apply-date-filter/`)
+- 슬라이스·폴더명은 **camelCase** (`householdMember/`, `scheduleCategory/`)
 - 파일명은 **camelCase** (`createProfile.ts`, `useCreateProfile.ts`)
 - ui 컴포넌트 파일명은 **PascalCase** (`HeroSection.tsx`)
 
@@ -149,6 +149,8 @@ import { useGetCategories } from '@/features/category';
 // ❌ Bad
 import { useGetCategories } from '@/features/category/model/useGetCategories';
 ```
+
+**보조 진입점 예외**: 서버 전용 코드를 클라이언트 번들에서 분리해야 할 때는 슬라이스 루트에 `server.ts`를 두고 그것만 export하는 두 번째 진입점을 허용한다 (예: `shared/api/server.ts`, `features/onboarding/server.ts`). 화면마다 다른 등록이 필요한 라이브러리 초기화 모듈(예: `shared/lib/echarts.ts`)도 같은 이유로 `index.ts`를 거치지 않고 직접 import할 수 있다. 그 밖의 내부 파일 직접 import는 예외가 아니다.
 
 ---
 

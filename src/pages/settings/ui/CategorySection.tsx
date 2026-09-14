@@ -9,7 +9,7 @@ import { getErrorMessage } from '@/shared/lib';
 import { CategoryDeleteConfirm } from './CategoryDeleteConfirm';
 import { CategoryForm } from './CategoryForm';
 import { CategoryList } from './CategoryList';
-import styles from '../settings.module.css';
+import styles from './settings.module.css';
 
 type Panel =
   | { type: 'idle' }

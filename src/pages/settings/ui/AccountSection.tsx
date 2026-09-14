@@ -6,7 +6,7 @@ import { clearAuthGateReadyCookie } from '@/features/onboarding';
 import { useGetProfile } from '@/features/profile';
 import { getErrorMessage } from '@/shared/lib';
 
-import styles from '../settings.module.css';
+import styles from './settings.module.css';
 
 export const AccountSection = () => {
   const { data: profile, isLoading, error } = useGetProfile();

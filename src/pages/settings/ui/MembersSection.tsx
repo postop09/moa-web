@@ -14,7 +14,7 @@ import { getErrorMessage } from '@/shared/lib';
 import { MemberInviteForm } from './MemberInviteForm';
 import { MemberKickConfirm } from './MemberKickConfirm';
 import { MemberList } from './MemberList';
-import styles from '../settings.module.css';
+import styles from './settings.module.css';
 
 type Panel =
   | { type: 'idle' }

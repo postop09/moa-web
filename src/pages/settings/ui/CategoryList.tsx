@@ -4,7 +4,7 @@ import type { Category } from '@/entities/category';
 import { TRANSACTION_TYPE_LABEL, type TransactionType } from '@/shared/model';
 import { formatAmount } from '@/shared/lib';
 
-import styles from '../settings.module.css';
+import styles from './settings.module.css';
 
 type Props = {
   categories: Category[];

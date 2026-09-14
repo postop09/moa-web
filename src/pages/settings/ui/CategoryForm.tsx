@@ -8,7 +8,7 @@ import { getErrorMessage } from '@/shared/lib';
 import { TRANSACTION_TYPE_LABEL, type TransactionType } from '@/shared/model';
 import { Modal } from '@/shared/ui';
 
-import styles from '../settings.module.css';
+import styles from './settings.module.css';
 
 type Mode = { type: 'create' } | { type: 'edit'; category: Category };
 

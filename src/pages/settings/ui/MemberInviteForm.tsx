@@ -6,7 +6,7 @@ import { useCreateHouseholdInvite } from '@/features/householdMember';
 import { getErrorMessage } from '@/shared/lib';
 import { Modal } from '@/shared/ui';
 
-import styles from '../settings.module.css';
+import styles from './settings.module.css';
 
 type Props = {
   householdId: string;

@@ -14,13 +14,12 @@ pages/
     api/        # entities api를 조합하는 화면 전용 api
     lib/        # mock, mapper, 순수 유틸
     config/     # 상수·설정
-    index.ts    # public API — ui/{Domain}Page를 re-export만 함
+    index.tsx   # 완성된 페이지 (JSX 조립)
 ```
 
 ## ui
 
 - 해당 슬라이스 전용 UI 컴포넌트.
-- **`{Domain}Page` 컴포넌트도 이 세그먼트에 둔다** (`ui/{Domain}Page.tsx`) — 섹션들을 조립해 실제 페이지를 구성하는 루트 컴포넌트. `index.ts`는 이를 re-export만 한다.
 - 최소 기능 단위로 컴포넌트를 분리한다.
 - 섹션별 레이아웃·스타일은 해당 컴포넌트에 둔다.
 - 슬라이스 내부에서는 `ui/`·`model/` 등 상대 경로 import를 허용한다.
@@ -58,17 +57,17 @@ export const useSignInWithGoogle = () => {
 
 - 슬라이스 전용 env 키, 테이블명, 쿼리 키, 상수 등.
 
-## index.ts (public API)
+## index.tsx (public API)
 
-- 실제 페이지 조립은 `ui/{Domain}Page.tsx`에서 하고, `index.ts`는 그것을 **re-export만** 한다.
-- 파일명은 `index.ts` (JSX가 없으므로 `.tsx`가 아니다).
+- `ui` 세그먼트 컴포넌트를 조립한 **완성된 페이지**를 export한다.
+- 파일명은 `index.tsx`를 사용한다.
 - export 이름은 `{Domain}Page` (`CsPage`).
 
 ```tsx
-// ✅ pages/cs/ui/CsPage.tsx — 섹션 조립
+// ✅ pages/cs/index.tsx
 import { PageTitle } from '@/shared/ui';
-import { CsDiagnosticBand } from './CsDiagnosticBand';
-import { MonthlyDiagnosticPanel } from './MonthlyDiagnosticPanel';
+import { CsDiagnosticBand } from './ui/CsDiagnosticBand';
+import { MonthlyDiagnosticPanel } from './ui/MonthlyDiagnosticPanel';
 
 export const CsPage = () => {
   return (
@@ -79,11 +78,6 @@ export const CsPage = () => {
     </div>
   );
 };
-```
-
-```ts
-// ✅ pages/cs/index.ts — public API
-export { CsPage } from './ui/CsPage';
 ```
 
 ## features vs pages
@@ -102,6 +96,6 @@ export { CsPage } from './ui/CsPage';
 
 1. `shared`에서 공통으로 쓸 수 있는 요소가 있는지 먼저 확인.
 2. 해당 슬라이스 UI·로직은 해당 `pages/{slice}`에 둔다.
-3. `ui/{Domain}Page.tsx`에서 섹션을 조립하고, `index.ts`가 이를 re-export.
+3. `index.tsx`에서 섹션을 조립하고 `{Domain}Page`를 export.
 4. 다른 슬라이스에 재사용되는 요소는 `shared` 또는 `features`로 이동.
 5. API 원본은 `entities`에 두고, 활용은 `model` 훅으로 감싸서 사용한다.

@@ -2,6 +2,8 @@
 
 // global-error는 루트 레이아웃 자체가 던질 때만 실행되며 그 레이아웃을 완전히 대체하므로,
 // app/layout.tsx의 <html>/<body>와 globals.css를 상속받지 못한다. 그래서 인라인 스타일만 사용한다.
+// 아래 색상 값은 globals.css의 --color-bg(#f4f6f8) / --color-text(#0f172a) /
+// --color-muted(#64748b) / --color-border(#e2e8f0)와 동일하다. 그 토큰이 바뀌면 이 값도 함께 맞춘다.
 type Props = {
   error: Error & { digest?: string };
   reset: () => void;

@@ -1,58 +1,57 @@
 {
-    "model": "opusplan",
-    "$schema": "https://json.schemastore.org/claude-code-settings.json",
-    "permissions": {
-      "allow": [
-        "Read(./**)",
-        "Bash(git status)",
-        "Bash(git diff *)",
-        "Bash(git log *)",
-        "Bash(git branch *)",
-        "Bash(git add *)",
-        "Bash(git commit *)",
-        "Bash(npm run lint)",
-        "Bash(npm run format)",
-        "Bash(npm test)",
-        "Bash(npm test *)",
-        "Bash(npm run test:watch)",
-        "Bash(npm run typecheck)",
-        "Bash(npm run build)"
-      ],
-      "ask": [
-        "Bash(git push *)",
-        "Bash(npm install *)",
-        "Bash(npm uninstall *)",
-        "Bash(rm *)"
-      ],
-      "deny": [
-        "Read(./.env)",
-        "Read(./.env.*)",
-        "Read(./**/*.pem)",
-        "Read(./**/*.key)",
-        "Read(./secrets/**)",
-        "Edit(./.env)",
-        "Edit(./.env.*)",
-        "Bash(git push --force *)",
-        "Bash(git push -f *)",
-        "Bash(git reset --hard *)",
-        "Bash(rm -rf *)",
-        "Bash(sudo *)",
-        "Bash(curl *)",
-        "Bash(wget *)"
-      ]
-    },
-    "hooks": {
-      "PostToolUse": [
-        {
-          "matcher": "Edit|Write",
-          "hooks": [
-            {
-              "type": "command",
-              "command": "echo '[hook] 파일이 수정되었습니다. 포맷터를 연결하려면 이 명령을 교체하세요. 예: npx prettier --write \"$CLAUDE_FILE_PATH\"'"
-            }
-          ]
-        }
-      ]
-    }
+  "model": "opusplan",
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Read(./**)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git branch *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(pnpm lint)",
+      "Bash(pnpm format)",
+      "Bash(pnpm test)",
+      "Bash(pnpm test *)",
+      "Bash(pnpm test:watch)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(pnpm build)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(pnpm add *)",
+      "Bash(pnpm remove *)",
+      "Bash(rm *)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/*.pem)",
+      "Read(./**/*.key)",
+      "Read(./secrets/**)",
+      "Edit(./.env)",
+      "Edit(./.env.*)",
+      "Bash(git push --force *)",
+      "Bash(git push -f *)",
+      "Bash(git reset --hard *)",
+      "Bash(rm -rf *)",
+      "Bash(sudo *)",
+      "Bash(curl *)",
+      "Bash(wget *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | { read -r f; npx prettier --write \"$f\" 2>/dev/null || true; }"
+          }
+        ]
+      }
+    ]
   }
-  
+}

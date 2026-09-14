@@ -6,7 +6,7 @@ import { useListHouseholdMembers } from '@/features/householdMember';
 
 import { HouseholdDeleteConfirm } from './HouseholdDeleteConfirm';
 import { HouseholdLeaveConfirm } from './HouseholdLeaveConfirm';
-import styles from '../settings.module.css';
+import styles from './settings.module.css';
 
 type Panel = { type: 'idle' } | { type: 'delete' } | { type: 'leave' };
 

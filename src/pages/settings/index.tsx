@@ -7,7 +7,7 @@ import { AccountSection } from './ui/AccountSection';
 import { CategorySection } from './ui/CategorySection';
 import { HouseholdDangerSection } from './ui/HouseholdDangerSection';
 import { MembersSection } from './ui/MembersSection';
-import styles from './settings.module.css';
+import styles from './ui/settings.module.css';
 
 export const SettingsPage = () => {
   const { household, householdId } = useCurrentHousehold();
