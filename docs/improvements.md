@@ -24,7 +24,7 @@
 | 8   | 거래·일정 queryKey가 파라미터를 일부만 반영                | 데이터    | 🟠 중간  | -             |
 | 9   | 하드코딩된 queryKey 2곳                                    | 데이터    | 🟠 중간  | -             |
 | 10  | env 검증 부재 + README가 없는 파일을 안내                  | 안정성/DX | 🟠 중간  | -             |
-| 11  | 테스트 0개, CI 없음                                        | 품질      | 🟠 중간  | -             |
+| 11  | 테스트 0개, CI 없음                                        | 품질      | 🟠 중간  | ✅ 완료       |
 | 12  | loading.tsx/Suspense/ErrorBoundary 전무                    | 안정성    | 🟠 중간  | -             |
 | 13  | 한국어 앱인데 폰트 3종 모두 latin 서브셋만 로드            | 성능      | 🟠 중간  | -             |
 | 14  | 디자인 시스템 부재 (버튼 클래스 103개 중복 등)             | 구조      | 🟠 중간  | -             |
@@ -173,6 +173,8 @@ defaultOptions: {
 **제안** — `src/shared/config/env.ts`에서 앱 시작 시 한 번 검증하고(간단한 수기 검사로 충분), 세 곳이 함께 임포트한다. `.env.example`을 추가하고 README를 실제 파일명(`.env`)에 맞게 고친다.
 
 ### 11. 테스트 0개, CI 없음
+
+> **진행 상황 (✅ 완료)** — `typecheck` 스크립트를 추가하고, `lint`/`format`/`format:check` 대상을 `proxy.ts`·`scripts/`·`next.config.ts`·설정 파일까지 넓혔다(새로 뜬 에러 0건). 아래 표의 함수 전부에 특성화 테스트를 추가했다(`getErrorCode`/`mapInviteError`는 #20/#18 작업 중 이미 커버돼 제외). `.github/workflows/ci.yml`을 신설해 PR·main push마다 `lint`/`format:check`/`typecheck`/`test`(`verify` 잡)와 `pnpm build`(`build` 잡, 병렬)를 돌린다. `vitest.config.mts`에 `test.env.TZ = 'Asia/Seoul'`을 고정했다 — `buildDailyExpenses`/`buildWeeklyExpenses`/`buildEventLanes`/`visibleRange`가 로컬 타임존 기준으로 날짜 경계를 계산해, UTC가 기본인 GitHub Actions 러너에서만 깨질 수 있었다(`TZ=UTC pnpm test`로 고정 전/후 차이를 확인). 이 작업 중 아래 문서 초안의 사실 오류도 함께 바로잡았다: "버튼 클래스 103개"는 `:hover`/`:disabled`까지 포함한 셀렉터 줄 수였고 실제 중복 정의는 5개 파일뿐이며(#14), `parseDayKey('')`는 `Number('')===0`이 아니라 `month`/`day`가 `undefined`가 돼 실제로는 `null`을 반환한다(테스트로 고정).
 
 **근거** — `find app src scripts -name '*.test.*' -o -name '*.spec.*'` 결과 0건. `pnpm test`는 "No test files found"로 exit 1. `.github/` 디렉터리 없음, husky/lint-staged 없음. `package.json`에 `typecheck` 스크립트 없음(`npx tsc --noEmit`으로 수동 실행). `pnpm lint`/`pnpm format` 대상이 `app src`뿐이라 `proxy.ts`(138줄)·`scripts/`·`*.mts`는 검사 사각지대. Vitest/RTL/jsdom 설정은 완비돼 있다(`vitest.config.mts`, `vitest.setup.ts`).
 

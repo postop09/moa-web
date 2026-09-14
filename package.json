@@ -6,9 +6,10 @@
     "dev": "next dev --turbopack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint app src",
-    "format": "prettier --write app src",
-    "format:check": "prettier --check app src",
+    "lint": "eslint app src proxy.ts scripts next.config.ts",
+    "format": "prettier --write app src proxy.ts scripts next.config.ts vitest.config.mts vitest.setup.ts eslint.config.mjs",
+    "format:check": "prettier --check app src proxy.ts scripts next.config.ts vitest.config.mts vitest.setup.ts eslint.config.mjs",
+    "typecheck": "tsc --noEmit",
     "og:generate": "tsx scripts/generateOgImage.ts",
     "test": "vitest run",
     "test:watch": "vitest"
