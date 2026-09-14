@@ -24,10 +24,10 @@
 | 8   | 거래·일정 queryKey가 파라미터를 일부만 반영                | 데이터    | 🟠 중간  | -             |
 | 9   | 하드코딩된 queryKey 2곳                                    | 데이터    | 🟠 중간  | -             |
 | 10  | env 검증 부재 + README가 없는 파일을 안내                  | 안정성/DX | 🟠 중간  | -             |
-| 11  | 테스트 0개, CI 없음                                        | 품질      | 🟠 중간  | -             |
+| 11  | 테스트 0개, CI 없음                                        | 품질      | 🟠 중간  | ✅ 완료       |
 | 12  | loading.tsx/Suspense/ErrorBoundary 전무                    | 안정성    | 🟠 중간  | -             |
-| 13  | 한국어 앱인데 폰트 3종 모두 latin 서브셋만 로드            | 성능      | 🟠 중간  | -             |
-| 14  | 디자인 시스템 부재 (버튼 클래스 103개 중복 등)             | 구조      | 🟠 중간  | -             |
+| 13  | 한국어 앱인데 폰트 3종 모두 latin 서브셋만 로드            | 성능      | 🟠 중간  | ✅ 완료       |
+| 14  | 디자인 시스템 부재 (버튼 클래스 103개 중복 등)             | 구조      | 🟠 중간  | 🟡 부분 완료  |
 | 15  | 컨벤션 문서 충돌·드리프트                                  | 구조      | 🟡 낮음  | ✅ 완료       |
 | 16  | Public API deep import 17건                                | 구조      | 🟡 낮음  | ✅ 완료       |
 | 17  | widgets 설계 규칙 위반 2건                                 | 구조      | 🟡 낮음  | ✅ 완료(대안) |
@@ -174,6 +174,10 @@ defaultOptions: {
 
 ### 11. 테스트 0개, CI 없음
 
+> **진행 상황 (✅ 완료)** — `typecheck` 스크립트를 추가하고, `lint`/`format`/`format:check` 대상을 `proxy.ts`·`scripts/`·`next.config.ts`·설정 파일까지 넓혔다(새로 뜬 에러 0건). 아래 표의 함수 전부에 특성화 테스트를 추가했다(`getErrorCode`/`mapInviteError`는 #20/#18 작업 중 이미 커버돼 제외). `.github/workflows/ci.yml`을 신설해 PR·main push마다 `lint`/`format:check`/`typecheck`/`test`(`verify` 잡)와 `pnpm build`(`build` 잡, 병렬)를 돌린다. `vitest.config.mts`에 `test.env.TZ = 'Asia/Seoul'`을 고정했다 — `buildDailyExpenses`/`buildWeeklyExpenses`/`buildEventLanes`/`visibleRange`가 로컬 타임존 기준으로 날짜 경계를 계산해, UTC가 기본인 GitHub Actions 러너에서만 깨질 수 있었다(`TZ=UTC pnpm test`로 고정 전/후 차이를 확인). 이 작업 중 아래 문서 초안의 사실 오류도 함께 바로잡았다: "버튼 클래스 103개"는 `:hover`/`:disabled`까지 포함한 셀렉터 줄 수였고 실제 중복 정의는 5개 파일뿐이며(#14), `parseDayKey('')`는 `Number('')===0`이 아니라 `month`/`day`가 `undefined`가 돼 실제로는 `null`을 반환한다(테스트로 고정).
+>
+> 테스트 작성 중 드러난, 이번 범위 밖의 작은 동작 두 가지는 고치지 않고 현재 동작 그대로 특성화 테스트로 고정했다 — 후속 과제로 남긴다: (1) `buildCategoryBudgets`의 정렬 비교자는 두 카테고리의 `ratio`가 모두 `Infinity`면 `Infinity - Infinity = NaN`이 돼 그 둘 사이 순서가 미정의다. (2) `buildExpenseByCategory`는 카테고리가 16개를 넘으면 상위 15개만 반환하고 나머지를 조용히 버린다(주석 처리된 "기타" 버킷 코드가 남아 있어, 원래는 합산할 계획이었던 것으로 보인다).
+
 **근거** — `find app src scripts -name '*.test.*' -o -name '*.spec.*'` 결과 0건. `pnpm test`는 "No test files found"로 exit 1. `.github/` 디렉터리 없음, husky/lint-staged 없음. `package.json`에 `typecheck` 스크립트 없음(`npx tsc --noEmit`으로 수동 실행). `pnpm lint`/`pnpm format` 대상이 `app src`뿐이라 `proxy.ts`(138줄)·`scripts/`·`*.mts`는 검사 사각지대. Vitest/RTL/jsdom 설정은 완비돼 있다(`vitest.config.mts`, `vitest.setup.ts`).
 
 **문제** — 순수 함수로 잘 분리된 계산 로직이 무방비다. 아래 표의 함수들은 입력/출력이 명확해 테스트하기 쉬운데 하나도 없다. `.claude/rules/git-workflow.md`는 "CI 통과 후 머지"를 요구하지만 CI 자체가 없다.
@@ -205,6 +209,8 @@ defaultOptions: {
 
 ### 13. 한국어 앱인데 폰트 3종 모두 latin 서브셋만 로드
 
+> **진행 상황 (✅ 완료)** — `Geist`/`Geist_Mono`/`Instrument_Serif`(next/font/google) 의존을 전부 제거하고 `pretendard` npm 패키지 하나로 통일했다. Pretendard는 라틴을 Inter 기반으로 자체 커버하므로 Geist Sans도 함께 뺐다 — 남겨뒀다면 한글은 어차피 Pretendard로 렌더되면서 Geist Sans 다운로드만 낭비로 남았을 것이다. PWA라 CDN 대신 npm 패키지로 self-host해 웹팩이 woff2를 자체 오리진으로 번들링하게 했다(외부 CDN은 서비스워커 오프라인 캐싱과 상성이 나쁘다). 실제로 `pnpm dev` 후 Network 탭으로 확인한 결과 `PretendardVariable.subset.*.woff2` 13개만 자체 오리진에서 요청되고 Geist·Instrument 관련 요청은 0건이었고, `getComputedStyle(document.body).fontFamily`도 `"Pretendard Variable", Pretendard, "Apple SD Gothic Neo", sans-serif`로 확인됐다. `globals.css`의 `--font-display`(Instrument Serif 전용, 소비처 0건이었음)도 함께 삭제했다.
+
 **근거** — [`app/layout.tsx`](../app/layout.tsx)가 `Geist`/`Geist_Mono`/`Instrument_Serif`를 전부 `subsets: ['latin']`으로 로드한다. `<html lang="ko">`이고 전체 UI가 한글이다. `--font-sans`([`globals.css:14-15`](../src/shared/styles/globals.css))의 폴백에 적힌 `Pretendard`를 로드하는 코드는 없다. `Geist_Mono`는 `<html>`에 CSS 변수까지 붙지만(`app/layout.tsx`) 전체 CSS에서 참조 0건이다.
 
 **문제** — latin 서브셋은 한글을 커버하지 않아 본문 대부분이 시스템 폰트로 폴백되는 상태로 보인다(직접 렌더링 검증은 하지 않음 — 확인 필요). 즉 폰트 3종을 다운로드하면서 정작 본문에는 쓰이지 않을 가능성이 있고, `Geist_Mono`는 참조가 아예 없어 순수 낭비 다운로드다.
@@ -212,6 +218,14 @@ defaultOptions: {
 **제안** — `Geist_Mono`를 쓰지 않는다면 제거한다. 한글 본문용으로 `next/font/google`의 `Noto_Sans_KR` 등을 추가하거나, Pretendard를 실제로 로드하도록 정리한다.
 
 ### 14. 디자인 시스템 부재
+
+> **진행 상황 (🟡 부분 완료)** — 실측 결과 "버튼 클래스 103개"는 `:hover`/`:disabled`까지 포함한 셀렉터 줄 수였고, 실제 중복 정의는 5개 파일(바이트 단위로 동일), 호출부는 17개 파일 31곳이었다. `globals.css`에 `--color-danger`/`--color-danger-hover`/`--color-on-accent`/`--color-scrim`/`--shadow-sm`/`--shadow-md`/`--space-5` 토큰을 추가하고 반복되던 하드코딩 값(70건 중 `#b91c1c`/`#991b1b`/`#fff`/`rgba(15,23,42,.12)`/`rgba(15,23,42,.16)`/`rgba(15,23,42,.4)`)을 치환했다. 브레이크포인트 `768px` 2곳을 `48rem`으로 통일해 6종을 사실상 2종(`48rem`/`64rem`)으로 좁혔다(CSS 커스텀 프로퍼티는 `@media` 조건에 쓸 수 없어 완전한 토큰화는 불가능 — `globals.css`에 참고 주석만 남김).
+>
+> `shared/ui/Button`을 신설해(variant 5종 + size + fullWidth + loading + `as` 다형성) 31개 호출부를 전부 교체했다. 이 과정에서 실제 불일치 3건을 해소했다: `dangerButton`이라는 같은 이름이 파일마다 텍스트 버튼(`settings.module.css`)과 솔리드 버튼(`modal`/`calendar.module.css`)으로 정반대 의미였던 것을 `variant="dangerText"`/`"danger"`로 분리했고, danger 색이 `write.module.css`만 `--color-expense`(#dc2626)를 쓰고 나머지는 `#b91c1c`였던 걸 `--color-danger`로 통일했으며(write 화면 삭제 버튼 색이 조금 어두워지는 의도된 변경), `:hover`/`:hover:not(:disabled)` 혼용도 한 곳으로 합쳐 사라졌다.
+>
+> **Card/Input은 이번 범위에서 만들지 않았다** — 후속 과제로 남는다. **`welcome`/`guide`(공개 페이지)의 `.ctaButton` 등**과 **이번 매핑 표에 없던 나머지 버튼**(`CreateHouseholdForm`/`CreateProfileForm`/`AcceptInvitePage`의 `.submit`, `AppErrorPage`/`GlobalErrorPage`의 `.retryButton`, `ListFooter`의 `.loadMoreButton`, `.monthNavButton`/`.filterButton`/`.googleButton`/`.sidebarAddButton` 등 아이콘·형태가 다른 버튼)도 손대지 않았다 — 코드 리뷰에서 발견된 미마이그레이션 목록이다.
+>
+> 리뷰에서 나온 항목 중 이번에 고치지 않기로 한 것: 로딩 중(`loading=true`) 버튼이 네이티브 `disabled` 속성을 받으면 브라우저가 포커스를 강제로 이탈시켜(표준 동작), `aria-busy`/`loadingLabel`로 바뀐 안내를 스크린리더가 읽어주지 못한다. 이건 이번 마이그레이션 이전부터 각 화면에 이미 있던 패턴(`disabled={isPending}`)이지 새로 생긴 회귀는 아니다 — 제대로 고치려면 모든 로딩 버튼에 `aria-live` 상태 영역을 도입해야 해서 범위가 커, #18(로딩/에러 상태 aria 작업)과 함께 별도로 처리하기로 했다.
 
 **근거** — `src/shared/ui/index.ts`가 6개만 export(ConfirmDialog/DatePicker/GridBackdrop/Modal/MoaLogo/TimePicker) — Button/Input/Card 없음. `grep -rhoE '^\.[a-zA-Z]*[Bb]utton'` 결과 CSS Module에 버튼 클래스 **103개**(`.primaryButton` 15회, `.secondaryButton` 15회, `.dangerButton` 12회, `.textButton` 9회 등), 카드 클래스 38개. `globals.css`는 60줄로 색·간격 토큰만 있고 타이포·그림자·z-index·breakpoint 토큰이 없다. breakpoint 6종 혼용(`48rem`/`768px`/`47.99rem`/`960px`/`64rem`/`640px`). `prefers-color-scheme` 사용 0건(다크 모드 미지원)이라 [`welcome.module.css:126-137`](../src/pages/welcome/ui/welcome.module.css)이 전역 토큰 `--color-bg`/`--color-surface`를 슬라이스 내부에서 덮어쓰는 우회가 발생했다. CSS Module 내 하드코딩 색상 70건(`var(--color-*)` 사용 1,119회 대비) — 최다 반복은 `#b91c1c`(에러 텍스트, 9개 파일), `#991b1b`, `#fff`, `rgba(15, 23, 42, 0.12)`.
 
@@ -254,7 +268,7 @@ defaultOptions: {
 
 ### 18. 로딩/에러 문구에 aria-live·role="alert" 누락
 
-> **진행 상황 (✅ 완료 — 범위 한정)** — 전역 로딩/에러 상태 문구 8개 파일(`HouseholdGuard`, `write/edit`, `settings`의 `AccountSection`·`CategorySection`·`MembersSection`, `home/DashboardSection`, `calendar`, `history`)에 로딩은 `role="status"`, 에러는 `role="alert"`를 추가했다(시각적 변화 없음). 폼 필드별 유효성 검증 메시지(`TransactionForm`, `ScheduleForm` 등)는 성격이 다르고 파일 수가 많아 이번 범위에서 제외했다 — 별도 검토 필요. 공통 로딩/에러 컴포넌트로의 승격(중복 방지)은 하지 않았다 — `shared/ui`에 `Button`/`Card` 등을 추가하는 #14(디자인 시스템, Medium)와 함께 처리하는 게 적절하다고 판단해 이번 범위에서는 반복 적용만 했다. 또한 `role` 속성이 조건부로 마운트되는 요소에 붙어 있어(예: `{isLoading ? <p role="status">...</p> : null}`) 아주 짧게 지나가는 로딩 상태에서는 스크린리더가 announce 타이밍을 놓칠 수 있다는 지적이 리뷰에서 나왔다 — 지금 구현으로도 WCAG 4.1.3 요건은 충족하지만, 상시 마운트 + 내용 교체 패턴(`src/pages/history/ui/ListFooter.tsx`가 이미 이 패턴을 씀)으로 개선할 여지가 남아 있다.
+> **진행 상황 (✅ 완료 — 범위 한정)** — 전역 로딩/에러 상태 문구 8개 파일(`HouseholdGuard`, `write/edit`, `settings`의 `AccountSection`·`CategorySection`·`MembersSection`, `home/DashboardSection`, `calendar`, `history`)에 로딩은 `role="status"`, 에러는 `role="alert"`를 추가했다(시각적 변화 없음). 폼 필드별 유효성 검증 메시지(`TransactionForm`, `ScheduleForm` 등)는 성격이 다르고 파일 수가 많아 이번 범위에서 제외했다 — 별도 검토 필요. 공통 로딩/에러 컴포넌트로의 승격(중복 방지)은 하지 않았다 — `shared/ui`에 `Button`/`Card` 등을 추가하는 #14(디자인 시스템, Medium)와 함께 처리하는 게 적절하다고 판단해 이번 범위에서는 반복 적용만 했다. 또한 `role` 속성이 조건부로 마운트되는 요소에 붙어 있어(예: `{isLoading ? <p role="status">...</p> : null}`) 아주 짧게 지나가는 로딩 상태에서는 스크린리더가 announce 타이밍을 놓칠 수 있다는 지적이 리뷰에서 나왔다 — 지금 구현으로도 WCAG 4.1.3 요건은 충족하지만, 상시 마운트 + 내용 교체 패턴(`src/pages/history/ui/ListFooter.tsx`가 이미 이 패턴을 씀)으로 개선할 여지가 남아 있다. #14에서 `shared/ui/Button`을 도입하며 같은 종류의 문제가 하나 더 발견됐다 — 로딩 버튼이 네이티브 `disabled`를 받으면 포커스가 이탈해 `aria-busy`/`loadingLabel` 안내가 스크린리더에 전달되지 않는다. 두 문제 모두 "상태 변화를 스크린리더가 놓친다"는 같은 유형이라 함께 검토하면 좋다.
 
 **근거** — 로딩 상태가 전부 정적 `<p>불러오는 중…</p>`([`HouseholdGuard.tsx`](../src/features/household/ui/HouseholdGuard.tsx), [`DashboardSection.tsx`](../src/pages/home/ui/DashboardSection.tsx))로 `role="status"`/`aria-live`가 없다. 에러 문구도 `role="alert"`가 없다 — [`AppErrorPage.tsx:19`](../src/pages/errorFallback/ui/AppErrorPage.tsx)는 제대로 붙어 있어 대비된다. ECharts 캔버스 차트 5개는 대체 텍스트·표 형태 대안이 없다.
 

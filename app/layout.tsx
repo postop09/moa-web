@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono, Instrument_Serif } from 'next/font/google';
 import { type ReactNode } from 'react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
@@ -16,23 +15,12 @@ import {
   siteName,
   titleTemplate,
 } from '@/shared/config';
+// Pretendard를 npm 패키지로 self-host한다 — 이 앱은 한글 전용 PWA라
+// next/font/google(Geist 등 latin 서브셋)로는 본문 한글이 전부 시스템
+// 폰트로 폴백되고, 외부 폰트 CDN은 서비스워커 오프라인 캐싱과 상성이
+// 나쁘다. 웹팩이 woff2를 자체 오리진으로 번들링해 두 문제를 함께 해결한다.
+import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
 import '@/shared/styles/globals.css';
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
-
-const instrumentSerif = Instrument_Serif({
-  variable: '--font-instrument',
-  subsets: ['latin'],
-  weight: '400',
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
@@ -120,11 +108,7 @@ const RootLayout = ({ children }: Props) => {
   const jsonLd = getWebSiteJsonLd();
 
   return (
-    <html
-      lang="ko"
-      className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable}`}
-      style={{ background: '#f4f6f8' }}
-    >
+    <html lang="ko" style={{ background: '#f4f6f8' }}>
       <body style={{ background: '#f4f6f8' }}>
         <script
           type="application/ld+json"

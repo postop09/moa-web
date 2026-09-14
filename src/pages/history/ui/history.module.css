@@ -15,7 +15,7 @@
 .error {
   margin: 0;
   font-size: 0.9375rem;
-  color: #b91c1c;
+  color: var(--color-danger);
 }
 
 .errorCard {
@@ -32,7 +32,7 @@
 .errorCardText {
   margin: 0;
   font-size: 0.9375rem;
-  color: #b91c1c;
+  color: var(--color-danger);
 }
 
 .listSection {
@@ -224,7 +224,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   background: var(--color-surface);
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  box-shadow: var(--shadow-sm);
 }
 
 .popoverList {
@@ -473,7 +473,7 @@
   color: var(--color-insurance);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 48rem) {
   .listCards {
     display: none;
   }

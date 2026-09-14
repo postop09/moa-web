@@ -10,6 +10,7 @@ import {
 } from '@/features/householdMember';
 import { useListProfilesByIds } from '@/features/profile';
 import { getErrorMessage } from '@/shared/lib';
+import { Button } from '@/shared/ui';
 
 import { MemberInviteForm } from './MemberInviteForm';
 import { MemberKickConfirm } from './MemberKickConfirm';
@@ -74,13 +75,12 @@ export const MembersSection = ({
       <header className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>멤버</h2>
         {isOwner ? (
-          <button
-            type="button"
-            className={styles.primaryButton}
+          <Button
+            variant="primary"
             onClick={() => setPanel({ type: 'invite' })}
           >
             초대
-          </button>
+          </Button>
         ) : null}
       </header>
 

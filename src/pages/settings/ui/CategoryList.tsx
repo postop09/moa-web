@@ -3,6 +3,7 @@
 import type { Category } from '@/entities/category';
 import { TRANSACTION_TYPE_LABEL, type TransactionType } from '@/shared/model';
 import { formatAmount } from '@/shared/lib';
+import { Button } from '@/shared/ui';
 
 import styles from './settings.module.css';
 
@@ -69,20 +70,20 @@ export const CategoryList = ({ categories, onEdit, onDelete }: Props) => {
                     </span>
                   </div>
                   <div className={styles.rowActions}>
-                    <button
-                      type="button"
-                      className={styles.textButton}
+                    <Button
+                      variant="text"
+                      size="sm"
                       onClick={() => onEdit(category)}
                     >
                       수정
-                    </button>
-                    <button
-                      type="button"
-                      className={styles.dangerButton}
+                    </Button>
+                    <Button
+                      variant="dangerText"
+                      size="sm"
                       onClick={() => onDelete(category)}
                     >
                       삭제
-                    </button>
+                    </Button>
                   </div>
                 </li>
               ))}

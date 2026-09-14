@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react';
 import type { Category } from '@/entities/category';
 import { useListCategories } from '@/features/category';
 import { getErrorMessage } from '@/shared/lib';
+import { Button } from '@/shared/ui';
 
 import { CategoryDeleteConfirm } from './CategoryDeleteConfirm';
 import { CategoryForm } from './CategoryForm';
@@ -35,13 +36,9 @@ export const CategorySection = ({ householdId }: Props) => {
     <section className={styles.section}>
       <header className={styles.sectionHeader}>
         <h2 className={styles.sectionTitle}>카테고리</h2>
-        <button
-          type="button"
-          className={styles.primaryButton}
-          onClick={() => setPanel({ type: 'create' })}
-        >
+        <Button variant="primary" onClick={() => setPanel({ type: 'create' })}>
           추가
-        </button>
+        </Button>
       </header>
 
       {panel.type === 'create' ? (

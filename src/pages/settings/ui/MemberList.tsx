@@ -4,6 +4,7 @@ import type { HouseholdInvite } from '@/entities/householdInvite';
 import type { HouseholdMember } from '@/entities/householdMember';
 import type { Profile } from '@/entities/profile';
 import { HOUSEHOLD_ROLE_LABEL } from '@/shared/model';
+import { Button } from '@/shared/ui';
 
 import styles from './settings.module.css';
 
@@ -56,13 +57,13 @@ export const MemberList = ({
                 </div>
                 <div className={styles.rowActions}>
                   {canKick ? (
-                    <button
-                      type="button"
-                      className={styles.dangerButton}
+                    <Button
+                      variant="dangerText"
+                      size="sm"
                       onClick={() => onKick(member)}
                     >
                       추방
-                    </button>
+                    </Button>
                   ) : null}
                   <span className={styles.roleBadge}>
                     {HOUSEHOLD_ROLE_LABEL[member.role]}
@@ -88,14 +89,15 @@ export const MemberList = ({
                     <span className={styles.rowMeta}>수락 대기 중</span>
                   </div>
                   <div className={styles.rowActions}>
-                    <button
-                      type="button"
-                      className={styles.dangerButton}
+                    <Button
+                      variant="dangerText"
+                      size="sm"
                       onClick={() => onCancelInvite(invite)}
-                      disabled={isCancelling}
+                      loading={isCancelling}
+                      loadingLabel="취소 중…"
                     >
-                      {isCancelling ? '취소 중…' : '취소'}
-                    </button>
+                      취소
+                    </Button>
                   </div>
                 </li>
               );

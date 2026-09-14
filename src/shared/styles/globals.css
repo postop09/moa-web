@@ -11,16 +11,36 @@
   --color-border: #e2e8f0;
   --color-grid: rgba(15, 23, 42, 0.06);
   --color-grid-strong: rgba(15, 23, 42, 0.1);
+  /* danger 버튼용 강조 빨강 — --color-expense(#dc2626, 데이터 시각화용)와는
+     다른 값이다. CSS Module 여러 곳에 #b91c1c/#991b1b로 하드코딩돼 있던
+     값을 승격했다. */
+  --color-danger: #b91c1c;
+  --color-danger-hover: #991b1b;
+  /* accent/danger처럼 채도 높은 배경 위에 얹는 전경색(주로 흰 텍스트/아이콘) */
+  --color-on-accent: #fff;
+  /* 모달·시트 등의 배경 스크림 */
+  --color-scrim: rgba(15, 23, 42, 0.4);
+  /* 카드·패널이 떠 있을 때(householdPageTitle/write/calendar/history 4곳에서
+     동일하게 반복) */
+  --shadow-sm: 0 12px 28px rgba(15, 23, 42, 0.12);
+  /* 모달·다이얼로그처럼 더 위에 뜬 레이어(modal/pwaInstallPrompt 2곳) */
+  --shadow-md: 0 16px 40px rgba(15, 23, 42, 0.16);
   --font-sans:
-    var(--font-geist-sans), 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
-  --font-display: var(--font-instrument), var(--font-sans);
+    'Pretendard Variable', 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
   --space-4: 1rem;
+  --space-5: 1.25rem;
   --space-6: 1.5rem;
   --space-8: 2rem;
   --radius: 0.5rem;
+  /* CSS 커스텀 프로퍼티는 @media 조건 안에서 쓸 수 없어 브레이크포인트는
+     토큰화할 수 없다. 참고용 값만 남기고, 실제 미디어쿼리는 이 rem 값을
+     그대로 min-width에 써서 통일한다(48rem과 768px처럼 같은 값을 두 방식
+     으로 쓰지 않는다).
+     --bp-md: 48rem;  (768px)
+     --bp-lg: 64rem;  (1024px) */
 }
 
 *,
