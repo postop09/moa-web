@@ -26,7 +26,7 @@
 | 10  | env 검증 부재 + README가 없는 파일을 안내                  | 안정성/DX | 🟠 중간  | -             |
 | 11  | 테스트 0개, CI 없음                                        | 품질      | 🟠 중간  | ✅ 완료       |
 | 12  | loading.tsx/Suspense/ErrorBoundary 전무                    | 안정성    | 🟠 중간  | -             |
-| 13  | 한국어 앱인데 폰트 3종 모두 latin 서브셋만 로드            | 성능      | 🟠 중간  | -             |
+| 13  | 한국어 앱인데 폰트 3종 모두 latin 서브셋만 로드            | 성능      | 🟠 중간  | ✅ 완료       |
 | 14  | 디자인 시스템 부재 (버튼 클래스 103개 중복 등)             | 구조      | 🟠 중간  | -             |
 | 15  | 컨벤션 문서 충돌·드리프트                                  | 구조      | 🟡 낮음  | ✅ 완료       |
 | 16  | Public API deep import 17건                                | 구조      | 🟡 낮음  | ✅ 완료       |
@@ -208,6 +208,8 @@ defaultOptions: {
 **제안** — `(auth)`/`(marketing)` 그룹에도 `error.tsx` 추가. 대시보드처럼 로딩이 긴 화면부터 `loading.tsx` 스켈레톤 도입.
 
 ### 13. 한국어 앱인데 폰트 3종 모두 latin 서브셋만 로드
+
+> **진행 상황 (✅ 완료)** — `Geist`/`Geist_Mono`/`Instrument_Serif`(next/font/google) 의존을 전부 제거하고 `pretendard` npm 패키지 하나로 통일했다. Pretendard는 라틴을 Inter 기반으로 자체 커버하므로 Geist Sans도 함께 뺐다 — 남겨뒀다면 한글은 어차피 Pretendard로 렌더되면서 Geist Sans 다운로드만 낭비로 남았을 것이다. PWA라 CDN 대신 npm 패키지로 self-host해 웹팩이 woff2를 자체 오리진으로 번들링하게 했다(외부 CDN은 서비스워커 오프라인 캐싱과 상성이 나쁘다). 실제로 `pnpm dev` 후 Network 탭으로 확인한 결과 `PretendardVariable.subset.*.woff2` 13개만 자체 오리진에서 요청되고 Geist·Instrument 관련 요청은 0건이었고, `getComputedStyle(document.body).fontFamily`도 `"Pretendard Variable", Pretendard, "Apple SD Gothic Neo", sans-serif`로 확인됐다. `globals.css`의 `--font-display`(Instrument Serif 전용, 소비처 0건이었음)도 함께 삭제했다.
 
 **근거** — [`app/layout.tsx`](../app/layout.tsx)가 `Geist`/`Geist_Mono`/`Instrument_Serif`를 전부 `subsets: ['latin']`으로 로드한다. `<html lang="ko">`이고 전체 UI가 한글이다. `--font-sans`([`globals.css:14-15`](../src/shared/styles/globals.css))의 폴백에 적힌 `Pretendard`를 로드하는 코드는 없다. `Geist_Mono`는 `<html>`에 CSS 변수까지 붙지만(`app/layout.tsx`) 전체 CSS에서 참조 0건이다.
 
