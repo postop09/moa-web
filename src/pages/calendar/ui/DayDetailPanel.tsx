@@ -5,9 +5,15 @@ import type { CSSProperties } from 'react';
 
 import type { Schedule } from '@/entities/schedule';
 import type { Transaction } from '@/entities/transaction';
-import { formatAmount, isSameDay } from '@/shared/lib';
+import {
+  formatAmount,
+  formatHolidayNames,
+  getHolidayNames,
+  isSameDay,
+} from '@/shared/lib';
 
 import { resolveScheduleColor } from '../model/resolveScheduleColor';
+import { toDayKey } from '../model/visibleRange';
 import styles from './calendar.module.css';
 
 type Props = {
@@ -26,7 +32,9 @@ type Props = {
 const WEEKDAY_FULL = ['일', '월', '화', '수', '목', '금', '토'] as const;
 
 const formatDayHeading = (date: Date) => {
-  return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${WEEKDAY_FULL[date.getDay()]})`;
+  const base = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${WEEKDAY_FULL[date.getDay()]})`;
+  const holidayNames = getHolidayNames(toDayKey(date));
+  return holidayNames ? `${base} · ${formatHolidayNames(holidayNames)}` : base;
 };
 
 const formatTime = (iso: string) => {

@@ -4,7 +4,12 @@ import { useMemo, useRef, type PointerEvent as ReactPointerEvent } from 'react';
 import type { CSSProperties } from 'react';
 
 import type { Schedule } from '@/entities/schedule';
-import { isSameDay, isSameMonth } from '@/shared/lib';
+import {
+  formatHolidayNames,
+  getHolidayNames,
+  isSameDay,
+  isSameMonth,
+} from '@/shared/lib';
 
 import { buildEventLanes } from '../model/buildEventLanes';
 import { resolveScheduleColor } from '../model/resolveScheduleColor';
@@ -137,6 +142,7 @@ export const CalendarGrid = ({
               <div className={styles.weekDays}>
                 {weekDays.map((date, col) => {
                   const key = toDayKey(date);
+                  const holidayNames = getHolidayNames(key);
                   const inMonth = isSameMonth(date, month);
                   const isToday = isSameDay(date, today);
                   const isSelected = isSameDay(date, selectedDay);
@@ -148,6 +154,9 @@ export const CalendarGrid = ({
                     inMonth ? '' : styles.dayCellMuted,
                     isToday ? styles.dayCellToday : '',
                     isSelected ? styles.dayCellSelected : '',
+                    holidayNames && !isToday && inMonth
+                      ? styles.dayCellHoliday
+                      : '',
                   ]
                     .filter(Boolean)
                     .join(' ');
@@ -160,10 +169,20 @@ export const CalendarGrid = ({
                       className={className}
                       aria-selected={isSelected}
                       aria-current={isToday ? 'date' : undefined}
+                      title={
+                        holidayNames
+                          ? formatHolidayNames(holidayNames)
+                          : undefined
+                      }
                       data-day={key}
                       onClick={() => handleSelectDay(date)}
                     >
                       <span className={styles.dayNumber}>{date.getDate()}</span>
+                      {holidayNames ? (
+                        <span className={styles.visuallyHidden}>
+                          {formatHolidayNames(holidayNames)}
+                        </span>
+                      ) : null}
                       {showExpenses && expenseTotal > 0 ? (
                         <span className={styles.dayExpense}>
                           {formatCompactAmount(expenseTotal)}
