@@ -40,10 +40,14 @@ export const AccountSection = () => {
         </button>
       </header>
 
-      {isLoading ? <p className={styles.empty}>불러오는 중…</p> : null}
+      {isLoading ? (
+        <p className={styles.empty} role="status">
+          불러오는 중…
+        </p>
+      ) : null}
 
       {error ? (
-        <p className={styles.error}>
+        <p className={styles.error} role="alert">
           {getErrorMessage(error, '계정 정보를 불러오지 못했습니다.')}
         </p>
       ) : null}
@@ -62,7 +66,7 @@ export const AccountSection = () => {
       ) : null}
 
       {signOutError ? (
-        <p className={styles.error}>
+        <p className={styles.error} role="alert">
           {signOutError instanceof Error
             ? signOutError.message
             : '로그아웃에 실패했습니다.'}

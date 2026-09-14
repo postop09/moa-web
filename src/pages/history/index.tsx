@@ -61,7 +61,11 @@ export const HistoryPage = () => {
               onCategoryChange={setCategoryId}
             />
 
-            {isLoading ? <p className={styles.empty}>불러오는 중…</p> : null}
+            {isLoading ? (
+              <p className={styles.empty} role="status">
+                불러오는 중…
+              </p>
+            ) : null}
 
             {!isLoading && isFirstPageError ? (
               <div className={styles.errorCard} role="alert">

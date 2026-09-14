@@ -24,12 +24,16 @@ export const HouseholdGuard = ({
   const { householdId, isLoading, error } = useCurrentHousehold();
 
   if (isLoading) {
-    return <p className={styles.empty}>불러오는 중…</p>;
+    return (
+      <p className={styles.empty} role="status">
+        불러오는 중…
+      </p>
+    );
   }
 
   if (error) {
     return (
-      <p className={styles.error}>
+      <p className={styles.error} role="alert">
         {getErrorMessage(error, errorFallbackMessage)}
       </p>
     );

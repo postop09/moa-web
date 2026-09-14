@@ -29,7 +29,9 @@ export const WriteEditPage = ({ transactionId }: Props) => {
   if (!isValidId) {
     return (
       <main className={styles.page}>
-        <p className={styles.error}>올바르지 않은 내역입니다.</p>
+        <p className={styles.error} role="alert">
+          올바르지 않은 내역입니다.
+        </p>
       </main>
     );
   }
@@ -42,10 +44,14 @@ export const WriteEditPage = ({ transactionId }: Props) => {
     <main className={styles.page}>
       <h2 className={styles.title}>수정하기</h2>
 
-      {isLoading ? <p className={styles.empty}>불러오는 중…</p> : null}
+      {isLoading ? (
+        <p className={styles.empty} role="status">
+          불러오는 중…
+        </p>
+      ) : null}
 
       {error ? (
-        <p className={styles.error}>
+        <p className={styles.error} role="alert">
           {getErrorMessage(error, '내역을 불러오지 못했습니다.')}
         </p>
       ) : null}
@@ -55,7 +61,7 @@ export const WriteEditPage = ({ transactionId }: Props) => {
       ) : null}
 
       {isHouseholdMismatch ? (
-        <p className={styles.error}>
+        <p className={styles.error} role="alert">
           선택한 가계부와 다른 내역입니다. 가계부를 확인해 주세요.
         </p>
       ) : null}

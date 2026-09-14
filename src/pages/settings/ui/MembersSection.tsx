@@ -103,15 +103,23 @@ export const MembersSection = ({
         />
       ) : null}
 
-      {isLoading ? <p className={styles.empty}>불러오는 중…</p> : null}
+      {isLoading ? (
+        <p className={styles.empty} role="status">
+          불러오는 중…
+        </p>
+      ) : null}
 
       {error ? (
-        <p className={styles.error}>
+        <p className={styles.error} role="alert">
           {getErrorMessage(error, '멤버 목록을 불러오지 못했습니다.')}
         </p>
       ) : null}
 
-      {cancelError ? <p className={styles.error}>{cancelError}</p> : null}
+      {cancelError ? (
+        <p className={styles.error} role="alert">
+          {cancelError}
+        </p>
+      ) : null}
 
       {!isLoading && !error ? (
         <MemberList

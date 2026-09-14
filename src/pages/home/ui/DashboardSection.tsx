@@ -69,12 +69,16 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
   } = useHomeDashboard(householdId, selectedMonth);
 
   if (isLoading) {
-    return <p className={styles.empty}>불러오는 중…</p>;
+    return (
+      <p className={styles.empty} role="status">
+        불러오는 중…
+      </p>
+    );
   }
 
   if (error) {
     return (
-      <p className={styles.error}>
+      <p className={styles.error} role="alert">
         {getErrorMessage(error, '현황을 불러오지 못했습니다.')}
       </p>
     );
