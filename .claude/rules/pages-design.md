@@ -1,5 +1,5 @@
 ---
-paths: src/pages/**/*
+paths: "src/pages/**/*"
 ---
 
 # pages 설계 원칙

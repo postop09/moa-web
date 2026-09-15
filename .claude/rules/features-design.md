@@ -1,5 +1,5 @@
 ---
-paths: src/features/**/*
+paths: 'src/features/**/*'
 ---
 
 # features 설계 원칙
@@ -20,11 +20,11 @@ features/
 
 `entities/model`은 **도메인 타입**(Req/Res, 엔티티)만 둔다. `useQuery`·`useMutation` 등 TanStack Query 코드는 **entities에 두지 않는다**.
 
-| 위치 | TanStack Query | 기준 |
-| ---- | -------------- | ---- |
-| `entities/model` | ❌ 금지 | 타입 정의만 |
-| `features/{slice}/model` | ✅ 권장 | 2곳 이상(pages·widgets)에서 재사용 |
-| `pages/{slice}/model` | ✅ 허용 | 해당 화면에서만 사용 |
+| 위치                     | TanStack Query | 기준                               |
+| ------------------------ | -------------- | ---------------------------------- |
+| `entities/model`         | ❌ 금지        | 타입 정의만                        |
+| `features/{slice}/model` | ✅ 권장        | 2곳 이상(pages·widgets)에서 재사용 |
+| `pages/{slice}/model`    | ✅ 허용        | 해당 화면에서만 사용               |
 
 ```typescript
 // ❌ entities/transaction/model/useCreateTransaction.ts
@@ -79,16 +79,16 @@ export const useMonthlySummary = (householdId: string, date = new Date()) => {
 
 ## entities vs features vs pages
 
-| 레이어 | 역할 |
-| ------ | ---- |
-| `entities` | Supabase 등 **순수 API** + Req/Res·도메인 타입 |
+| 레이어     | 역할                                                        |
+| ---------- | ----------------------------------------------------------- |
+| `entities` | Supabase 등 **순수 API** + Req/Res·도메인 타입              |
 | `features` | entities api + **TanStack Query** + 재사용 비즈니스 로직·UI |
-| `pages` | 페이지 조립, 화면 전용 훅·UI |
+| `pages`    | 페이지 조립, 화면 전용 훅·UI                                |
 
 ```
 entities/transaction/api/createTransaction.ts   → API 함수
-features/create-transaction/model/useCreateTransaction.ts → mutation 훅
-pages/add-transaction/ui/AddTransactionForm.tsx         → UI 조립
+features/createTransaction/model/useCreateTransaction.ts → mutation 훅
+pages/addTransaction/ui/AddTransactionForm.tsx           → UI 조립
 ```
 
 ## index.ts (public API)

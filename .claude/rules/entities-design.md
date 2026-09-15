@@ -1,5 +1,5 @@
 ---
-paths: src/entities/**/*
+paths: "src/entities/**/*"
 ---
 
 # entities 설계 원칙
@@ -50,7 +50,7 @@ export const createProfile = async (payload: CreateProfileReq) => {
 
 ## model
 
-- **TanStack Query 훅(`useQuery`, `useMutation`)은 두지 않는다.** → `features` 또는 `pages`의 `model`에 작성한다. ([features-design](./features-design.mdc) 참고)
+- **TanStack Query 훅(`useQuery`, `useMutation`)은 두지 않는다.** → `features` 또는 `pages`의 `model`에 작성한다. ([features-design](./features-design.md) 참고)
 - API 요청/응답 타입은 **파일 1개 = 타입 1개**.
 - 파일명: `{api함수명}Req.ts` 또는 `{api함수명}Res.ts` (camelCase).
 - 타입명: 파일명과 동일한 PascalCase (`CreateProfileReq`, `GetProfileRes`).

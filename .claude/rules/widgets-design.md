@@ -1,5 +1,5 @@
 ---
-paths: src/widgets/**/*
+paths: 'src/widgets/**/*'
 ---
 
 # widgets 설계 원칙
@@ -20,13 +20,13 @@ widgets/
 
 ## ui
 
-- 컴포넌트 이름은 슬라이스명과 대응하는 PascalCase (`widgets/chart-panel/ui/ChartPanel.tsx`).
+- 컴포넌트 이름은 슬라이스명과 대응하는 PascalCase (`widgets/chartPanel/ui/ChartPanel.tsx`).
 - **도메인 API를 직접 호출하지 않는다.** 데이터는 상위(`pages`)에서 훅으로 조회해 props로 내려받는다. 데이터 조회가 필요하면 `entities`/`features`의 훅을 widget 내부에서 호출하는 대신, 그 훅을 사용하는 쪽(pages)에서 결과를 props로 전달한다.
 - 로딩/에러/빈 상태처럼 여러 화면에서 반복되는 상태 UI는 widget이 props(`isLoading`, `isError`, `isEmpty` 등)로 받아 처리한다.
 - **예외**: 특정 페이지가 아니라 앱 셸 전체에 걸친 전역 부수효과(예: 가계부가 없으면 온보딩으로 리다이렉트)는 모든 페이지가 각자 props로 내려야 해서 오히려 중복이 커진다. 이런 경우는 `features`의 훅을 widget에서 직접 호출하는 것을 허용한다(레이어 방향 자체는 `widgets → features`로 합법). 예: [`widgets/appShell/ui/NoHouseholdRedirect.tsx`](../../src/widgets/appShell/ui/NoHouseholdRedirect.tsx).
 
 ```tsx
-// ✅ widgets/chart-panel/ui/ChartPanel.tsx
+// ✅ widgets/chartPanel/ui/ChartPanel.tsx
 type Props = {
   title: string;
   isLoading?: boolean;
@@ -56,7 +56,7 @@ export const ChartPanel = ({
 - `ui`의 루트 컴포넌트를 export한다.
 
 ```ts
-// ✅ widgets/chart-panel/index.ts
+// ✅ widgets/chartPanel/index.ts
 export { ChartPanel } from './ui/ChartPanel';
 ```
 

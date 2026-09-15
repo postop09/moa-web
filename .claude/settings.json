@@ -9,7 +9,6 @@
       "Bash(git log *)",
       "Bash(git branch *)",
       "Bash(git add *)",
-      "Bash(git commit *)",
       "Bash(pnpm lint)",
       "Bash(pnpm format)",
       "Bash(pnpm format:check)",
@@ -21,6 +20,7 @@
       "Bash(pnpm build)"
     ],
     "ask": [
+      "Bash(git commit *)",
       "Bash(git push *)",
       "Bash(pnpm add *)",
       "Bash(pnpm remove *)",
