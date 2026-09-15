@@ -5,7 +5,7 @@
 - 프레임워크: Next.js 16 (App Router) + React 19 + TypeScript 5.9
 - 라우팅: Next.js App Router (`app/`). `pages/`는 사용하지 않는 빈 디렉터리(README만 존재)이며, react-router는 쓰지 않는다(주의: 이 `pages/`는 Next.js 라우팅용 루트 디렉터리이며, 아래 FSD 레이어인 `src/pages/`와는 다른 것이다).
 - 개발/빌드: `next dev --turbopack`(개발) / `next build --webpack`(빌드) — next-pwa가 webpack 기반이라 빌드만 webpack을 쓴다.
-- 스타일: CSS Modules(`*.module.css`) + `src/shared/styles/globals.css`의 CSS 변수(`--color-*`, `--space-*` 등)로 디자인 토큰 관리. Tailwind는 쓰지 않는다.
+- 스타일: CSS Modules(`*.module.css`) + `src/shared/styles/globals.css`의 CSS 변수(`--color-*`, `--space-*` 등)로 디자인 토큰 관리.
 - 상태 관리: Zustand 5(클라이언트 상태) + TanStack Query 5(서버 상태)
 - 차트: ECharts 6 (`echarts/core` + 필요한 모듈만 개별 등록, `echarts-for-react`로 렌더링). 화면마다 쓰는 차트 타입이 다르면 `src/shared/lib/echarts.ts`를 공유하지 말고 화면 전용 등록 모듈을 새로 만든다.
 - 백엔드/인증: Supabase (`@supabase/ssr`, `@supabase/supabase-js`)

@@ -1,5 +1,6 @@
 ---
-paths: "src/pages/**/*"
+paths:
+  - 'src/pages/**/*'
 ---
 
 # pages 설계 원칙
@@ -82,10 +83,10 @@ export const CsPage = () => {
 
 ## features vs pages
 
-| 위치                 | 기준                                        |
-| -------------------- | ------------------------------------------- |
-| `features`           | 여러 화면·위젯에서 재사용되는 비즈니스 기능 |
-| `pages/{slice}/ui`   | 해당 화면에서만 쓰이는 UI·인터랙션          |
+| 위치               | 기준                                        |
+| ------------------ | ------------------------------------------- |
+| `features`         | 여러 화면·위젯에서 재사용되는 비즈니스 기능 |
+| `pages/{slice}/ui` | 해당 화면에서만 쓰이는 UI·인터랙션          |
 
 ```text
 // login 화면 전용 → pages/login/ui/GoogleSignInButton.tsx
