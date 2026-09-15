@@ -529,6 +529,14 @@
   background: var(--color-surface);
 }
 
+.eventLaneFillerRest {
+  background: color-mix(
+    in srgb,
+    var(--color-expense) 20%,
+    var(--color-surface)
+  );
+}
+
 .eventBar {
   min-width: 0;
   height: 1.125rem;
@@ -614,8 +622,12 @@
    AA 대비 4.72:1)를 배경으로 전제한 색이다. .week의 회색 배경과는
    무관하게 항상 surface 기준으로 합성되므로 이 대비는 .week 배경색과
    섞이지 않는다. 이 컴포넌트를 다른 배경 위에서 재사용할 경우 대비를
-   다시 검증해야 한다. */
-.dayCellRest:not(.dayCellToday) .dayNumber {
+   다시 검증해야 한다.
+   패딩(.dayCellMuted) 셀은 이 규칙에서 제외되어 계속 흐린 회색을 쓰는데,
+   그 결과 20% 배경 위에서 대비가 1.55:1로 AA(4.5:1) 미달이다. 이번 달이
+   아닌 날짜라는 정보가 더 중요하다고 판단해 사용자가 명시적으로 승인한
+   트레이드오프이며, 장식적 콘텐츠라서 예외가 성립하는 것은 아니다. */
+.dayCellRest:not(.dayCellToday):not(.dayCellMuted) .dayNumber {
   color: var(--color-danger);
 }
 
@@ -627,7 +639,8 @@
 
 /* rest+selected 조합에서는 특정도가 .dayCellSelected 단독보다 높은 이
    규칙이 이겨서 빨간 배경 신호가 선택 상태에서도 유지된다(선택 여부는
-   accent box-shadow 링으로 구분). */
+   accent box-shadow 링으로 구분). 패딩(muted) 셀도 동일 규칙을 타므로
+   전/다음달 주말·공휴일 배경 역시 같은 방식으로 물든다(의도된 동작). */
 .dayCellRest.dayCellSelected {
   --cell-bg: color-mix(in srgb, var(--color-expense) 20%, var(--color-surface));
 }
