@@ -34,6 +34,10 @@ type Props = {
 
 const DAYS_PER_WEEK = 7;
 
+const FILLER_COLUMNS = Array.from({ length: DAYS_PER_WEEK }, (_, i) => ({
+  gridColumn: `${i + 1} / ${i + 2}`,
+}));
+
 const formatCompactAmount = (amount: number) => {
   if (amount >= 100_000) {
     return `${Math.round(amount / 10_000)}만`;
@@ -136,6 +140,10 @@ export const CalendarGrid = ({
             (max, segment) => Math.max(max, segment.lane + 1),
             0,
           );
+          const restDayByCol = weekDays.map((date, col) => {
+            const isWeekend = col === 0 || col === DAYS_PER_WEEK - 1;
+            return isWeekend || Boolean(getHolidayNames(toDayKey(date)));
+          });
 
           return (
             <div className={styles.week} key={weekIndex}>
@@ -150,8 +158,7 @@ export const CalendarGrid = ({
                   const overflow = week.overflowByCol[col] ?? 0;
 
                   const isWeekend = col === 0 || col === DAYS_PER_WEEK - 1;
-                  const isRestDay =
-                    inMonth && (isWeekend || Boolean(holidayNames));
+                  const isRestDay = isWeekend || Boolean(holidayNames);
 
                   const className = [
                     styles.dayCell,
@@ -201,6 +208,21 @@ export const CalendarGrid = ({
                 <div className={styles.weekEvents}>
                   {Array.from({ length: usedLanes }, (_, lane) => (
                     <div className={styles.eventLane} key={lane}>
+                      {FILLER_COLUMNS.map((style, fillerCol) => (
+                        <span
+                          key={`filler-${fillerCol}`}
+                          aria-hidden
+                          className={[
+                            styles.eventLaneFiller,
+                            restDayByCol[fillerCol]
+                              ? styles.eventLaneFillerRest
+                              : '',
+                          ]
+                            .filter(Boolean)
+                            .join(' ')}
+                          style={style}
+                        />
+                      ))}
                       {week.segments
                         .filter((segment) => segment.lane === lane)
                         .map((segment) => (

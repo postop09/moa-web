@@ -497,24 +497,44 @@
 .eventLane {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-}
-
-.weekDays {
   column-gap: 1px;
 }
 
 .weekEvents {
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
-  /* .week의 background-color(격자선용)가 일정 바 영역까지 새어나오지
-     않도록 이 영역만 다시 불투명 배경으로 덮는다. 세로 격자선은
-     날짜 숫자 행(.weekDays)에서만 표시한다. */
-  background: var(--color-surface);
+  gap: 0;
 }
 
 .eventLane {
-  min-height: 1.125rem;
+  min-height: 1.25rem;
+  align-items: start;
+}
+
+/* sparse grid 자동 배치 규칙 때문에 grid-row를 명시하지 않으면 filler와
+   eventBar가 서로 다른 암묵적 행에 배치되어 filler 높이가 0이 될 수
+   있다. 모든 자식을 1행에 고정해 완전 확정 배치로 만든다. */
+.eventLane > * {
+  grid-row: 1;
+}
+
+.eventLaneFiller {
+  /* .eventLane의 align-items: start는 컨테이너의 모든 자식에 적용되므로,
+     명시적 높이가 없는 filler(빈 span)도 "start"로 정렬되어 콘텐츠
+     높이(0)만큼만 차지하게 된다. align-self: stretch로 이를 덮어써야
+     filler가 레인 전체 높이(1.25rem)로 늘어나 eventBar(1.125rem)보다
+     남는 0.125rem까지 흰색으로 채운다. 이 여유분이 레인 사이 시각적
+     간격 역할을 대신하므로 .weekEvents의 gap은 0으로 둔다. */
+  align-self: stretch;
+  background: var(--color-surface);
+}
+
+.eventLaneFillerRest {
+  background: color-mix(
+    in srgb,
+    var(--color-expense) 20%,
+    var(--color-surface)
+  );
 }
 
 .eventBar {
@@ -602,8 +622,12 @@
    AA 대비 4.72:1)를 배경으로 전제한 색이다. .week의 회색 배경과는
    무관하게 항상 surface 기준으로 합성되므로 이 대비는 .week 배경색과
    섞이지 않는다. 이 컴포넌트를 다른 배경 위에서 재사용할 경우 대비를
-   다시 검증해야 한다. */
-.dayCellRest:not(.dayCellToday) .dayNumber {
+   다시 검증해야 한다.
+   패딩(.dayCellMuted) 셀은 이 규칙에서 제외되어 계속 흐린 회색을 쓰는데,
+   그 결과 20% 배경 위에서 대비가 1.55:1로 AA(4.5:1) 미달이다. 이번 달이
+   아닌 날짜라는 정보가 더 중요하다고 판단해 사용자가 명시적으로 승인한
+   트레이드오프이며, 장식적 콘텐츠라서 예외가 성립하는 것은 아니다. */
+.dayCellRest:not(.dayCellToday):not(.dayCellMuted) .dayNumber {
   color: var(--color-danger);
 }
 
@@ -615,7 +639,8 @@
 
 /* rest+selected 조합에서는 특정도가 .dayCellSelected 단독보다 높은 이
    규칙이 이겨서 빨간 배경 신호가 선택 상태에서도 유지된다(선택 여부는
-   accent box-shadow 링으로 구분). */
+   accent box-shadow 링으로 구분). 패딩(muted) 셀도 동일 규칙을 타므로
+   전/다음달 주말·공휴일 배경 역시 같은 방식으로 물든다(의도된 동작). */
 .dayCellRest.dayCellSelected {
   --cell-bg: color-mix(in srgb, var(--color-expense) 20%, var(--color-surface));
 }
