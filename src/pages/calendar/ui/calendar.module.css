@@ -530,11 +530,7 @@
 }
 
 .eventLaneFillerRest {
-  background: color-mix(
-    in srgb,
-    var(--color-expense) 5%,
-    var(--color-surface)
-  );
+  background: color-mix(in srgb, var(--color-expense) 5%, var(--color-surface));
 }
 
 .eventBar {

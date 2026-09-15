@@ -1,5 +1,6 @@
 ---
-paths: "src/entities/**/*"
+paths:
+  - 'src/entities/**/*'
 ---
 
 # entities 설계 원칙

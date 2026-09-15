@@ -1,5 +1,6 @@
 ---
-paths: 'src/features/**/*'
+paths:
+  - 'src/features/**/*'
 ---
 
 # features 설계 원칙

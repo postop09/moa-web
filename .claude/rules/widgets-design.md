@@ -1,5 +1,6 @@
 ---
-paths: "src/widgets/**/*"
+paths:
+  - 'src/widgets/**/*'
 ---
 
 # widgets 설계 원칙
