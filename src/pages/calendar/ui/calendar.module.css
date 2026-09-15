@@ -497,24 +497,36 @@
 .eventLane {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-}
-
-.weekDays {
   column-gap: 1px;
 }
 
 .weekEvents {
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
-  /* .week의 background-color(격자선용)가 일정 바 영역까지 새어나오지
-     않도록 이 영역만 다시 불투명 배경으로 덮는다. 세로 격자선은
-     날짜 숫자 행(.weekDays)에서만 표시한다. */
-  background: var(--color-surface);
+  gap: 0;
 }
 
 .eventLane {
-  min-height: 1.125rem;
+  min-height: 1.25rem;
+  align-items: start;
+}
+
+/* sparse grid 자동 배치 규칙 때문에 grid-row를 명시하지 않으면 filler와
+   eventBar가 서로 다른 암묵적 행에 배치되어 filler 높이가 0이 될 수
+   있다. 모든 자식을 1행에 고정해 완전 확정 배치로 만든다. */
+.eventLane > * {
+  grid-row: 1;
+}
+
+.eventLaneFiller {
+  /* .eventLane의 align-items: start는 컨테이너의 모든 자식에 적용되므로,
+     명시적 높이가 없는 filler(빈 span)도 "start"로 정렬되어 콘텐츠
+     높이(0)만큼만 차지하게 된다. align-self: stretch로 이를 덮어써야
+     filler가 레인 전체 높이(1.25rem)로 늘어나 eventBar(1.125rem)보다
+     남는 0.125rem까지 흰색으로 채운다. 이 여유분이 레인 사이 시각적
+     간격 역할을 대신하므로 .weekEvents의 gap은 0으로 둔다. */
+  align-self: stretch;
+  background: var(--color-surface);
 }
 
 .eventBar {

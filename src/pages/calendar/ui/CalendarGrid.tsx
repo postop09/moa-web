@@ -34,6 +34,10 @@ type Props = {
 
 const DAYS_PER_WEEK = 7;
 
+const FILLER_COLUMNS = Array.from({ length: DAYS_PER_WEEK }, (_, i) => ({
+  gridColumn: `${i + 1} / ${i + 2}`,
+}));
+
 const formatCompactAmount = (amount: number) => {
   if (amount >= 100_000) {
     return `${Math.round(amount / 10_000)}만`;
@@ -201,6 +205,14 @@ export const CalendarGrid = ({
                 <div className={styles.weekEvents}>
                   {Array.from({ length: usedLanes }, (_, lane) => (
                     <div className={styles.eventLane} key={lane}>
+                      {FILLER_COLUMNS.map((style, fillerCol) => (
+                        <span
+                          key={`filler-${fillerCol}`}
+                          aria-hidden
+                          className={styles.eventLaneFiller}
+                          style={style}
+                        />
+                      ))}
                       {week.segments
                         .filter((segment) => segment.lane === lane)
                         .map((segment) => (
