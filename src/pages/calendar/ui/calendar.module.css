@@ -467,20 +467,30 @@
   color: var(--color-muted);
 }
 
-.weekday:first-child {
+.weekday:first-child,
+.weekday:last-child {
   color: var(--color-expense);
 }
 
 .grid {
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
+  gap: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
 }
 
 .week {
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
+  gap: 0;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-border);
+}
+
+.week:last-child {
+  border-bottom: 0;
 }
 
 .weekDays,
@@ -490,13 +500,17 @@
 }
 
 .weekDays {
-  gap: 0.125rem;
+  column-gap: 1px;
 }
 
 .weekEvents {
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
+  /* .week의 background-color(격자선용)가 일정 바 영역까지 새어나오지
+     않도록 이 영역만 다시 불투명 배경으로 덮는다. 세로 격자선은
+     날짜 숫자 행(.weekDays)에서만 표시한다. */
+  background: var(--color-surface);
 }
 
 .eventLane {
@@ -506,7 +520,7 @@
 .eventBar {
   min-width: 0;
   height: 1.125rem;
-  margin: 0 -0.0625rem;
+  margin: 0;
   padding: 0 0.25rem;
   overflow: hidden;
   border: 0;
@@ -540,15 +554,33 @@
   gap: 0.125rem;
   padding: 0.25rem 0.125rem;
   border: 1px solid transparent;
-  border-radius: 0.375rem;
-  background: transparent;
+  border-radius: 0;
+  /* .week의 background-color(격자선용)가 셀 사이 1px gap에서만 보이도록
+     셀 자체는 불투명해야 한다. --cell-bg는 항상 surface를 기준으로 합성된
+     불투명 색이므로 .dayCellRest/.dayCellSelected 등은 --cell-bg만
+     재정의하면 되고, .week의 회색과는 절대 섞이지 않는다. */
+  --cell-bg: var(--color-surface);
+  background: var(--cell-bg);
   color: var(--color-text);
   cursor: pointer;
 }
 
+@media (hover: hover) {
+  .dayCell:hover {
+    background: color-mix(in srgb, var(--color-text) 4%, var(--cell-bg));
+  }
+}
+
+.dayCell:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+  z-index: 1;
+}
+
 .dayCellMuted {
-  color: var(--color-muted);
-  opacity: 0.55;
+  /* opacity로 셀 전체를 반투명하게 만들면 .week의 회색 배경이 다시
+     비쳐 탁해지므로, 흰 배경 기준 opacity 0.55와 근사한 색상만 적용한다. */
+  color: color-mix(in srgb, var(--color-muted) 55%, var(--color-surface));
 }
 
 .dayCellToday .dayNumber {
@@ -562,16 +594,30 @@
   color: var(--color-on-accent);
 }
 
-/* .dayCellToday .dayNumber와 특정도가 같고 이 규칙이 뒤에 선언돼 있어,
-   오늘이면서 공휴일인 날은 CalendarGrid에서 이 클래스 자체를 붙이지
-   않는 방식으로 충돌을 피한다(오늘 표시 우선). */
-.dayCellHoliday .dayNumber {
-  color: var(--color-expense);
+.dayCellRest {
+  --cell-bg: color-mix(in srgb, var(--color-expense) 20%, var(--color-surface));
+}
+
+/* --color-danger는 .dayCell의 --cell-bg(surface 위 20% expense 합성,
+   AA 대비 4.72:1)를 배경으로 전제한 색이다. .week의 회색 배경과는
+   무관하게 항상 surface 기준으로 합성되므로 이 대비는 .week 배경색과
+   섞이지 않는다. 이 컴포넌트를 다른 배경 위에서 재사용할 경우 대비를
+   다시 검증해야 한다. */
+.dayCellRest:not(.dayCellToday) .dayNumber {
+  color: var(--color-danger);
 }
 
 .dayCellSelected {
-  border-color: var(--color-accent);
-  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  border-color: transparent;
+  --cell-bg: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface));
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+}
+
+/* rest+selected 조합에서는 특정도가 .dayCellSelected 단독보다 높은 이
+   규칙이 이겨서 빨간 배경 신호가 선택 상태에서도 유지된다(선택 여부는
+   accent box-shadow 링으로 구분). */
+.dayCellRest.dayCellSelected {
+  --cell-bg: color-mix(in srgb, var(--color-expense) 20%, var(--color-surface));
 }
 
 .dayNumber {

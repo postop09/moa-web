@@ -149,14 +149,16 @@ export const CalendarGrid = ({
                   const expenseTotal = expenseTotalByDayKey.get(key) ?? 0;
                   const overflow = week.overflowByCol[col] ?? 0;
 
+                  const isWeekend = col === 0 || col === DAYS_PER_WEEK - 1;
+                  const isRestDay =
+                    inMonth && (isWeekend || Boolean(holidayNames));
+
                   const className = [
                     styles.dayCell,
                     inMonth ? '' : styles.dayCellMuted,
+                    isRestDay ? styles.dayCellRest : '',
                     isToday ? styles.dayCellToday : '',
                     isSelected ? styles.dayCellSelected : '',
-                    holidayNames && !isToday && inMonth
-                      ? styles.dayCellHoliday
-                      : '',
                   ]
                     .filter(Boolean)
                     .join(' ');
