@@ -532,7 +532,7 @@
 .eventLaneFillerRest {
   background: color-mix(
     in srgb,
-    var(--color-expense) 20%,
+    var(--color-expense) 5%,
     var(--color-surface)
   );
 }
@@ -615,7 +615,7 @@
 }
 
 .dayCellRest {
-  --cell-bg: color-mix(in srgb, var(--color-expense) 20%, var(--color-surface));
+  --cell-bg: color-mix(in srgb, var(--color-expense) 5%, var(--color-surface));
 }
 
 /* --color-danger는 .dayCell의 --cell-bg(surface 위 20% expense 합성,
@@ -633,7 +633,7 @@
 
 .dayCellSelected {
   border-color: transparent;
-  --cell-bg: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface));
+  --cell-bg: color-mix(in srgb, var(--color-accent) 10%, var(--color-surface));
   box-shadow: inset 0 0 0 1px var(--color-accent);
 }
 
@@ -642,7 +642,7 @@
    accent box-shadow 링으로 구분). 패딩(muted) 셀도 동일 규칙을 타므로
    전/다음달 주말·공휴일 배경 역시 같은 방식으로 물든다(의도된 동작). */
 .dayCellRest.dayCellSelected {
-  --cell-bg: color-mix(in srgb, var(--color-expense) 20%, var(--color-surface));
+  --cell-bg: color-mix(in srgb, var(--color-expense) 5%, var(--color-surface));
 }
 
 .dayNumber {
