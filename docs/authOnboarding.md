@@ -186,7 +186,7 @@ sequenceDiagram
 
 ### 마지막 가계부 삭제/나가기
 
-앱 셸의 [`NoHouseholdRedirect`](../src/widgets/appShell/ui/NoHouseholdRedirect.tsx)가 `listHouseholds`가 빈 배열이면 `moa_gate`를 지우고 `/onboarding/household`로 보냅니다. 설정 화면의 삭제/나가기 확인도 같은 `redirectIfNoHouseholds`를 호출합니다.
+앱 셸의 [`NoHouseholdRedirect`](../src/widgets/appShell/ui/NoHouseholdRedirect.tsx)가 `listHouseholds`가 빈 배열이면 `/auth/complete`로 보냅니다. Route Handler가 게이트를 다시 판별해 `moa_gate` 삭제를 응답 헤더로 확정하고 `/onboarding/household`(목록이 stale였다면 `/`)로 리다이렉트합니다. 클라이언트에서 서버 액션으로 쿠키를 지운 뒤 `/onboarding/household`로 가는 방식은 쓰지 않습니다 — `moa_gate`가 30일 영속 쿠키라 삭제가 실패하면 proxy가 온보딩을 `/`로 되돌려 무한 루프가 되기 때문입니다. 설정 화면의 삭제/나가기 확인도 같은 `redirectIfNoHouseholds`를 호출합니다.
 
 ### 로그아웃
 
@@ -215,7 +215,7 @@ hydrate(1프레임) 직후 저장 id가 있으면 `listHouseholds` 완료를 기
 | [`src/features/onboarding/model/resolveAuthGate.ts`](../src/features/onboarding/model/resolveAuthGate.ts)               | 풀 게이트, 경로 계산, `redirectForAuthGate` |
 | [`src/features/onboarding/model/authGateCookie.ts`](../src/features/onboarding/model/authGateCookie.ts)                 | 서버 쿠키 set/delete                        |
 | [`src/features/onboarding/model/authGateCookieActions.ts`](../src/features/onboarding/model/authGateCookieActions.ts)   | 클라이언트에서 호출하는 서버 액션           |
-| [`src/features/onboarding/model/redirectIfNoHouseholds.ts`](../src/features/onboarding/model/redirectIfNoHouseholds.ts) | 멤버십 0개 → 온보딩                         |
+| [`src/features/onboarding/model/redirectIfNoHouseholds.ts`](../src/features/onboarding/model/redirectIfNoHouseholds.ts) | 멤버십 0개 → `/auth/complete`로 재판별      |
 | [`src/app/api-routes/authCallback.ts`](../src/app/api-routes/authCallback.ts)                                           | OAuth 콜백                                  |
 | [`src/app/api-routes/authComplete.ts`](../src/app/api-routes/authComplete.ts)                                           | 온보딩 완료 판별                            |
 | [`src/shared/config/authGateCookie.ts`](../src/shared/config/authGateCookie.ts)                                         | 쿠키 이름/옵션/값 파싱                      |
