@@ -30,6 +30,7 @@
 
 - `src/` 안: 검사 대상 파일 옆에 붙인다. 예) `src/entities/consultation/lib/selectors.test.ts`
 - `scripts/` 안: 같은 규칙. 예) `scripts/enrich/rules.test.ts`
+- 루트 `proxy.ts`: 옆에 `proxy.test.ts` (`vitest.config.mts` `include`에 명시돼 있다). Next 서버 객체를 쓰므로 파일 첫 줄에 `// @vitest-environment node`를 둔다.
 - 테스트 파일에서는 같은 슬라이스 내부 파일을 상대 경로로 직접 import해도 된다 (Public API 규칙의 예외).
 - `describe`/`it`/`expect`는 전역이 아니다. 반드시 `import { describe, it, expect } from 'vitest'`로 가져온다.
 - 컴포넌트·훅 테스트는 `@testing-library/react`의 `render`/`screen`을 쓰고, matcher는 `@testing-library/jest-dom`(전역 setup: `vitest.setup.ts`)을 사용한다. 구현 세부(내부 state, 클래스명)가 아니라 사용자가 보는 결과로 검증한다.

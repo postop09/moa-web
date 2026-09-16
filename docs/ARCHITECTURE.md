@@ -361,6 +361,7 @@ CI는 [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)에서 `pull_requ
 | [`proxy.ts`](../proxy.ts)                                                                                           | 인증 미들웨어 (세션 + `moa_gate` 분기) |
 | [`src/shared/api/index.ts`](../src/shared/api/index.ts)                                                             | 브라우저용 Supabase 클라이언트 진입점  |
 | [`src/shared/api/server.ts`](../src/shared/api/server.ts)                                                           | 서버용 Supabase 클라이언트 진입점      |
+| [`src/shared/api/getSupabaseJwks.ts`](../src/shared/api/getSupabaseJwks.ts)                                         | proxy용 JWKS 모듈 캐시(10분)           |
 | [`src/shared/lib/queryClient.ts`](../src/shared/lib/queryClient.ts)                                                 | TanStack Query 기본 설정               |
 | [`src/shared/styles/globals.css`](../src/shared/styles/globals.css)                                                 | 디자인 토큰(CSS 변수)                  |
 | [`src/features/household/model/currentHouseholdStore.ts`](../src/features/household/model/currentHouseholdStore.ts) | 유일한 Zustand 스토어                  |
