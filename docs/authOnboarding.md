@@ -17,12 +17,12 @@
 
 ## 쿠키 두 종류
 
-| 쿠키                          | 역할                                            | 누가 쓰나                                             |
-| ----------------------------- | ----------------------------------------------- | ----------------------------------------------------- |
-| Supabase 세션 쿠키            | 로그인 여부. `getUser()`로 검증                 | `proxy.ts`, `createServerClient`, 브라우저 클라이언트 |
-| `moa_gate` (`ready:{userId}`) | 온보딩 완료 여부. DB를 다시 치지 않기 위한 힌트 | `proxy.ts`가 userId와 비교                            |
+| 쿠키                          | 역할                                                                      | 누가 쓰나                                             |
+| ----------------------------- | ------------------------------------------------------------------------- | ----------------------------------------------------- |
+| Supabase 세션 쿠키            | 로그인 여부. proxy는 `getClaims()`로 JWT를 로컬 검증, 그 외는 `getUser()` | `proxy.ts`, `createServerClient`, 브라우저 클라이언트 |
+| `moa_gate` (`ready:{userId}`) | 온보딩 완료 여부. DB를 다시 치지 않기 위한 힌트                           | `proxy.ts`가 userId와 비교                            |
 
-`moa_gate`는 httpOnly, `SameSite=lax`, path `/`입니다. 프로덕션에서만 `Secure`입니다. 값 접두사는 `ready:`입니다.
+`moa_gate`는 httpOnly, `SameSite=lax`, path `/`, `Max-Age` 30일입니다. 프로덕션에서만 `Secure`입니다. 값 접두사는 `ready:`입니다. 세션 쿠키가 아닌 이유: 설치형 PWA(특히 iOS standalone)는 앱을 완전히 종료하면 세션 쿠키가 사라져, 매 콜드 스타트마다 `/auth/complete` 우회(리다이렉트 2회 + Supabase 호출 4회)를 타게 되기 때문입니다.
 
 세션 토큰은 localStorage에 두지 않습니다. 현재 가계부 id만 zustand + `localStorage` (`moa:currentHouseholdId`)에 둡니다.
 
@@ -42,7 +42,7 @@ flowchart TD
   resolve --> dest[로그인 / 온보딩 / next]
 ```
 
-1. **proxy** — 매 매칭 요청마다 `getUser()`. DB(profile/membership)는 조회하지 않음.
+1. **proxy** — 매 매칭 요청마다 `getClaims()`로 세션 JWT를 검증. DB(profile/membership)는 조회하지 않음. `getUser()`는 매 요청 Supabase Auth 서버를 왕복하지만, `getClaims()`는 프로젝트가 비대칭 서명키(ES256/RS256)를 쓰면 JWKS로 로컬 검증하고(레거시 HS256이면 내부적으로 `getUser()`로 폴백), 토큰이 만료돼 있으면 먼저 리프레시해 쿠키를 갱신합니다. JWKS는 [`src/shared/api/getSupabaseJwks.ts`](../src/shared/api/getSupabaseJwks.ts)가 모듈 레벨에서 10분간 캐시해 `getClaims(undefined, { jwks })`로 넘깁니다 — Supabase 클라이언트 자체 캐시는 인스턴스 단위라 요청마다 새로 만드는 proxy에서는 비어 있기 때문입니다. 응답에는 인증 판별 소요 시간이 `Server-Timing: auth;dur=<ms>` 헤더로 실립니다.
 2. **`/auth/complete`** — 쿠키가 없거나 userId가 다를 때만 앱 경로에서 호출. `redirectForAuthGate`가 `resolveAuthGate`를 한 번 실행.
 3. **로그인 페이지** — `getUser()`만. 세션이 있으면 `/auth/complete`로 보냄.
 4. **온보딩/초대 페이지** — 해당 페이지 첫 진입 시 `resolveAuthGate`로 폼 또는 리다이렉트 결정.
@@ -54,7 +54,7 @@ flowchart TD
 
 ### matcher
 
-`/`, `/login`, `/onboarding/:path*`, `/invite/:path*`, `/auth/:path*`, `/history`, `/stats`, `/write`, `/write/:path*`, `/calendar`, `/settings`
+`/`, `/login`, `/welcome`, `/onboarding/:path*`, `/invite/:path*`, `/auth/:path*`, `/history`, `/stats`, `/write`, `/write/:path*`, `/calendar`, `/settings`
 
 matcher에 없는 경로는 proxy를 타지 않습니다.
 
@@ -170,8 +170,8 @@ sequenceDiagram
 
 ### 재방문 (이미 ready)
 
-1. proxy `getUser()` 성공
-2. `moa_gate` userId 일치
+1. proxy `getClaims()` 성공
+2. `moa_gate` userId 일치 (쿠키는 30일 유지되므로 설치형 PWA를 완전히 종료한 뒤 다시 열어도 `/auth/complete`를 거치지 않음)
 3. 앱 페이지 통과
 4. 클라이언트는 localStorage의 `householdId`로 거래/카테고리를 바로 요청하고, `listHouseholds`는 뒤에서 검증
 
@@ -186,7 +186,7 @@ sequenceDiagram
 
 ### 마지막 가계부 삭제/나가기
 
-앱 셸의 [`NoHouseholdRedirect`](../src/widgets/appShell/ui/NoHouseholdRedirect.tsx)가 `listHouseholds`가 빈 배열이면 `moa_gate`를 지우고 `/onboarding/household`로 보냅니다. 설정 화면의 삭제/나가기 확인도 같은 `redirectIfNoHouseholds`를 호출합니다.
+앱 셸의 [`NoHouseholdRedirect`](../src/widgets/appShell/ui/NoHouseholdRedirect.tsx)가 `listHouseholds`가 빈 배열이면 `/auth/complete`로 보냅니다. Route Handler가 게이트를 다시 판별해 `moa_gate` 삭제를 응답 헤더로 확정하고 `/onboarding/household`(목록이 stale였다면 `/`)로 리다이렉트합니다. 클라이언트에서 서버 액션으로 쿠키를 지운 뒤 `/onboarding/household`로 가는 방식은 쓰지 않습니다 — `moa_gate`가 30일 영속 쿠키라 삭제가 실패하면 proxy가 온보딩을 `/`로 되돌려 무한 루프가 되기 때문입니다. 설정 화면의 삭제/나가기 확인도 같은 `redirectIfNoHouseholds`를 호출합니다.
 
 ### 로그아웃
 
@@ -215,7 +215,7 @@ hydrate(1프레임) 직후 저장 id가 있으면 `listHouseholds` 완료를 기
 | [`src/features/onboarding/model/resolveAuthGate.ts`](../src/features/onboarding/model/resolveAuthGate.ts)               | 풀 게이트, 경로 계산, `redirectForAuthGate` |
 | [`src/features/onboarding/model/authGateCookie.ts`](../src/features/onboarding/model/authGateCookie.ts)                 | 서버 쿠키 set/delete                        |
 | [`src/features/onboarding/model/authGateCookieActions.ts`](../src/features/onboarding/model/authGateCookieActions.ts)   | 클라이언트에서 호출하는 서버 액션           |
-| [`src/features/onboarding/model/redirectIfNoHouseholds.ts`](../src/features/onboarding/model/redirectIfNoHouseholds.ts) | 멤버십 0개 → 온보딩                         |
+| [`src/features/onboarding/model/redirectIfNoHouseholds.ts`](../src/features/onboarding/model/redirectIfNoHouseholds.ts) | 멤버십 0개 → `/auth/complete`로 재판별      |
 | [`src/app/api-routes/authCallback.ts`](../src/app/api-routes/authCallback.ts)                                           | OAuth 콜백                                  |
 | [`src/app/api-routes/authComplete.ts`](../src/app/api-routes/authComplete.ts)                                           | 온보딩 완료 판별                            |
 | [`src/shared/config/authGateCookie.ts`](../src/shared/config/authGateCookie.ts)                                         | 쿠키 이름/옵션/값 파싱                      |

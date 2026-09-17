@@ -7,6 +7,8 @@ export const AUTH_GATE_COOKIE_OPTIONS = {
   sameSite: 'lax' as const,
   path: '/',
   secure: process.env.NODE_ENV === 'production',
+  // 세션 쿠키면 설치형 PWA 종료 시 사라져 매 콜드 스타트마다 /auth/complete를 거친다.
+  maxAge: 60 * 60 * 24 * 30,
 };
 
 export const toAuthGateReadyValue = (userId: string) => {
