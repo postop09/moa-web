@@ -1,3 +1,9 @@
+export {
+  APPLE_SPLASH_SPECS,
+  getAppleSplashStartupImages,
+  getAppleSplashUrl,
+} from './appleSplash';
+export type { AppleSplashSpec } from './appleSplash';
 export { isNavItemActive, navItems, writeHref } from './navItems';
 export type { NavItem, NavItemId } from './navItems';
 export {
