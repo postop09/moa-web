@@ -3,6 +3,9 @@
   --color-surface: #ffffff;
   --color-text: #0f172a;
   --color-muted: #64748b;
+  /* 페이지 배경(--color-bg) 위 소형 텍스트용 — --color-muted는 흰 카드 위에서 4.76:1이지만
+     페이지 배경 위에서는 4.39:1로 AA 미달이다. */
+  --color-muted-strong: #5b6b82;
   --color-accent: #2563eb;
   --color-income: #2563eb;
   --color-expense: #dc2626;

@@ -20,6 +20,20 @@
   gap: var(--space-4);
 }
 
+.refreshStatus {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  /* sm 버튼 높이와 맞춘 고정 높이 — 메시지·버튼이 나타나고 사라져도 레이아웃이 밀리지 않게 한다. */
+  min-height: 1.75rem;
+}
+
+.refreshStatusText {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-muted-strong);
+}
+
 .monthNavigator {
   display: flex;
   flex-shrink: 0;

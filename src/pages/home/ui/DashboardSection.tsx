@@ -4,11 +4,13 @@ import dynamic from 'next/dynamic';
 
 import { TRANSACTION_TYPE_COLOR } from '@/shared/model';
 import { formatAmount, getErrorMessage } from '@/shared/lib';
+import { Button } from '@/shared/ui';
 
 import { CategoryBudgetCard } from './CategoryBudgetCard';
 import { DashboardHeader } from './DashboardHeader';
 import { RecentTransactionsCard } from './RecentTransactionsCard';
 import { useHomeDashboard } from '../model/useHomeDashboard';
+import { useRefreshStatus } from '../model/useRefreshStatus';
 import styles from './home.module.css';
 
 // echarts를 쓰는 카드들은 dashboard 진입 시에만 별도 청크로 불러온다(다른 라우트의 초기 번들에서 제외).
@@ -65,10 +67,16 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
     weeklyExpenses,
     dailyExpenses,
     isLoading,
+    isFetching,
+    hasData,
     error,
+    refetch,
   } = useHomeDashboard(householdId, selectedMonth);
+  const hasError = Boolean(error);
+  const { message } = useRefreshStatus({ isFetching, hasError });
 
-  if (isLoading) {
+  // 데이터가 전혀 없을 때만 전체 로딩/에러 문구로 대체하고, 이전 데이터가 있으면 본문을 유지한다.
+  if (!hasData && isLoading) {
     return (
       <p className={styles.empty} role="status">
         불러오는 중…
@@ -76,7 +84,7 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
     );
   }
 
-  if (error) {
+  if (!hasData && error) {
     return (
       <p className={styles.error} role="alert">
         {getErrorMessage(error, '현황을 불러오지 못했습니다.')}
@@ -88,7 +96,17 @@ export const DashboardSection = ({ householdId, selectedMonth }: Props) => {
     income > 0 ? (income / incomeTotalBudget) * 100 : null;
 
   return (
-    <div className={styles.dashboard}>
+    <div className={styles.dashboard} aria-busy={isFetching}>
+      <div className={styles.refreshStatus}>
+        <p role="status" className={styles.refreshStatusText}>
+          {message}
+        </p>
+        {hasError ? (
+          <Button variant="text" size="sm" onClick={() => void refetch()}>
+            다시 시도
+          </Button>
+        ) : null}
+      </div>
       <DashboardHeader
         income={income}
         expense={expense}

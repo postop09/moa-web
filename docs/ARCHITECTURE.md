@@ -318,6 +318,7 @@ erDiagram
 - 저장 대상: [`shouldDehydrateQuery`](../src/app/providers/shouldDehydrateQuery.ts) — `success` 상태이고 queryKey 루트가 `auth`가 아닌 쿼리만. 사용자 객체는 저장하지 않는다.
 - 삭제: 로그아웃(`useSignOut`)에서 `queryClient.clear()` 후 `persister.removeClient()`. 세션 만료로 proxy가 `/login`에 보내는 경로는 `useSignOut`을 거치지 않으므로, 로그인 페이지의 [`ResetClientState`](../src/pages/login/ui/ResetClientState.tsx)가 마운트 시 쿼리 캐시·영속 저장소·현재 가계부 id를 모두 비운다(`/login`은 미인증일 때만 도달하므로 항상 안전). 가계부 전환은 캐시 키가 householdId를 포함하므로 추가 조치가 없다. **알려진 한계**: 저장 키가 사용자와 무관하므로, 이전 계정 화면이 다른 브라우저 탭에 열린 채 남아 있으면 그 탭의 구독자가 `/login` 정리 직후 이전 캐시를 다시 쓸 수 있다(설치형 PWA는 단일 창이라 해당 없음). 필요해지면 키 또는 `buster`에 userId를 섞는다.
 - 복원 중에는 쿼리가 `pending` + `fetchStatus: 'idle'`이라 `isLoading`이 false다. 로딩 판정은 `isPending`으로 해야 빈 데이터가 한 프레임 그려지지 않는다(`useCurrentHousehold`, `useHomeDashboard`).
+- 캐시가 보이는 상태에서의 갱신 피드백(홈): `DashboardSection` 상단에 항상 마운트된 `role="status"` 영역(고정 높이 — 레이아웃 시프트 방지)에 갱신 중 "이전 데이터 · 업데이트 중…", 완료 후 3초간 "최신 정보로 업데이트되었습니다", 갱신 실패 시 본문을 유지한 채 "최신 정보를 가져오지 못했어요" + 다시 시도 버튼([`useRefreshStatus`](../src/pages/home/model/useRefreshStatus.ts)). 데이터가 없을 때만 전체 로딩/에러 문구로 대체한다.
   queryKey는 각 feature 슬라이스의 `config/queryKeys.ts` 팩토리로 관리한다(예: [`src/features/transaction/config/queryKeys.ts`](../src/features/transaction/config/queryKeys.ts)). `entities/config`에도 공유 queryKey를 둘 수 있다(예: [`src/entities/auth/config/queryKeys.ts`](../src/entities/auth/config/queryKeys.ts)).
 
 ### 클라이언트 상태 (Zustand)
