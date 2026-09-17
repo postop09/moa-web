@@ -103,8 +103,9 @@ export const useCurrentHousehold = () => {
     household,
     householdId,
     setHouseholdId,
-    isLoading: !householdId && (!hydrated || householdsQuery.isLoading),
-    isHouseholdsLoading: !hydrated || householdsQuery.isLoading,
+    // 영속화 캐시 복원 중에는 pending + fetchStatus idle이라 isLoading이 false가 된다.
+    isLoading: !householdId && (!hydrated || householdsQuery.isPending),
+    isHouseholdsLoading: !hydrated || householdsQuery.isPending,
     isHouseholdsSuccess: hasList,
     error: householdsQuery.error,
   };

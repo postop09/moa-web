@@ -12,4 +12,5 @@ export {
   startOfMonth,
 } from './month';
 export { getQueryClient } from './queryClient';
+export { getQueryPersister } from './queryPersister';
 export { useDismissable } from './useDismissable';

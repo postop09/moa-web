@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { useListCategories } from '@/features/category';
 import {
@@ -129,9 +129,25 @@ export const useHomeDashboard = (
     transactionsQuery.data,
   ]);
 
+  const { refetch: refetchTransactions } = transactionsQuery;
+  const { refetch: refetchCategories } = categoriesQuery;
+  const refetch = useCallback(
+    () => Promise.all([refetchTransactions(), refetchCategories()]),
+    [refetchTransactions, refetchCategories],
+  );
+
   return {
     ...dashboard,
-    isLoading: transactionsQuery.isLoading || categoriesQuery.isLoading,
+    // 영속화 캐시 복원 중에는 pending + fetchStatus idle이라 isLoading이 false가 된다.
+    // householdId가 없으면 enabled: false로 영원히 pending이므로 로딩으로 치지 않는다.
+    isLoading:
+      !!householdId &&
+      (transactionsQuery.isPending || categoriesQuery.isPending),
+    isFetching: transactionsQuery.isFetching || categoriesQuery.isFetching,
+    hasData:
+      transactionsQuery.data !== undefined &&
+      categoriesQuery.data !== undefined,
     error: transactionsQuery.error ?? categoriesQuery.error,
+    refetch,
   };
 };

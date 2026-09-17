@@ -194,9 +194,9 @@ sequenceDiagram
 
 1. `clearAuthGateReadyCookie`
 2. `clearCurrentHouseholdId` (zustand + localStorage)
-3. Supabase `signOut` 후 `/login`
+3. Supabase `signOut` 후 `queryClient.clear()` + 영속화된 쿼리 캐시 삭제(`localStorage`의 `moa:query-cache`, [ARCHITECTURE.md](./ARCHITECTURE.md#서버-상태-tanstack-query) 참고) → `/login`
 
-proxy도 미인증이면 `moa_gate`를 지웁니다.
+proxy도 미인증이면 `moa_gate`를 지웁니다. 세션 만료로 proxy가 `/login`에 보낸 경우에는 위 1~3을 거치지 않으므로, 로그인 페이지가 마운트될 때 [`ResetClientState`](../src/pages/login/ui/ResetClientState.tsx)가 쿼리 캐시·영속 저장소(`moa:query-cache`)·현재 가계부 id(`moa:currentHouseholdId`)를 비웁니다 — 같은 기기에서 다른 계정으로 로그인해도 이전 계정 데이터가 보이지 않게 하기 위함입니다.
 
 ## 클라이언트 householdId
 
