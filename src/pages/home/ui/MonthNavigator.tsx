@@ -9,19 +9,27 @@ type Props = {
   onPrev: () => void;
   onNext: () => void;
   canGoNext: boolean;
+  disabled?: boolean;
 };
 
 const formatMonthLabel = (date: Date) => {
   return `${date.getFullYear()}년 ${date.getMonth() + 1}월`;
 };
 
-export const MonthNavigator = ({ value, onPrev, onNext, canGoNext }: Props) => {
+export const MonthNavigator = ({
+  value,
+  onPrev,
+  onNext,
+  canGoNext,
+  disabled = false,
+}: Props) => {
   return (
     <div className={styles.monthNavigator}>
       <button
         type="button"
         className={styles.monthNavButton}
         onClick={onPrev}
+        disabled={disabled}
         aria-label="이전 달"
       >
         <ChevronLeft size={20} aria-hidden />
@@ -31,7 +39,7 @@ export const MonthNavigator = ({ value, onPrev, onNext, canGoNext }: Props) => {
         type="button"
         className={styles.monthNavButton}
         onClick={onNext}
-        disabled={!canGoNext}
+        disabled={disabled || !canGoNext}
         aria-label="다음 달"
       >
         <ChevronRight size={20} aria-hidden />

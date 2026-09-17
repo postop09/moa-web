@@ -119,7 +119,9 @@ features/{domain}/model/use*.ts           'use client' — useQuery/useMutation 
 | `app/(app)/error.tsx`  | `(app)` 그룹 전용                 |
 | `app/not-found.tsx`    | 전역 404                          |
 
-`(auth)`, `(marketing)` 그룹에는 세그먼트 전용 `error.tsx`가 없어 해당 그룹의 렌더 오류는 `global-error`(전체 페이지 교체)로 떨어진다. `loading.tsx`는 전 라우트에 걸쳐 존재하지 않으며, 로딩은 각 훅의 `isLoading` 분기로 처리한다 — [improvements.md](./improvements.md).
+`(auth)`, `(marketing)` 그룹에는 세그먼트 전용 `error.tsx`가 없어 해당 그룹의 렌더 오류는 `global-error`(전체 페이지 교체)로 떨어진다. `loading.tsx`는 전 라우트에 걸쳐 존재하지 않으며, 로딩은 각 훅의 `isPending`/`isLoading` 분기로 처리한다 — [improvements.md](./improvements.md).
+
+홈 대시보드만은 텍스트 대신 **레이아웃 일치 스켈레톤**을 쓴다: [`DashboardSkeleton`](../src/pages/home/ui/DashboardSkeleton.tsx)이 실제 대시보드와 같은 `home.module.css` 클래스로 자리를 잡고 [`shared/ui/Skeleton`](../src/shared/ui/Skeleton.tsx) 블록으로 채운다. 스켈레톤은 **순수 장식**(`aria-hidden`)이고 상태 안내는 별도 라이브 리전이 맡는다 — `DashboardSection`은 로딩/에러/본문 어느 상태에서도 **같은** `role="status"` 요소를 유지하며 텍스트만 바꾼다("현황을 불러오는 중" → `useRefreshStatus` 메시지). 리전을 교체하면 스크린리더가 변화를 놓치고, `aria-label`만 있는 빈 리전은 announce가 보장되지 않기 때문이다. `HouseholdGuard`는 `fallback` prop을 받으면 `role="status"` + 숨김 텍스트로 감싸 호출측이 접근성을 빠뜨릴 수 없게 한다. ECharts 카드의 `next/dynamic`에는 실제 카드와 같은 형태의 `loading`(`CardSkeleton`/`RingCardSkeleton`)을 둬 청크가 늦게 와도 자리가 유지되고, 카드 청크는 `HomePage`가 마운트될 때 [`warmDashboardChunks`](../src/pages/home/ui/dashboardChunks.ts)로 가계부·데이터 요청과 병렬로 워밍한다 — 이전에는 데이터 도착 후에야 청크 로드가 시작돼 직렬 hop이 하나 더 있었다. `MonthNavigator`는 가계부가 정해지기 전에도 `disabled`로 렌더해 헤더가 나중에 밀리지 않는다.
 
 ## 데이터 모델
 

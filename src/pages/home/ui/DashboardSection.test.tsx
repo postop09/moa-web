@@ -82,7 +82,7 @@ describe('DashboardSection', () => {
   });
 
   describe('데이터가 없을 때', () => {
-    it('로딩 중이면 role="status"로 접근 가능한 로딩 문구를 보여준다', () => {
+    it('로딩 중이면 role="status" 슬롯에 "현황을 불러오는 중" 문구를 넣고 aria-busy를 켠다', () => {
       mockUseHomeDashboard.mockReturnValue(
         makeDashboardState({
           hasData: false,
@@ -93,9 +93,85 @@ describe('DashboardSection', () => {
 
       renderSection();
 
-      expect(screen.getByRole('status')).toHaveTextContent('불러오는 중…');
+      const status = screen.getByRole('status');
+      expect(status).toHaveTextContent('현황을 불러오는 중');
+      expect(screen.queryByText('불러오는 중…')).not.toBeInTheDocument();
       expect(screen.queryByText(/업데이트 중/)).not.toBeInTheDocument();
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument();
       expect(screen.queryByText(/잔액/)).not.toBeInTheDocument();
+
+      const container = status.closest('[aria-busy]');
+      expect(container).not.toBeNull();
+      expect(container).toHaveAttribute('aria-busy', 'true');
+    });
+
+    it('로딩 중에는 장식용 스켈레톤(aria-hidden)이 상태 슬롯 아래에 함께 렌더된다', () => {
+      mockUseHomeDashboard.mockReturnValue(
+        makeDashboardState({
+          hasData: false,
+          isLoading: true,
+          isFetching: true,
+        }),
+      );
+
+      const { container } = renderSection();
+
+      // 스켈레톤은 순수 장식이므로 role/status로 잡히지 않고 aria-hidden으로만 존재한다
+      expect(container.querySelector('[aria-hidden="true"]')).not.toBeNull();
+      expect(screen.queryAllByRole('status')).toHaveLength(1);
+    });
+
+    it('로딩 중에는 "다시 시도" 버튼을 보여주지 않는다', () => {
+      mockUseHomeDashboard.mockReturnValue(
+        makeDashboardState({
+          hasData: false,
+          isLoading: true,
+          isFetching: true,
+        }),
+      );
+
+      renderSection();
+
+      expect(
+        screen.queryByRole('button', { name: '다시 시도' }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('로딩 → 데이터 도착으로 바뀌어도 role="status" 노드는 교체되지 않고 동일하게 유지된다', () => {
+      mockUseHomeDashboard.mockReturnValue(
+        makeDashboardState({
+          hasData: false,
+          isLoading: true,
+          isFetching: true,
+        }),
+      );
+
+      const { rerender } = renderSection();
+      const before = screen.getByRole('status');
+      expect(before).toHaveTextContent('현황을 불러오는 중');
+
+      mockUseHomeDashboard.mockReturnValue(
+        makeDashboardState({
+          hasData: true,
+          isLoading: false,
+          isFetching: false,
+        }),
+      );
+      rerender(
+        <DashboardSection
+          householdId="household-1"
+          selectedMonth={new Date()}
+        />,
+      );
+
+      // 스크린 리더가 라이브 리전 변화를 계속 추적할 수 있도록 같은 DOM 노드여야 한다
+      const after = screen.getByRole('status');
+      expect(after).toBe(before);
+      expect(screen.getByText(/잔액/)).toBeInTheDocument();
+      expect(screen.queryByText('현황을 불러오는 중')).not.toBeInTheDocument();
+
+      const container = after.closest('[aria-busy]');
+      expect(container).toHaveAttribute('aria-busy', 'false');
     });
 
     it('에러가 있으면 role="alert"로 접근 가능한 에러 문구를 보여준다', () => {
@@ -110,6 +186,44 @@ describe('DashboardSection', () => {
 
       expect(screen.getByRole('alert')).toHaveTextContent('현황 조회 실패');
       expect(screen.queryByText(/잔액/)).not.toBeInTheDocument();
+    });
+
+    it('에러가 있어도 role="status" 슬롯은 유지되고 aria-busy는 꺼진다', () => {
+      mockUseHomeDashboard.mockReturnValue(
+        makeDashboardState({
+          hasData: false,
+          error: new Error('현황 조회 실패'),
+        }),
+      );
+
+      renderSection();
+
+      const status = screen.getByRole('status');
+      expect(status).toHaveTextContent(ERROR_MESSAGE);
+      expect(screen.queryByText('현황을 불러오는 중')).not.toBeInTheDocument();
+
+      const container = status.closest('[aria-busy]');
+      expect(container).not.toBeNull();
+      expect(container).toHaveAttribute('aria-busy', 'false');
+    });
+
+    it('에러가 있으면 "다시 시도" 버튼을 보여주고 클릭 시 refetch를 1회 호출한다', () => {
+      const refetch = vi.fn(async () => undefined);
+      mockUseHomeDashboard.mockReturnValue(
+        makeDashboardState({
+          hasData: false,
+          error: new Error('현황 조회 실패'),
+          refetch,
+        }),
+      );
+
+      renderSection();
+
+      expect(screen.getByRole('alert')).toBeInTheDocument();
+      const retryButton = screen.getByRole('button', { name: '다시 시도' });
+      fireEvent.click(retryButton);
+
+      expect(refetch).toHaveBeenCalledTimes(1);
     });
   });
 
