@@ -337,16 +337,19 @@ Supabase httpOnly 쿠키(세션) + `moa_gate`(온보딩 완료 캐시). 상세�
 
 ## 빌드·배포·환경 변수
 
-| 스크립트       | 명령                                                                               |
-| -------------- | ---------------------------------------------------------------------------------- |
-| 개발           | `pnpm dev` (`next dev --turbopack`)                                                |
-| 빌드           | `pnpm build` (`next build --webpack`)                                              |
-| 프로덕션 실행  | `pnpm start`                                                                       |
-| 린트           | `pnpm lint` (`eslint app src proxy.ts scripts next.config.ts`)                     |
-| 포맷           | `pnpm format` / `pnpm format:check` (`app src proxy.ts scripts next.config.ts` 등) |
-| 타입체크       | `pnpm typecheck` (`tsc --noEmit`)                                                  |
-| 테스트         | `pnpm test` (`vitest run`) / `pnpm test:watch`                                     |
-| OG 이미지 생성 | `pnpm og:generate`                                                                 |
+| 스크립트          | 명령                                                                               |
+| ----------------- | ---------------------------------------------------------------------------------- |
+| 개발              | `pnpm dev` (`next dev --turbopack`)                                                |
+| 빌드              | `pnpm build` (`next build --webpack`)                                              |
+| 프로덕션 실행     | `pnpm start`                                                                       |
+| 린트              | `pnpm lint` (`eslint app src proxy.ts scripts next.config.ts`)                     |
+| 포맷              | `pnpm format` / `pnpm format:check` (`app src proxy.ts scripts next.config.ts` 등) |
+| 타입체크          | `pnpm typecheck` (`tsc --noEmit`)                                                  |
+| 테스트            | `pnpm test` (`vitest run`) / `pnpm test:watch`                                     |
+| OG 이미지 생성    | `pnpm og:generate`                                                                 |
+| iOS 스플래시 생성 | `pnpm splash:generate` (아래 참고)                                                 |
+
+**iOS 스플래시**: 해상도 목록은 [`src/shared/config/appleSplash.ts`](../src/shared/config/appleSplash.ts)가 단일 출처이고, `app/layout.tsx`의 `appleWebApp.startupImage`와 생성 스크립트가 모두 이 목록에서 파생된다. 새 iPhone·iPad가 나오면 `APPLE_SPLASH_SPECS`에 `{ width, height, deviceWidth, deviceHeight, ratio }`(width = deviceWidth × ratio)를 추가하고 `pnpm splash:generate`를 실행해 PNG를 커밋한다 — 테스트가 스펙과 `public/splash/`의 파일 목록이 정확히 일치하는지 검사하므로 누락·잔여 파일은 CI에서 걸린다. 매칭되는 `media`가 없으면 iOS는 흰 화면을 띄운다. 가로·다크 변형은 앱이 세로 전용 UI이고 다크 모드가 없어 만들지 않는다. 생성물은 `next.config.ts`의 `publicExcludes`로 SW 프리캐시에서 제외한다 — iOS가 시작 이미지를 OS 레벨에서 따로 캐시하므로 프리캐시하면 모든 방문자가 쓰지 않는 수 MB를 받게 된다.
 
 환경 변수: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`(필수, [`src/shared/api/createBrowserClient.ts`](../src/shared/api/createBrowserClient.ts) 등에서 non-null 단언으로만 사용 — 런타임 검증 없음), `NEXT_PUBLIC_SITE_URL`(선택, [`src/shared/config/site.ts`](../src/shared/config/site.ts)에서 Vercel 환경변수로 폴백).
 
