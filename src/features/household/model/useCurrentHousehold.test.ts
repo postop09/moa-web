@@ -84,6 +84,7 @@ describe('useCurrentHousehold - setHouseholdId invalidate predicate', () => {
       data: [],
       isSuccess: true,
       isLoading: false,
+      isPending: false,
       error: null,
     });
   });
@@ -199,5 +200,67 @@ describe('useCurrentHousehold - setHouseholdId invalidate predicate', () => {
     const predicate = getPredicate(invalidateSpy);
 
     expect(predicate({ queryKey: ['households', 'byId', newId] })).toBe(false);
+  });
+});
+
+describe('useCurrentHousehold - 영속화 캐시 복원 중 로딩 상태', () => {
+  // PersistQueryClientProvider가 캐시를 복원하는 동안 useQuery는
+  // { isPending: true, fetchStatus: 'idle' } 상태다. 이때 isLoading(= pending && fetching)은
+  // false가 되므로, 목록을 기다려야 하는지는 isPending으로 판단해야 한다.
+  const restoringQueryState = {
+    data: undefined,
+    isSuccess: false,
+    isLoading: false,
+    isPending: true,
+    error: null,
+  };
+
+  beforeEach(() => {
+    storeState.householdId = null;
+    storeState.hydrated = true;
+    storeState.hydrate.mockReset();
+    storeState.setHouseholdId.mockReset();
+    storeState.clearHouseholdId.mockReset();
+
+    mockUseListHouseholds.mockReset();
+    mockUseListHouseholds.mockReturnValue(restoringQueryState);
+  });
+
+  it('저장된 id가 없고 목록이 pending(복원 중, fetch idle)이면 isLoading이 true다', () => {
+    storeState.householdId = null;
+
+    const { result } = setup();
+
+    expect(result.current.isLoading).toBe(true);
+  });
+
+  it('목록이 pending(복원 중, fetch idle)이면 isHouseholdsLoading이 true다', () => {
+    const { result } = setup();
+
+    expect(result.current.isHouseholdsLoading).toBe(true);
+  });
+
+  it('저장된 id가 있으면 목록이 pending이어도 isLoading은 false다 (목록을 기다리지 않는다)', () => {
+    storeState.householdId = 'stored-household-id';
+
+    const { result } = setup();
+
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.householdId).toBe('stored-household-id');
+  });
+
+  it('목록이 success로 도착하면 isLoading과 isHouseholdsLoading이 모두 false다', () => {
+    mockUseListHouseholds.mockReturnValue({
+      data: [{ id: 'h1', name: '우리집' }],
+      isSuccess: true,
+      isLoading: false,
+      isPending: false,
+      error: null,
+    });
+
+    const { result } = setup();
+
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.isHouseholdsLoading).toBe(false);
   });
 });

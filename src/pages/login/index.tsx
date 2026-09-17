@@ -4,6 +4,7 @@ import { GridBackdrop } from '@/shared/ui';
 
 import { BrandHero } from './ui/BrandHero';
 import { GoogleSignInButton } from './ui/GoogleSignInButton';
+import { ResetClientState } from './ui/ResetClientState';
 import styles from './ui/login.module.css';
 
 type Props = {
@@ -13,6 +14,7 @@ type Props = {
 export const LoginPage = ({ next }: Props) => {
   return (
     <main className={styles.page}>
+      <ResetClientState />
       <GridBackdrop />
       <div className={styles.panel}>
         <BrandHero />

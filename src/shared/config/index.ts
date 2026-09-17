@@ -7,6 +7,11 @@ export {
   toAuthGateReadyValue,
 } from './authGateCookie';
 export {
+  QUERY_PERSIST_BUSTER,
+  QUERY_PERSIST_KEY,
+  QUERY_PERSIST_MAX_AGE_MS,
+} from './queryPersist';
+export {
   contactEmail,
   defaultTitle,
   description,
