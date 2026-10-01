@@ -1,0 +1,518 @@
+.page {
+  display: flex;
+  min-height: calc(
+    100dvh - var(--tab-bar-height) - env(safe-area-inset-bottom)
+  );
+  max-width: 40rem;
+  flex-direction: column;
+  padding: 0 var(--space-4);
+}
+
+:global(html):has(.page) {
+  /* 키보드 포커스 이동 시 sticky 등록 바와 탭 바에 가리지 않게 한다. */
+  scroll-padding-bottom: calc(
+    var(--tab-bar-height, 0px) + env(safe-area-inset-bottom) + 6rem
+  );
+}
+
+.form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding-bottom: var(--space-6);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.label {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.input,
+.textareaWrap {
+  width: 100%;
+  border: 1px solid var(--color-muted);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.input {
+  min-height: 3rem;
+  padding: 0 var(--space-4);
+}
+
+.input:focus-visible,
+.textareaWrap:focus-within {
+  border-color: var(--color-accent);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.invalid,
+.invalid:focus-within {
+  border-color: var(--color-danger);
+}
+
+.textareaWrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 9rem;
+  padding: var(--space-3) var(--space-4) 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.textarea:focus {
+  outline: none;
+}
+
+.input[readonly],
+.textarea[readonly] {
+  opacity: 0.65;
+}
+
+.counterInline {
+  margin: 0;
+  color: var(--color-muted-strong);
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+.counterOver {
+  color: var(--color-danger);
+  font-weight: 700;
+}
+
+.required {
+  color: var(--color-muted-strong);
+  font-weight: 400;
+}
+
+.origin {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+
+.counter {
+  margin: 0;
+  padding: var(--space-1) var(--space-4) var(--space-3);
+  color: var(--color-muted-strong);
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+.error {
+  min-height: 0;
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 0.8125rem;
+}
+
+.error:empty {
+  display: none;
+}
+
+.hint {
+  margin: 0;
+  color: var(--color-muted-strong);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+/* 추천 도움말 */
+.suggestSlotReserved {
+  /* 제목 + 항목 3개 + 안내 문구 높이만큼 자리를 잡아 목록이 나타나도 아래가 밀리지 않게 한다. */
+  min-height: 14rem;
+}
+
+.suggest {
+  padding: var(--space-4);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--color-accent) 6%, var(--color-surface));
+}
+
+.suggestFooter {
+  margin: var(--space-2) 0 0;
+  color: var(--color-muted-strong);
+  font-size: 0.8125rem;
+}
+
+.suggestTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.suggestTitle svg {
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
+.suggestList {
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.suggestList li + li {
+  border-top: 1px solid var(--color-border);
+}
+
+.suggestItem {
+  display: flex;
+  width: 100%;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.9375rem;
+  text-align: left;
+}
+
+.suggestItem:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.answer {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* 사진 */
+.photos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.photoRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.photoAddCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.photoCount {
+  color: var(--color-muted-strong);
+  font-size: 0.875rem;
+}
+
+.photoAdd,
+.thumb {
+  position: relative;
+  width: 5.5rem;
+  height: 5.5rem;
+  flex-shrink: 0;
+  border-radius: var(--radius);
+}
+
+.photoAdd {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  border: 1px dashed var(--color-muted);
+  background: var(--color-surface);
+  color: var(--color-muted-strong);
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.photoAdd:focus-visible,
+.thumbRemove:focus-visible,
+.linkButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.photoAdd:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.thumb {
+  overflow: hidden;
+  background: var(--color-border);
+}
+
+.thumbImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbFallback {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2) var(--space-2) 1.75rem;
+  color: var(--color-muted-strong);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.thumbName {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  padding: var(--space-1) var(--space-2);
+  background: color-mix(in srgb, var(--color-text) 80%, transparent);
+  color: var(--color-on-accent);
+  font-size: 0.75rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 시각 크기는 작게, 터치 영역은 44px 로 확보한다. */
+.thumbRemove {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: var(--space-1);
+  border: 0;
+  background: transparent;
+  color: var(--color-on-accent);
+  cursor: pointer;
+}
+
+.thumbRemove svg {
+  box-sizing: content-box;
+  padding: var(--space-1);
+  border-radius: 999px;
+  background: var(--color-text);
+}
+
+/* 기기 정보 */
+.device {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.deviceRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.checkbox {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  accent-color: var(--color-accent);
+}
+
+.checkbox:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.deviceLabel {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.linkButton {
+  align-self: flex-start;
+  min-height: 2.75rem;
+  padding: 0 var(--space-2);
+  border: 0;
+  background: transparent;
+  color: var(--color-accent);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.deviceList {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  font-size: 0.875rem;
+}
+
+.deviceList div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.deviceList dt {
+  color: var(--color-muted-strong);
+}
+
+.deviceList dd {
+  margin: 0;
+  color: var(--color-text);
+}
+
+/* 탭 바 바로 위에 붙는 하단 등록 바. 지원 센터 CTA 와 같은 sticky 방식이다. */
+.submitBar {
+  position: sticky;
+  bottom: calc(var(--tab-bar-height) + env(safe-area-inset-bottom));
+  z-index: 10;
+  margin: auto calc(var(--space-4) * -1) 0;
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+  box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.06);
+}
+
+.submitError {
+  margin: 0 0 var(--space-2);
+  color: var(--color-danger);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.submitButton {
+  min-height: 3.25rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* 로딩·오류 */
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.skeletonLine,
+.skeletonBlock {
+  border-radius: var(--radius);
+  background: var(--color-border);
+}
+
+.skeletonLine {
+  height: 3rem;
+}
+
+.skeletonBlock {
+  height: 9rem;
+}
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-4);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  text-align: center;
+}
+
+.state p {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .skeletonLine,
+  .skeletonBlock {
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* 낮은 화면(가로 모드 등)에서는 고정 바가 본문을 가리므로 흐름 안에 둔다. */
+@media (max-height: 40rem) {
+  .submitBar {
+    position: static;
+    box-shadow: none;
+  }
+}
+
+@media (min-width: 48rem) {
+  :global(html):has(.page) {
+    scroll-padding-bottom: 6rem;
+  }
+
+  .page {
+    min-height: 100dvh;
+    padding: 0 var(--space-6);
+  }
+
+  .submitBar {
+    bottom: 0;
+    margin: auto calc(var(--space-6) * -1) 0;
+    padding: var(--space-3) var(--space-6) var(--space-4);
+  }
+}

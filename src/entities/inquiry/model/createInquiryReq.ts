@@ -6,6 +6,6 @@ export type CreateInquiryReq = {
   body: string;
   category: InquiryCategory | null;
   confidence: number | null;
-  deviceInfo: DeviceInfo;
+  deviceInfo: DeviceInfo | null;
   attachments: string[];
 };

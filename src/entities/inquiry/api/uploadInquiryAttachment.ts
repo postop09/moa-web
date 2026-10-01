@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@/shared/api';
 
 import { INQUIRY_BUCKET } from '../config/tableName';
+import { getImageMimeByName } from '../lib/inquiryImageMime';
 import type { UploadInquiryAttachmentReq } from '../model/uploadInquiryAttachmentReq';
 
 /**
@@ -19,7 +20,10 @@ export const uploadInquiryAttachment = async (
 
   const { error } = await supabase.storage
     .from(INQUIRY_BUCKET)
-    .upload(path, file, { contentType: file.type || undefined });
+    .upload(path, file, {
+      // 일부 브라우저는 HEIC 의 type 을 비워 보낸다. 버킷은 허용 MIME 만 받으므로 확장자로 명시한다.
+      contentType: file.type || getImageMimeByName(file.name) || undefined,
+    });
 
   if (error) {
     throw error;

@@ -1,3 +1,4 @@
+export { classifyInquiry } from './api/classifyInquiry';
 export { addInquiryFollowUp } from './api/addInquiryFollowUp';
 export { closeInquiry } from './api/closeInquiry';
 export { createInquiry } from './api/createInquiry';
@@ -14,6 +15,10 @@ export { updateInquiry } from './api/updateInquiry';
 export { uploadInquiryAttachment } from './api/uploadInquiryAttachment';
 
 export {
+  INQUIRY_CLASSIFY_CRITERIA,
+  INQUIRY_CLASSIFY_INSTRUCTIONS,
+} from './config/classifyCriteria';
+export {
   INQUIRY_CATEGORIES,
   INQUIRY_CATEGORY_LABELS,
   UNCATEGORIZED_USER_LABEL,
@@ -28,6 +33,8 @@ export type { InquiryStatus } from './config/inquiryStatus';
 export {
   INQUIRY_BODY_MAX,
   INQUIRY_BODY_MIN,
+  INQUIRY_CLASSIFY_THRESHOLD,
+  INQUIRY_IMAGE_TYPES,
   INQUIRY_MAX_IMAGE_BYTES,
   INQUIRY_MAX_IMAGES,
   INQUIRY_PAGE_SIZE,
@@ -45,12 +52,8 @@ export {
   formatInquiryListDate,
 } from './lib/formatInquiryDate';
 export { getWaitingHours, isOverdue } from './lib/getWaitingHours';
-export {
-  clearInquiryDraft,
-  loadInquiryDraft,
-  saveInquiryDraft,
-} from './lib/inquiryDraftStorage';
-export type { InquiryDraft } from './lib/inquiryDraftStorage';
+export { mapJevCategory } from './lib/mapJevCategory';
+export type { ClassifyInquiryRes } from './model/classifyInquiryRes';
 export { validateInquiryForm } from './lib/validateInquiryForm';
 export { validateInquiryImages } from './lib/validateInquiryImages';
 
