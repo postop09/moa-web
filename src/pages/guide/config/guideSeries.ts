@@ -2,6 +2,12 @@ import type { GuideSeries } from './guide';
 
 export const GUIDE_SERIES: GuideSeries[] = [
   {
+    id: 'getting-started',
+    title: '모아 시작하기',
+    description:
+      '모아를 휴대폰 홈 화면에 앱처럼 설치하고 빠르게 여는 방법을 안내합니다.',
+  },
+  {
     id: 'shared-ledger',
     title: '공유 가계부 사용하기',
     description:

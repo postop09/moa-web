@@ -17,7 +17,8 @@ export const GuideListPage = () => {
             <p className={styles.eyebrow}>가이드</p>
             <h1 className={styles.pageTitle}>가이드</h1>
             <p className={styles.pageLead}>
-              가족, 커플과 공유 가계부를 시작하고 함께 쓰는 방법을 정리했습니다.
+              모아를 설치하고 가족, 커플과 공유 가계부를 함께 쓰는 방법을
+              정리했습니다.
             </p>
           </header>
 
