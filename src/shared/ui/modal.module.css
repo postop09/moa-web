@@ -97,3 +97,15 @@
   background: var(--color-surface);
   color: var(--color-accent);
 }
+
+/* 사진 뷰어: 화면을 가득 채우고 사진이 돋보이도록 어두운 배경을 쓴다. */
+.dialogViewer {
+  max-width: 48rem;
+  height: calc(100dvh - 2rem);
+  border-color: var(--color-text);
+  background: var(--color-text);
+}
+
+.dialogViewer .title {
+  color: var(--color-on-accent);
+}

@@ -1,0 +1,413 @@
+.page {
+  display: flex;
+  min-height: calc(
+    100dvh - var(--tab-bar-height) - env(safe-area-inset-bottom)
+  );
+  max-width: 40rem;
+  flex-direction: column;
+  padding: 0 var(--space-4);
+}
+
+:global(html):has(.page) {
+  /* 키보드 포커스 이동 시 sticky 하단 바와 탭 바에 가리지 않게 한다. */
+  scroll-padding-bottom: calc(
+    var(--tab-bar-height, 0px) + env(safe-area-inset-bottom) + 6rem
+  );
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-2) 0 var(--space-6);
+}
+
+.headerAction {
+  display: inline-flex;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--space-2);
+  border: 0;
+  background: transparent;
+  color: var(--color-muted-strong);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.headerAction:hover {
+  color: var(--color-accent);
+}
+
+.headerAction:focus-visible,
+.thumbButton:focus-visible,
+.starButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.metaText {
+  color: var(--color-muted-strong);
+  font-size: 0.9375rem;
+}
+
+/* 스레드 */
+.thread {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.question,
+.reply,
+.rating {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: calc(var(--radius) * 2);
+  background: var(--color-surface);
+}
+
+/* 텍스트 대비 4.5:1 이상이 되도록 표면색 위에 옅게만 섞는다. */
+.reply {
+  background: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface));
+}
+
+.questionTitle {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.followUpLabel {
+  margin: 0;
+  color: var(--color-muted-strong);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.replyLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--color-accent);
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.replyIcon {
+  display: inline-flex;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.body {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+/* 첨부 사진 */
+.thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.thumbItem {
+  display: flex;
+}
+
+.thumbButton,
+.thumbSkeleton,
+.thumbMissing {
+  display: flex;
+  width: 5.5rem;
+  height: 5.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: calc(var(--radius) * 1.5);
+  background: var(--color-border);
+}
+
+.thumbButton {
+  cursor: pointer;
+}
+
+.thumbImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbMissing {
+  padding: var(--space-2);
+  color: var(--color-muted-strong);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+/* 사진 뷰어 */
+.viewerBody {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.viewerImage {
+  min-height: 0;
+  max-width: 100%;
+  flex: 1;
+  object-fit: contain;
+}
+
+.viewerControls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.viewerButton {
+  display: inline-flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--color-on-accent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-on-accent);
+  cursor: pointer;
+}
+
+.viewerButton[aria-disabled='true'] {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.viewerButton:focus-visible {
+  outline: 2px solid var(--color-on-accent);
+  outline-offset: 2px;
+}
+
+/* 별점 */
+.rating {
+  align-items: center;
+  text-align: center;
+}
+
+.ratingTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.starButton {
+  display: inline-flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.star {
+  color: var(--color-muted);
+  fill: none;
+}
+
+.starFilled {
+  color: var(--color-accent);
+  fill: var(--color-accent);
+}
+
+.ratingResult {
+  margin: 0;
+  /* 저장 직후 프로그래밍 방식으로 포커스를 받는다. 안내용이라 링을 그리지 않는다. */
+  outline: none;
+  color: var(--color-muted-strong);
+  font-size: 0.9375rem;
+}
+
+.inlineError,
+.barError {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* 탭 바 바로 위에 붙는 하단 바. 지원 센터 CTA 와 같은 sticky 방식이다. */
+.bar {
+  position: sticky;
+  bottom: calc(var(--tab-bar-height) + env(safe-area-inset-bottom));
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: auto calc(var(--space-4) * -1) 0;
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+  box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.06);
+}
+
+.barActions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.barButton {
+  min-height: 3.25rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* 로딩·오류 */
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-2) 0;
+}
+
+.skeletonMeta,
+.skeletonCard {
+  display: block;
+  border-radius: var(--radius);
+  background: var(--color-border);
+}
+
+.skeletonMeta {
+  width: 60%;
+  height: 1.75rem;
+}
+
+.skeletonCard {
+  height: 8rem;
+}
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-8) var(--space-4);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  text-align: center;
+}
+
+.stateText {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.9375rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .skeletonMeta,
+  .skeletonCard {
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* 낮은 화면(가로 모드 등)에서는 고정 바가 본문을 가리므로 흐름 안에 둔다. */
+@media (max-height: 40rem) {
+  .bar {
+    position: static;
+    box-shadow: none;
+  }
+}
+
+@media (min-width: 48rem) {
+  :global(html):has(.page) {
+    scroll-padding-bottom: 6rem;
+  }
+
+  .page {
+    min-height: 100dvh;
+    padding: 0 var(--space-6);
+  }
+
+  .bar {
+    bottom: 0;
+    margin: auto calc(var(--space-6) * -1) 0;
+    padding: var(--space-3) var(--space-6) var(--space-4);
+  }
+}
+
+/* 수정 자리는 링크가 없어도 폭을 유지해 삭제 버튼이 밀리지 않게 한다. */
+.editSlot {
+  display: inline-flex;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.ratingHelper {
+  margin: 0;
+  color: var(--color-muted-strong);
+  font-size: 0.875rem;
+}
+
+.viewerMissing {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  color: var(--color-on-accent);
+  font-size: 0.9375rem;
+  text-align: center;
+}

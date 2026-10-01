@@ -40,6 +40,8 @@ type Props = {
   role?: 'dialog' | 'alertdialog';
   /** 대화상자 설명 요소 id (aria-describedby). */
   descriptionId?: string;
+  /** 'viewer'는 사진처럼 화면을 가득 채우는 어두운 패널. */
+  variant?: 'default' | 'viewer';
 };
 
 export const Modal = ({
@@ -51,6 +53,7 @@ export const Modal = ({
   initialFocus,
   role = 'dialog',
   descriptionId,
+  variant = 'default',
 }: Props) => {
   const titleId = useId();
   const mounted = useSyncExternalStore(
@@ -154,7 +157,7 @@ export const Modal = ({
       />
       <div
         ref={panelRef}
-        className={styles.dialog}
+        className={`${styles.dialog} ${variant === 'viewer' ? styles.dialogViewer : ''}`}
         role={role}
         aria-modal="true"
         aria-labelledby={titleId}

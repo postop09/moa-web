@@ -30,6 +30,8 @@ export const getMyInquiries = async (
   const { data, error } = await query
     .order('hasUnreadReply', { ascending: false })
     .order('createdAt', { ascending: false })
+    // createdAt 이 같아도 페이지 경계에서 행이 겹치거나 빠지지 않도록 고정한다
+    .order('id', { ascending: false })
     .range(from, to);
 
   if (error) {

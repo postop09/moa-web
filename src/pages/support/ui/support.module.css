@@ -343,15 +343,6 @@
   font-weight: 600;
 }
 
-.newBadge {
-  padding: 0.125rem var(--space-2);
-  border-radius: 999px;
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
 /* 탭 바 바로 위에 붙는 하단 CTA. 페이지가 짧을 땐 화면 하단으로 밀고(margin-top: auto),
    길 땐 sticky로 따라온다. 본문 흐름 안에 있어 콘텐츠를 가리지 않고 사이드바와도 겹치지 않는다. */
 .cta {
