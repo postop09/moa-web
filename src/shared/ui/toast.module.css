@@ -1,0 +1,47 @@
+.viewport {
+  position: fixed;
+  right: max(var(--space-4), env(safe-area-inset-right));
+  /* 페이지가 --toast-bottom-offset을 지정하면(예: 하단 고정 CTA) 그 위로 띄운다. */
+  bottom: calc(
+    var(--tab-bar-height) + env(safe-area-inset-bottom) + var(--space-4) +
+      var(--toast-bottom-offset, 0px)
+  );
+  left: max(var(--space-4), env(safe-area-inset-left));
+  z-index: 70;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.toast,
+.toastError {
+  max-width: 28rem;
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius);
+  background: var(--color-text);
+  color: var(--color-on-accent);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  box-shadow: var(--shadow-md);
+}
+
+.toastError {
+  background: var(--color-danger);
+}
+
+@media (min-width: 48rem) {
+  .viewport {
+    bottom: calc(
+      max(var(--space-6), env(safe-area-inset-bottom)) +
+        var(--toast-bottom-offset, 0px)
+    );
+  }
+}
+
+/* CTA가 sticky에서 static으로 바뀌는 낮은 화면에서는 띄울 필요가 없다. */
+@media (max-height: 40rem) {
+  .viewport {
+    --toast-bottom-offset: 0px;
+  }
+}

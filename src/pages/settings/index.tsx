@@ -7,6 +7,7 @@ import { AccountSection } from './ui/AccountSection';
 import { CategorySection } from './ui/CategorySection';
 import { HouseholdDangerSection } from './ui/HouseholdDangerSection';
 import { MembersSection } from './ui/MembersSection';
+import { SupportSection } from './ui/SupportSection';
 import styles from './ui/settings.module.css';
 
 export const SettingsPage = () => {
@@ -23,6 +24,8 @@ export const SettingsPage = () => {
       </header>
 
       <AccountSection />
+
+      <SupportSection />
 
       {householdId && profile ? (
         <MembersSection

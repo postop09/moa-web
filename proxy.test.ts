@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import { AuthError, AuthRetryableFetchError } from '@supabase/supabase-js';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { proxy } from './proxy';
+import { config, proxy } from './proxy';
 
 type CookieToSet = {
   name: string;
@@ -208,6 +208,63 @@ describe('proxy', () => {
       expect(lower).toMatch(/max-age=3600(;|$)/);
       expect(lower).toMatch(/path=\/(;|$)/);
       expect(lower).toMatch(/samesite=lax(;|$)/);
+    });
+  });
+  describe('고객센터·어드민 경로', () => {
+    const PROTECTED_PATHS = [
+      '/support',
+      '/support/inquiries',
+      '/support/inquiries/abc',
+      '/admin',
+      '/admin/inquiries',
+    ];
+
+    it('config.matcher에 /support/:path*와 /admin/:path*가 포함된다', () => {
+      expect(config.matcher).toContain('/support/:path*');
+      expect(config.matcher).toContain('/admin/:path*');
+    });
+
+    it('config.matcher에 /support와 /admin 루트 경로도 포함된다', () => {
+      // :path*는 루트를 포함하지만 기존 /write 패턴처럼 명시해도 된다.
+      const matches = (pattern: string, path: string) =>
+        new RegExp(`^${pattern.replace('/:path*', '(?:/.*)?')}$`).test(path);
+      PROTECTED_PATHS.forEach((path) => {
+        expect(config.matcher.some((pattern) => matches(pattern, path))).toBe(
+          true,
+        );
+      });
+    });
+
+    describe.each(PROTECTED_PATHS)('%s', (path) => {
+      it('세션이 없으면 /login으로 리다이렉트한다', async () => {
+        getClaimsMock.mockResolvedValue(NO_SESSION);
+
+        const response = await proxy(createRequest(path));
+
+        expectRedirect(response, '/login');
+      });
+
+      it('세션 + ready 쿠키가 있으면 리다이렉트 없이 통과한다', async () => {
+        getClaimsMock.mockResolvedValue(SESSION);
+
+        const response = await proxy(
+          createRequest(path, `${GATE_COOKIE}=ready:${USER_ID}`),
+        );
+
+        expect(response.status).toBe(200);
+        expect(response.headers.get('Location')).toBeNull();
+      });
+
+      it('세션은 있으나 ready 쿠키가 없으면 /auth/complete로 보낸다', async () => {
+        getClaimsMock.mockResolvedValue(SESSION);
+
+        const response = await proxy(createRequest(path));
+
+        expectRedirect(
+          response,
+          `/auth/complete?next=${encodeURIComponent(path)}`,
+        );
+      });
     });
   });
 });

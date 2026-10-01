@@ -8,10 +8,16 @@ import { writeHref } from '@/shared/config';
 
 import styles from './appShell.module.css';
 
+const supportHref = '/support';
+
 export const WriteFab = () => {
   const pathname = usePathname() ?? '';
 
-  if (pathname === writeHref || pathname.startsWith(`${writeHref}/`)) {
+  const isHidden = [writeHref, supportHref].some(
+    (href) => pathname === href || pathname.startsWith(`${href}/`),
+  );
+
+  if (isHidden) {
     return null;
   }
 

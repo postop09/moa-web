@@ -13,6 +13,8 @@ const isPassThroughPath = (pathname: string) => {
 
 // matcher(하단 config.matcher)에 없는 경로는 proxy가 아예 실행되지 않는다.
 // '/privacy', '/terms'는 matcher에 없어(항상 공개) 이 Set에 넣어도 도달하지 않는다.
+// 로그인이 필요한 '/support', '/admin' 하위 경로는 matcher에 반드시 있어야 보호된다.
+// (여기서는 비로그인 차단만 하고, 어드민 권한 검사는 app/admin 레이아웃에서 한다.)
 const PUBLIC_PATHS = new Set(['/login', '/welcome']);
 
 const isLoginPath = (pathname: string) => {
@@ -164,5 +166,9 @@ export const config = {
     '/write/:path*',
     '/calendar',
     '/settings',
+    '/support',
+    '/support/:path*',
+    '/admin',
+    '/admin/:path*',
   ],
 };

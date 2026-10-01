@@ -1,4 +1,6 @@
 .shell {
+  /* 모바일 하단 탭 바 높이(safe-area 제외). 하단 CTA·토스트·FAB가 같은 값을 쓴다. */
+  --tab-bar-height: 4.5rem;
   display: flex;
   min-height: 100dvh;
   background: var(--color-bg);
@@ -49,7 +51,7 @@
 .main {
   flex: 1;
   min-width: 0;
-  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+  padding-bottom: calc(var(--tab-bar-height) + env(safe-area-inset-bottom));
 }
 
 .sidebar {
@@ -151,7 +153,9 @@
 .fab {
   position: fixed;
   right: max(var(--space-4), env(safe-area-inset-right));
-  bottom: calc(4.5rem + env(safe-area-inset-bottom) + var(--space-3));
+  bottom: calc(
+    var(--tab-bar-height) + env(safe-area-inset-bottom) + var(--space-3)
+  );
   z-index: 30;
   display: flex;
   width: 3.5rem;
