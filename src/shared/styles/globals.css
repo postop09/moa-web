@@ -23,6 +23,18 @@
   --color-on-accent: #fff;
   /* 모달·시트 등의 배경 스크림 */
   --color-scrim: rgba(15, 23, 42, 0.4);
+  /* 주의가 필요한 상태(예: 어드민의 24시간 초과 대기). 배경 위 텍스트 대비 4.5:1 이상. */
+  --color-warning-text: #7c4a03;
+  --color-warning-bg: #fbf3e6;
+  --color-warning-pill-bg: #f6e5c8;
+  /* 어드민 셸(어두운 사이드바). 배경 위 텍스트 대비 4.5:1 이상. */
+  --color-admin-bg: #171c1a;
+  --color-admin-text: #f1f5f9;
+  --color-admin-muted: #a8b3bf;
+  --color-admin-hover: rgba(255, 255, 255, 0.08);
+  --color-admin-active: rgba(255, 255, 255, 0.14);
+  --color-admin-badge-bg: #dbeafe;
+  --color-admin-badge-text: #1e3a8a;
   /* 카드·패널이 떠 있을 때(householdPageTitle/write/calendar/history 4곳에서
      동일하게 반복) */
   --shadow-sm: 0 12px 28px rgba(15, 23, 42, 0.12);

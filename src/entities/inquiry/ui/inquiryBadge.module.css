@@ -19,6 +19,11 @@
   color: var(--color-accent);
 }
 
+.statusBadge[data-tone='warning'] {
+  background: var(--color-warning-pill-bg);
+  color: var(--color-warning-text);
+}
+
 .unreadBadge {
   display: inline-flex;
   align-items: center;

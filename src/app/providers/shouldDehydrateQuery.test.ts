@@ -86,4 +86,22 @@ describe('shouldDehydrateQuery', () => {
     expect(query.state.status).toBe('success');
     expect(shouldDehydrateQuery(query)).toBe(true);
   });
+
+  it('success 상태여도 운영자 문의 목록 쿼리 ["admin","inquiries",{...}] 는 영속화하지 않는다', () => {
+    const query = buildSuccessQuery([
+      'admin',
+      'inquiries',
+      { statuses: ['waiting'], page: 1 },
+    ]);
+
+    expect(query.state.status).toBe('success');
+    expect(shouldDehydrateQuery(query)).toBe(false);
+  });
+
+  it('success 상태여도 운영자 대기 건수 쿼리 ["admin","pendingCount"] 는 영속화하지 않는다', () => {
+    const query = buildSuccessQuery(['admin', 'pendingCount']);
+
+    expect(query.state.status).toBe('success');
+    expect(shouldDehydrateQuery(query)).toBe(false);
+  });
 });
