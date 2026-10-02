@@ -1,3 +1,12 @@
 export { adminQueryKeys } from './config/queryKeys';
+export { useAddAdminMemo } from './model/useAddAdminMemo';
 export { useAdminInquiries } from './model/useAdminInquiries';
+export { useAdminInquiry } from './model/useAdminInquiry';
+export { useAdminInquiryMessages } from './model/useAdminInquiryMessages';
+export { useAdminOperators } from './model/useAdminOperators';
 export { useAdminPendingCount } from './model/useAdminPendingCount';
+export { useAdminRecentInquiries } from './model/useAdminRecentInquiries';
+export { useCloseAdminInquiry } from './model/useCloseAdminInquiry';
+export { useOpenAdminInquiry } from './model/useOpenAdminInquiry';
+export { useReplyAdminInquiry } from './model/useReplyAdminInquiry';
+export { useUpdateAdminInquiryMeta } from './model/useUpdateAdminInquiryMeta';

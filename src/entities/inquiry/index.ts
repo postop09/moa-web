@@ -25,6 +25,7 @@ export {
   getInquiryCategoryLabel,
 } from './config/inquiryCategories';
 export type { InquiryCategory } from './config/inquiryCategories';
+export { INQUIRY_IMAGE_REJECT_MESSAGES } from './config/inquiryImageRejectMessages';
 export {
   getAdminStatusLabel,
   getUserStatusLabel,
@@ -51,6 +52,7 @@ export {
   formatInquiryDetailDate,
   formatInquiryListDate,
 } from './lib/formatInquiryDate';
+export { isDefinitiveRejection } from './lib/isDefinitiveRejection';
 export { getWaitingHours, isOverdue } from './lib/getWaitingHours';
 export { mapJevCategory } from './lib/mapJevCategory';
 export type { ClassifyInquiryRes } from './model/classifyInquiryRes';

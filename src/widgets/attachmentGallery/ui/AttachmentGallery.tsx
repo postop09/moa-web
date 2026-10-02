@@ -3,20 +3,18 @@
 import { useRef, useState } from 'react';
 
 import { useAttachmentUrls } from '@/features/inquiry';
+import { useRestoreFocus } from '@/shared/lib';
 
 import { PHOTO_FAILED_TEXT } from '../config/texts';
-import { useRestoreFocus } from '../model/useRestoreFocus';
 
-import styles from './inquiryDetail.module.css';
+import styles from './attachmentGallery.module.css';
 import { PhotoViewer } from './PhotoViewer';
 
 type Props = {
   paths: string[];
-  /** 사진 버튼 이름에서 내 문의와 운영자 답변의 사진을 구분한다. */
-  owner: 'question' | 'reply';
+  /** 사진 버튼 이름에서 작성자별 사진을 구분한다. 예) '내 문의', '운영자 답변' */
+  ownerLabel: string;
 };
-
-const OWNER_LABEL = { question: '내 문의', reply: '운영자 답변' } as const;
 
 type ThumbnailProps = {
   url: string;
@@ -53,7 +51,7 @@ const Thumbnail = ({ url, label, onOpen, buttonRef }: ThumbnailProps) => {
   );
 };
 
-export const AttachmentGallery = ({ paths, owner }: Props) => {
+export const AttachmentGallery = ({ paths, ownerLabel }: Props) => {
   const { data, isError } = useAttachmentUrls(paths);
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
   const openedFromRef = useRef(0);
@@ -86,7 +84,7 @@ export const AttachmentGallery = ({ paths, owner }: Props) => {
                 <Thumbnail
                   key={url}
                   url={url}
-                  label={`${OWNER_LABEL[owner]} 첨부 사진 ${index + 1} 크게 보기`}
+                  label={`${ownerLabel} 첨부 사진 ${index + 1} 크게 보기`}
                   onOpen={() => openViewer(index)}
                   buttonRef={(element) => {
                     thumbRefs.current[index] = element;

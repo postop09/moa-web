@@ -8,14 +8,13 @@ import {
   useInquiry,
   useInquiryMessages,
 } from '@/features/inquiry';
-import { useSafeBack } from '@/shared/lib';
+import { useRestoreFocus, useSafeBack } from '@/shared/lib';
 import { PageHeader, useToast } from '@/shared/ui';
 
 import { INQUIRIES_PATH } from '../config/texts';
 import { useCloseAction } from '../model/useCloseAction';
 import { useMarkReadOnce } from '../model/useMarkReadOnce';
 import { useRateAction } from '../model/useRateAction';
-import { useRestoreFocus } from '../model/useRestoreFocus';
 
 import { BottomBar } from './BottomBar';
 import { CloseInquiryDialog } from './CloseInquiryDialog';

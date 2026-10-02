@@ -1,0 +1,258 @@
+.page {
+  display: flex;
+  max-width: 80rem;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+/* 헤더 */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.crumbLink {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  color: var(--color-muted-strong);
+  font-size: 0.9375rem;
+  text-decoration: none;
+}
+
+.crumbLink:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.textButton {
+  min-height: 2.75rem;
+  padding: 0 var(--space-2);
+  border: 0;
+  background: transparent;
+  color: var(--color-muted-strong);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9375rem;
+}
+
+.textButton:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.crumbLink:focus-visible,
+.textButton:focus-visible,
+.stateLink:focus-visible,
+.title:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
+  color: var(--color-muted-strong);
+  font-size: 0.9375rem;
+}
+
+/* 24시간 넘게 기다린 문의. 색만으로 알리지 않고 문구를 함께 보인다. */
+.overdue,
+.categoryChip {
+  padding: 0 var(--space-2);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+}
+
+.overdue {
+  background: var(--color-warning-pill-bg);
+  color: var(--color-warning-text);
+}
+
+.categoryChip {
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 1px var(--color-border);
+  color: var(--color-muted-strong);
+}
+
+.categoryChip[data-uncategorized='true'] {
+  background: var(--color-warning-bg);
+  box-shadow: inset 0 0 0 1px var(--color-warning-text);
+  color: var(--color-warning-text);
+}
+
+.peekNote {
+  margin: 0;
+  color: var(--color-muted-strong);
+  font-size: 0.9375rem;
+}
+
+/* 두 칸 배치: 좁은 화면에서는 한 줄로 쌓는다. */
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.main {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* 스레드 */
+.thread {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.question,
+.reply,
+.memo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: calc(var(--radius) * 2);
+  background: var(--color-surface);
+}
+
+/* 텍스트 대비 4.5:1 이상이 되도록 표면색 위에 옅게만 섞는다. */
+.reply {
+  background: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface));
+}
+
+.memo {
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+}
+
+.cardTitle,
+.cardTitleAccent,
+.memoTitle {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.cardTitle {
+  color: var(--color-muted-strong);
+}
+
+.cardTitleAccent {
+  color: var(--color-accent);
+}
+
+.memoTitle {
+  color: var(--color-warning-text);
+}
+
+.cardMeta,
+.memoMeta {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.cardMeta {
+  color: var(--color-muted-strong);
+}
+
+.body {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+.question .body,
+.reply .body {
+  color: var(--color-text);
+}
+
+/* 로딩·오류·없음 */
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.skeletonBlock {
+  display: block;
+  height: 8rem;
+  border-radius: calc(var(--radius) * 2);
+  background: var(--color-border);
+}
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-4);
+  border-radius: calc(var(--radius) * 2);
+  background: var(--color-surface);
+  text-align: center;
+}
+
+.stateText {
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+.stateLink {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .skeletonBlock {
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (min-width: 64rem) {
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 22rem;
+    align-items: start;
+    gap: var(--space-6);
+  }
+}

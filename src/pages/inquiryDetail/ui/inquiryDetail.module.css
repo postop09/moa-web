@@ -41,7 +41,6 @@
 }
 
 .headerAction:focus-visible,
-.thumbButton:focus-visible,
 .starButton:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
@@ -129,99 +128,6 @@
   line-height: 1.6;
   overflow-wrap: anywhere;
   white-space: pre-line;
-}
-
-/* 첨부 사진 */
-.thumbs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.thumbItem {
-  display: flex;
-}
-
-.thumbButton,
-.thumbSkeleton,
-.thumbMissing {
-  display: flex;
-  width: 5.5rem;
-  height: 5.5rem;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  overflow: hidden;
-  border: 0;
-  border-radius: calc(var(--radius) * 1.5);
-  background: var(--color-border);
-}
-
-.thumbButton {
-  cursor: pointer;
-}
-
-.thumbImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.thumbMissing {
-  padding: var(--space-2);
-  color: var(--color-muted-strong);
-  font-size: 0.75rem;
-  text-align: center;
-}
-
-/* 사진 뷰어 */
-.viewerBody {
-  display: flex;
-  min-height: 0;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.viewerImage {
-  min-height: 0;
-  max-width: 100%;
-  flex: 1;
-  object-fit: contain;
-}
-
-.viewerControls {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-}
-
-.viewerButton {
-  display: inline-flex;
-  width: 2.75rem;
-  height: 2.75rem;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: 1px solid var(--color-on-accent);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--color-on-accent);
-  cursor: pointer;
-}
-
-.viewerButton[aria-disabled='true'] {
-  cursor: default;
-  opacity: 0.4;
-}
-
-.viewerButton:focus-visible {
-  outline: 2px solid var(--color-on-accent);
-  outline-offset: 2px;
 }
 
 /* 별점 */
@@ -398,16 +304,4 @@
   margin: 0;
   color: var(--color-muted-strong);
   font-size: 0.875rem;
-}
-
-.viewerMissing {
-  display: flex;
-  min-height: 0;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  color: var(--color-on-accent);
-  font-size: 0.9375rem;
-  text-align: center;
 }

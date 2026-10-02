@@ -2219,6 +2219,101 @@ describe('InquiryWritePage - 첨부 정리 정책 (확정 거절만 삭제)', ()
   });
 });
 
+// supabase-js 는 fetch 실패를 던지지 않고 code 가 빈 문자열인 이 객체로 돌려준다.
+const NETWORK_SHAPE = {
+  message: 'TypeError: Failed to fetch',
+  details: '',
+  hint: '',
+  code: '',
+};
+
+describe('InquiryWritePage - 실제 네트워크 실패 모양(빈 code)과 첨부 정리', () => {
+  const NETWORK_MESSAGE = '연결을 확인하고 다시 시도해주세요.';
+
+  const failAndWait = async (container: HTMLElement) => {
+    attach(container, [makeFile('a.png')]);
+    fireEvent.click(submitButton());
+    await waitFor(() => expect(inlineAlert()).toBeInTheDocument());
+    await act(async () => {});
+  };
+
+  it('new: 확정 거절이 아니므로 올린 파일을 정리하지 않고 연결 확인 안내를 보인다', async () => {
+    vi.mocked(createInquiry).mockRejectedValue(NETWORK_SHAPE);
+    const { container } = renderPage({ mode: 'new' });
+    fillValid();
+
+    await failAndWait(container);
+
+    expect(deleteInquiryAttachments).not.toHaveBeenCalled();
+    expect(inlineAlert()).toHaveTextContent(NETWORK_MESSAGE);
+    expect(toastMessage()).toBeNull();
+    expect(router.replace).not.toHaveBeenCalled();
+    expect(titleInput()).toHaveValue(TITLE);
+    expect(bodyInput()).toHaveValue(BODY);
+  });
+
+  it('followUp: 추가 문의도 정리하지 않고 연결 확인 안내를 보인다', async () => {
+    vi.mocked(addInquiryFollowUp).mockRejectedValue(NETWORK_SHAPE);
+    const { container } = renderPage({ mode: 'followUp', inquiryId: 'inq-9' });
+    typeBody(BODY);
+
+    await failAndWait(container);
+
+    expect(deleteInquiryAttachments).not.toHaveBeenCalled();
+    expect(inlineAlert()).toHaveTextContent(NETWORK_MESSAGE);
+    expect(router.replace).not.toHaveBeenCalled();
+  });
+
+  it('재시도하면 새로 올린다 (고아 파일은 남을 수 있지만 서버가 처리했을 수 있는 파일을 지우지는 않는다)', async () => {
+    vi.mocked(createInquiry).mockRejectedValueOnce(NETWORK_SHAPE);
+    const { container } = renderPage({ mode: 'new' });
+    fillValid();
+    await failAndWait(container);
+    await waitFor(() => expect(isDisabled(submitButton())).toBe(false));
+
+    fireEvent.click(submitButton());
+
+    await waitFor(() => expect(createInquiry).toHaveBeenCalledTimes(2));
+    expect(deleteInquiryAttachments).not.toHaveBeenCalled();
+  });
+
+  it.each<[string, unknown]>([
+    ['PostgREST {code: 23514}', { code: '23514', message: 'check violation' }],
+    [
+      '{code: P0001, message: conflict}',
+      { code: 'P0001', message: 'conflict' },
+    ],
+  ])(
+    'new: 비어 있지 않은 code 가 있는 거절(%s)은 올린 파일을 정리한다',
+    async (_name, error) => {
+      vi.mocked(createInquiry).mockRejectedValue(error);
+      const { container } = renderPage({ mode: 'new' });
+      fillValid();
+
+      await failAndWait(container);
+
+      expect(deleteInquiryAttachments).toHaveBeenCalledWith(SUPABASE, [
+        expect.stringMatching(/^user-1\/.+\/a\.png$/),
+      ]);
+    },
+  );
+
+  it('followUp: 비어 있지 않은 code 가 있는 거절은 올린 파일을 정리한다', async () => {
+    vi.mocked(addInquiryFollowUp).mockRejectedValue({
+      code: 'P0001',
+      message: 'conflict',
+    });
+    const { container } = renderPage({ mode: 'followUp', inquiryId: 'inq-9' });
+    typeBody(BODY);
+
+    await failAndWait(container);
+
+    expect(deleteInquiryAttachments).toHaveBeenCalledWith(SUPABASE, [
+      expect.stringMatching(/^user-1\/.+\/a\.png$/),
+    ]);
+  });
+});
+
 describe('InquiryWritePage - HEIC/MIME 와 미리보기 실패', () => {
   it('type 이 빈 문자열이어도 .heic 확장자면 추가된다 (대소문자 무시)', () => {
     const { container } = renderPage({ mode: 'new' });

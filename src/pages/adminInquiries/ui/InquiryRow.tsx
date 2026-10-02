@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { MouseEvent } from 'react';
 
+import { formatWaitingTime } from '@/entities/admin';
 import type { AdminInquiryListItem } from '@/entities/admin';
 import {
   INQUIRY_CATEGORY_LABELS,
@@ -12,7 +13,6 @@ import {
   isOverdue,
 } from '@/entities/inquiry';
 
-import { formatWaitingTime } from '../lib/formatWaitingTime';
 import { getAssigneeName } from '../lib/getAssigneeName';
 import styles from './adminInquiries.module.css';
 

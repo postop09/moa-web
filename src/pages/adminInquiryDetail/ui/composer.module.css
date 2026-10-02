@@ -1,0 +1,379 @@
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: calc(var(--radius) * 2);
+  background: var(--color-surface);
+}
+
+/* 탭 */
+.tabs {
+  display: inline-flex;
+  align-self: flex-start;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+}
+
+.tab {
+  min-width: 4.5rem;
+  min-height: 2.75rem;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: calc(var(--radius) * 0.75);
+  background: transparent;
+  color: var(--color-muted-strong);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 500;
+}
+
+.tab[aria-selected='true'] {
+  background: var(--color-surface);
+  box-shadow: 0 0 0 1px var(--color-border);
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* 내부 메모 탭은 스레드의 메모 카드와 같은 경고 계열 색으로 구분한다. */
+.panel[data-kind='memo'] {
+  padding: var(--space-3);
+  border-radius: var(--radius);
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+}
+
+.panel[data-kind='memo'] .counter,
+.panel[data-kind='memo'] .panelNote {
+  color: var(--color-warning-text);
+}
+
+.panelNote {
+  margin: 0;
+  color: var(--color-muted-strong);
+  font-size: 0.875rem;
+}
+
+/* 미분류 문의는 답변 전에 카테고리부터 지정해야 한다. */
+.banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius);
+  background: var(--color-warning-bg);
+}
+
+.bannerText {
+  margin: 0;
+  color: var(--color-warning-text);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.bannerButton {
+  min-height: 2.75rem;
+  padding-inline: var(--space-3);
+}
+
+/* 입력 */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 10rem;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-muted);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.textarea:focus-visible {
+  border-color: var(--color-accent);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.textarea[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.textarea[readonly] {
+  opacity: 0.65;
+}
+
+.counterRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: var(--space-1) var(--space-3);
+}
+
+.counter {
+  margin: 0;
+  color: var(--color-muted-strong);
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+.counterOver {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.counter[data-over='true'] {
+  color: var(--color-danger);
+  font-weight: 700;
+}
+
+/* 사진 */
+.photos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.photoAdd {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-3);
+  border: 1px dashed var(--color-muted);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-muted-strong);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9375rem;
+}
+
+.photoAdd:hover:not([aria-disabled='true']) {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.photoAdd[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.photoAdd:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.thumbRemove:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.photoFullHint {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--color-muted-strong);
+  font-size: 0.875rem;
+}
+
+.photoCount {
+  color: var(--color-muted-strong);
+  font-size: 0.875rem;
+}
+
+.thumbs {
+  display: flex;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.thumbs:empty {
+  display: none;
+}
+
+.thumb {
+  position: relative;
+  width: 5.5rem;
+  height: 5.5rem;
+}
+
+/* 잘라내기는 이미지 틀에서만 한다. 삭제 버튼의 포커스 링이 잘리지 않게 한다. */
+.thumbFrame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--color-border);
+}
+
+.thumbImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbFallback {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2) var(--space-2) 1.75rem;
+  color: var(--color-muted-strong);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.thumbName {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  padding: var(--space-1) var(--space-2);
+  background: color-mix(in srgb, var(--color-text) 80%, transparent);
+  color: var(--color-on-accent);
+  font-size: 0.75rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 시각 크기는 작게, 터치 영역은 44px 로 확보한다. */
+.thumbRemove {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: var(--space-1);
+  border: 0;
+  background: transparent;
+  color: var(--color-on-accent);
+  cursor: pointer;
+}
+
+.thumbRemove[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.thumbRemove svg {
+  box-sizing: content-box;
+  padding: var(--space-1);
+  border-radius: 999px;
+  background: var(--color-text);
+}
+
+/* 안내와 버튼 */
+.notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.noticeText {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 0.9375rem;
+}
+
+.followUp,
+.hint {
+  margin: 0;
+  color: var(--color-muted-strong);
+  font-size: 0.875rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.actions > button {
+  min-width: 8rem;
+  min-height: 2.75rem;
+}
+
+.actions > button[aria-disabled='true'] {
+  cursor: not-allowed;
+}
+
+.notice button {
+  min-height: 2.75rem;
+  padding-inline: var(--space-3);
+}
+
+/* 등록 전 미리보기 */
+.previewBody,
+.previewMeta {
+  display: block;
+}
+
+.previewBody {
+  max-height: 40vh;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.previewMeta {
+  margin-top: var(--space-2);
+  color: var(--color-muted-strong);
+  font-size: 0.875rem;
+}
+
+/* 종결 안내 */
+.closed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border-radius: calc(var(--radius) * 2);
+  background: var(--color-surface);
+}
+
+.closedTitle {
+  margin: 0;
+  font-weight: 700;
+}
+
+.closedReason {
+  margin: 0;
+  color: var(--color-muted-strong);
+  font-size: 0.9375rem;
+  overflow-wrap: anywhere;
+}

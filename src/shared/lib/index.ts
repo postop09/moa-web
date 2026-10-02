@@ -17,3 +17,5 @@ export { useDismissable } from './useDismissable';
 export { isUuid } from './isUuid';
 export { InAppNavigationTracker } from './InAppNavigationTracker';
 export { useSafeBack } from './useSafeBack';
+export { useBeforeUnloadGuard } from './useBeforeUnloadGuard';
+export { useRestoreFocus } from './useRestoreFocus';

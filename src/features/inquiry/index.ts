@@ -11,3 +11,9 @@ export { useDeleteInquiry } from './model/useDeleteInquiry';
 export { useMarkInquiryRead } from './model/useMarkInquiryRead';
 export { useMyInquiries } from './model/useMyInquiries';
 export { useRateInquiry } from './model/useRateInquiry';
+export { useImageAttachments } from './model/useImageAttachments';
+export type {
+  AddImagesResult,
+  ImageAttachment,
+  ImageRejectReason,
+} from './model/useImageAttachments';
