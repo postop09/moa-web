@@ -3,8 +3,8 @@ import { useId } from 'react';
 
 import { formatInquiryDetailDate } from '@/entities/inquiry';
 import type { InquiryMessage } from '@/entities/inquiry';
+import { AttachmentGallery } from '@/widgets/attachmentGallery';
 
-import { AttachmentGallery } from './AttachmentGallery';
 import styles from './inquiryDetail.module.css';
 
 type Props = {
@@ -39,7 +39,7 @@ export const MessageThread = ({ title, messages }: Props) => {
                 {message.attachments.length > 0 ? (
                   <AttachmentGallery
                     paths={message.attachments}
-                    owner="reply"
+                    ownerLabel="운영자 답변"
                   />
                 ) : null}
               </article>
@@ -58,7 +58,7 @@ export const MessageThread = ({ title, messages }: Props) => {
                 {message.attachments.length > 0 ? (
                   <AttachmentGallery
                     paths={message.attachments}
-                    owner="question"
+                    ownerLabel="내 문의"
                   />
                 ) : null}
               </article>

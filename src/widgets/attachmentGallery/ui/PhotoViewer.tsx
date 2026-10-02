@@ -7,7 +7,7 @@ import { Modal } from '@/shared/ui';
 
 import { PHOTO_FAILED_TEXT } from '../config/texts';
 
-import styles from './inquiryDetail.module.css';
+import styles from './attachmentGallery.module.css';
 
 type Props = {
   /** 서명에 실패한 사진은 null. 순서는 첨부 순서와 같다. */

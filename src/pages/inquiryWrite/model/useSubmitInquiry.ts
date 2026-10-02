@@ -7,6 +7,7 @@ import {
   classifyInquiry,
   collectDeviceInfo,
   deleteInquiryAttachments,
+  isDefinitiveRejection,
   uploadInquiryAttachment,
   type ClassifyInquiryRes,
 } from '@/entities/inquiry';
@@ -18,7 +19,6 @@ import {
 import { createBrowserClient } from '@/shared/api';
 
 import { AUTH_REQUIRED_MESSAGE } from '../lib/getSubmitFailure';
-import { isDefinitiveRejection } from '../lib/isDefinitiveRejection';
 import type { WriteMode } from '../lib/parseWriteMode';
 import { createPhotoUploadError } from '../lib/photoUploadError';
 

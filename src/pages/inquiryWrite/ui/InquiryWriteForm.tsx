@@ -9,12 +9,11 @@ import {
   INQUIRY_TITLE_MAX,
   validateInquiryForm,
 } from '@/entities/inquiry';
-import { useSafeBack } from '@/shared/lib';
+import { useBeforeUnloadGuard, useSafeBack } from '@/shared/lib';
 import { Button, ConfirmDialog, PageHeader, useToast } from '@/shared/ui';
 
 import { EDIT_LOCKED_MESSAGE, getSubmitFailure } from '../lib/getSubmitFailure';
 import type { WriteMode } from '../lib/parseWriteMode';
-import { useBeforeUnloadGuard } from '../model/useBeforeUnloadGuard';
 import { useClassifySuggestion } from '../model/useClassifySuggestion';
 import { usePhotoAttachments } from '../model/usePhotoAttachments';
 import { useSubmitInquiry } from '../model/useSubmitInquiry';

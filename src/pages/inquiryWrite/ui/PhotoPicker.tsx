@@ -4,15 +4,14 @@ import { Camera, X } from 'lucide-react';
 import { useEffect, useId, useRef, useState, type ChangeEvent } from 'react';
 
 import { INQUIRY_IMAGE_TYPES } from '@/entities/inquiry';
-
-import type { Photo } from '../model/usePhotoAttachments';
+import type { ImageAttachment } from '@/features/inquiry';
 
 import styles from './inquiryWrite.module.css';
 
 const ACCEPT = INQUIRY_IMAGE_TYPES.join(',');
 
 type Props = {
-  photos: Photo[];
+  photos: ImageAttachment[];
   max: number;
   /** 첨부/삭제 결과를 스크린 리더에 알리는 문구 */
   announcement: string;
