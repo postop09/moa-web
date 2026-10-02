@@ -3,6 +3,7 @@
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
+import { UnreadReplyBadge } from '@/entities/inquiry';
 import { useUnreadReplyCount } from '@/features/inquiry';
 
 import styles from './settings.module.css';
@@ -18,9 +19,7 @@ export const SupportSection = () => {
 
       <Link href="/support" className={styles.linkRow}>
         <span className={styles.linkRowLabel}>고객센터</span>
-        {unreadCount > 0 ? (
-          <span className={styles.newBadge}>새 답변 {unreadCount}</span>
-        ) : null}
+        {unreadCount > 0 ? <UnreadReplyBadge count={unreadCount} /> : null}
         <ChevronRight size={20} strokeWidth={2} aria-hidden />
       </Link>
     </section>

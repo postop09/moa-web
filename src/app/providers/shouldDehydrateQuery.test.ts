@@ -3,6 +3,7 @@ import type { QueryKey } from '@tanstack/react-query';
 import { describe, expect, it } from 'vitest';
 
 import { authQueryKeys } from '@/entities/auth';
+import { inquiryQueryKeys } from '@/features/inquiry';
 
 import { shouldDehydrateQuery } from './shouldDehydrateQuery';
 
@@ -68,5 +69,21 @@ describe('shouldDehydrateQuery', () => {
 
     expect(query.state.status).toBe('error');
     expect(shouldDehydrateQuery(query)).toBe(false);
+  });
+
+  it('success 상태여도 첨부 서명 URL 쿼리(inquiries attachmentUrls)는 영속화하지 않는다', () => {
+    const query = buildSuccessQuery([
+      ...inquiryQueryKeys.attachmentUrls(['u/inq-1/a.jpg']),
+    ]);
+
+    expect(query.state.status).toBe('success');
+    expect(shouldDehydrateQuery(query)).toBe(false);
+  });
+
+  it('같은 inquiries 네임스페이스의 다른 success 쿼리(상세)는 계속 영속화한다', () => {
+    const query = buildSuccessQuery([...inquiryQueryKeys.detail('inq-1')]);
+
+    expect(query.state.status).toBe('success');
+    expect(shouldDehydrateQuery(query)).toBe(true);
   });
 });

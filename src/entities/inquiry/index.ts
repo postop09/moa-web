@@ -73,3 +73,6 @@ export type { InquiryStatusFilter } from './model/inquiryStatusFilter';
 export type { RateInquiryReq } from './model/rateInquiryReq';
 export type { UpdateInquiryReq } from './model/updateInquiryReq';
 export type { UploadInquiryAttachmentReq } from './model/uploadInquiryAttachmentReq';
+
+export { InquiryStatusBadge } from './ui/InquiryStatusBadge';
+export { UnreadReplyBadge } from './ui/UnreadReplyBadge';
