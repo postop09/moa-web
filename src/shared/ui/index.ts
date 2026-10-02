@@ -4,4 +4,6 @@ export { DatePicker } from './DatePicker';
 export { GridBackdrop } from './GridBackdrop';
 export { Modal } from './Modal';
 export { MoaLogo } from './MoaLogo';
+export { PageHeader } from './PageHeader';
 export { TimePicker } from './TimePicker';
+export { ToastViewport, useToast } from './Toast';

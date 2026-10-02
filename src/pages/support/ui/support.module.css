@@ -1,0 +1,422 @@
+.page {
+  display: flex;
+  min-height: calc(
+    100dvh - var(--tab-bar-height) - env(safe-area-inset-bottom)
+  );
+  max-width: 40rem;
+  flex-direction: column;
+  padding: 0 var(--space-4);
+}
+
+:global(html):has(.page) {
+  /* 키보드 포커스 이동 시 sticky CTA와 탭 바에 가리지 않게 한다. */
+  scroll-padding-bottom: calc(
+    var(--tab-bar-height, 0px) + env(safe-area-inset-bottom) + 6.5rem
+  );
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-bottom: var(--space-6);
+}
+
+.notice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--color-accent) 8%, var(--color-bg));
+  color: var(--color-text);
+  font-size: 0.875rem;
+}
+
+.notice svg {
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 3rem;
+  padding: 0 var(--space-4);
+  /* 입력창 경계는 비텍스트 대비 3:1 이상이어야 해서 --color-border 대신 --color-muted를 쓴다. */
+  border: 1px solid var(--color-muted);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-muted);
+}
+
+.search:focus-within {
+  border-color: var(--color-accent);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  min-height: 2.75rem;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 1rem;
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: var(--color-muted);
+}
+
+.chipsArea {
+  display: flex;
+  flex-direction: column;
+}
+
+.scopeLabel {
+  /* 라벨 유무와 관계없이 한 줄 높이를 확보해 레이아웃이 밀리지 않게 한다. */
+  min-height: 1.25rem;
+  margin: 0;
+  padding: 0 var(--space-1);
+  color: var(--color-muted-strong);
+  font-size: 0.8125rem;
+}
+
+.chips {
+  display: flex;
+  gap: var(--space-2);
+  margin: 0 calc(var(--space-4) * -1);
+  padding: var(--space-1) var(--space-4);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.chips::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  flex-shrink: 0;
+  min-height: 2.75rem;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.chip[aria-pressed='true'] {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.chip:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.chip:focus-visible,
+.faqQuestion:focus-visible,
+.helpfulButton:focus-visible,
+.helpfulDone:focus-visible,
+.retryButton:focus-visible,
+.inquiriesLink:focus-visible,
+.ctaButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.faqSection,
+.state,
+.inquiriesLink {
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.faqSection {
+  overflow: hidden;
+}
+
+.faqTitle {
+  margin: 0;
+  padding: var(--space-4) var(--space-4) var(--space-2);
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.faqList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.faqItem + .faqItem {
+  border-top: 1px solid var(--color-border);
+}
+
+.faqHeading {
+  margin: 0;
+  font-size: inherit;
+}
+
+.faqQuestion {
+  display: flex;
+  width: 100%;
+  min-height: 3.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 1rem;
+  text-align: left;
+}
+
+.faqQuestion span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.chevron,
+.chevronOpen {
+  flex-shrink: 0;
+  color: var(--color-muted);
+  transition: transform 0.15s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.faqAnswer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: 0 var(--space-4) var(--space-4);
+}
+
+.faqAnswerText {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.helpfulButton {
+  min-height: 2.75rem;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-accent);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.helpfulButton:hover {
+  border-color: var(--color-accent);
+}
+
+.helpfulDone {
+  font: inherit;
+}
+
+.helpfulDone {
+  display: flex;
+  min-height: 2.75rem;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-muted);
+  cursor: default;
+  font-size: 0.875rem;
+}
+
+.empty {
+  margin: 0;
+  padding: var(--space-4);
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+}
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+}
+
+.stateText {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.9375rem;
+}
+
+.retryButton {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--space-5);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-accent);
+  cursor: pointer;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.skeletonRow {
+  display: block;
+  height: 2.75rem;
+  border-radius: var(--radius);
+  background: var(--color-border);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonRow {
+    animation: none;
+  }
+
+  .chevron,
+  .chevronOpen {
+    transition: none;
+  }
+}
+
+.inquiriesLink {
+  display: flex;
+  min-height: 3.5rem;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-muted);
+}
+
+.inquiriesLabel {
+  flex: 1;
+  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.newBadge {
+  padding: 0.125rem var(--space-2);
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* 탭 바 바로 위에 붙는 하단 CTA. 페이지가 짧을 땐 화면 하단으로 밀고(margin-top: auto),
+   길 땐 sticky로 따라온다. 본문 흐름 안에 있어 콘텐츠를 가리지 않고 사이드바와도 겹치지 않는다. */
+.cta {
+  position: sticky;
+  bottom: calc(var(--tab-bar-height) + env(safe-area-inset-bottom));
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: auto calc(var(--space-4) * -1) 0;
+  padding: var(--space-3) var(--space-4) var(--space-3);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+  box-shadow: 0 -4px 12px rgba(15, 23, 42, 0.06);
+}
+
+.ctaButton {
+  display: flex;
+  min-height: 3.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.ctaButton:hover {
+  background: color-mix(in srgb, var(--color-accent) 88%, #000);
+}
+
+.ctaHint {
+  margin: 0;
+  color: var(--color-muted-strong);
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+/* 낮은 화면(가로 모드 등)에서는 고정 CTA가 본문을 거의 다 가리므로 흐름 안에 둔다. */
+@media (max-height: 40rem) {
+  .cta {
+    position: static;
+    box-shadow: none;
+  }
+}
+
+@media (min-width: 48rem) {
+  :global(html):has(.page) {
+    scroll-padding-bottom: 6.5rem;
+  }
+
+  .page {
+    min-height: 100dvh;
+    padding: 0 var(--space-6);
+  }
+
+  .chips {
+    margin: 0 calc(var(--space-6) * -1);
+    padding: var(--space-1) var(--space-6);
+  }
+
+  .cta {
+    bottom: 0;
+    margin: auto calc(var(--space-6) * -1) 0;
+    padding: var(--space-3) var(--space-6) var(--space-4);
+  }
+}

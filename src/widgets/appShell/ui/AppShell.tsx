@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 
+import { ToastViewport } from '@/shared/ui';
+
 import { BottomTabBar } from './BottomTabBar';
 import { NavigationProgress } from './NavigationProgress';
 import { NoHouseholdRedirect } from './NoHouseholdRedirect';
@@ -20,6 +22,7 @@ export const AppShell = ({ children }: Props) => {
       <div className={styles.main}>{children}</div>
       <BottomTabBar />
       <WriteFab />
+      <ToastViewport />
     </div>
   );
 };
