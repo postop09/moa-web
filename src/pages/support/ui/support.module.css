@@ -128,8 +128,6 @@
 
 .chip:focus-visible,
 .faqQuestion:focus-visible,
-.helpfulButton:focus-visible,
-.helpfulDone:focus-visible,
 .retryButton:focus-visible,
 .inquiriesLink:focus-visible,
 .ctaButton:focus-visible {
@@ -217,38 +215,6 @@
   font-size: 0.9375rem;
   line-height: 1.6;
   white-space: pre-line;
-}
-
-.helpfulButton {
-  min-height: 2.75rem;
-  padding: 0 var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  background: var(--color-surface);
-  color: var(--color-accent);
-  cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.helpfulButton:hover {
-  border-color: var(--color-accent);
-}
-
-.helpfulDone {
-  font: inherit;
-}
-
-.helpfulDone {
-  display: flex;
-  min-height: 2.75rem;
-  align-items: center;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--color-muted);
-  cursor: default;
-  font-size: 0.875rem;
 }
 
 .empty {

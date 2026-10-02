@@ -404,13 +404,13 @@ erDiagram
 | `category`     | `string` | `InquiryCategory` 7개 중 하나 (CHECK)                    |
 | `question`     | `string` |                                                          |
 | `answer`       | `string` |                                                          |
-| `helpfulCount` | `number` | 0 이상. `increment_faq_helpful` RPC로만 증가             |
+| `helpfulCount` | `number` | 0 이상. 앱은 증가시키지 않는다(아래 RPC 미사용)          |
 | `sortOrder`    | `number` | 목록은 `helpfulCount` 내림차순 다음 `sortOrder` 오름차순 |
 | `createdAt`    | `string` |                                                          |
 
 #### faq-helpful-votes
 
-테이블명: `faq-helpful-votes`. RPC 전용(`authenticated`에 직접 권한 없음)이며 `("faqId", "userId")` 복합 PK로 사용자당 FAQ 1회 집계를 보장한다.
+테이블명: `faq-helpful-votes`. **앱이 쓰지 않는다**("도움이 됐어요" 기능 제거, 후속 마이그레이션으로 삭제 가능). RPC 전용(`authenticated`에 직접 권한 없음)이며 `("faqId", "userId")` 복합 PK로 사용자당 FAQ 1회 집계를 보장한다.
 
 | 필드        | 타입     | 비고                                  |
 | ----------- | -------- | ------------------------------------- |
@@ -487,7 +487,7 @@ private 버킷, 장당 10MB, 허용 MIME `image/jpeg`·`image/png`·`image/webp`
 | `close_inquiry(p_inquiry_id)`                                                             | 사용자 종결(해결됐어요): `answered` → `closed`                                 | `unauthorized`, `not_found`, `invalid_state`                                                                                            |
 | `rate_inquiry(p_inquiry_id, p_rating)`                                                    | 별점 1–5, 1회. `answered`/`closed`이고 `reply`가 있어야 함                     | `unauthorized`, `invalid_rating`, `not_found`, `invalid_state`, `already_rated`                                                         |
 | `mark_inquiry_read(p_inquiry_id)`                                                         | `hasUnreadReply`를 끈다. 본인 문의가 아니면 아무 일도 하지 않음                | `unauthorized`                                                                                                                          |
-| `increment_faq_helpful(p_faq_id)`                                                         | `faq-helpful-votes`에 투표를 넣고, 처음일 때만 `helpfulCount` +1               | `unauthorized`, `not_found`                                                                                                             |
+| `increment_faq_helpful(p_faq_id)`                                                         | (앱 미사용) `faq-helpful-votes`에 투표를 넣고, 처음일 때만 `helpfulCount` +1   | `unauthorized`, `not_found`                                                                                                             |
 
 RPC가 아닌 접근은 둘이다. 내 문의·메시지 조회는 테이블 직접 SELECT(허용 컬럼을 명시, [`columns.ts`](../src/entities/inquiry/config/columns.ts))이고, 문의 삭제는 `DELETE`(RLS가 본인 행만 허용, 상태 제한 없음, 메시지는 cascade)다.
 
@@ -570,6 +570,7 @@ RPC가 아닌 접근은 둘이다. 내 문의·메시지 조회는 테이블 직
 - 작업 로그 화면 없음: `inquiry-events`는 기록과 운영자 조회 정책만 있고 이를 읽는 화면·함수가 없다.
 - 운영자 등록은 SQL 수동이며, 운영자도 일반 온보딩(프로필·가계부)을 마쳐야 어드민에 들어올 수 있다.
 - Jev 외부 전송에 맞춘 개인정보처리방침 개정이 아직 없다(작성 화면 고지만 있음).
+- FAQ "도움이 됐어요" 기능은 클라이언트에서 제거됐지만 `increment_faq_helpful` RPC와 `faq-helpful-votes` 테이블은 DB에 남아 있고 앱은 호출하지 않는다. `faqs.helpfulCount`는 더 늘지 않으며 목록 정렬 키로만 남는다. 후속 마이그레이션으로 RPC·테이블(과 필요하면 `helpfulCount` 정렬)을 제거할 수 있다.
 
 ### 공통 enum
 

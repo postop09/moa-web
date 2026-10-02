@@ -5,16 +5,15 @@ import {
   INQUIRY_CATEGORIES,
   INQUIRY_CATEGORY_LABELS,
 } from '@/entities/inquiry';
-import { useFaqs, useIncrementFaqHelpful, useSearchFaqs } from '@/features/faq';
+import { useFaqs, useSearchFaqs } from '@/features/faq';
 import { useUnreadReplyCount } from '@/features/inquiry';
-import { ToastViewport, useToast } from '@/shared/ui';
+import { useToast } from '@/shared/ui';
 
 import { SupportPage } from './index';
 
 vi.mock('@/features/faq', () => ({
   useFaqs: vi.fn(),
   useSearchFaqs: vi.fn(),
-  useIncrementFaqHelpful: vi.fn(),
 }));
 
 vi.mock('@/features/inquiry', () => ({
@@ -39,7 +38,6 @@ const FAQS = [
 const SEARCH_RESULTS = [makeFaq('f3', 'other', '검색된 질문')];
 
 const refetch = vi.fn();
-const mutate = vi.fn();
 
 type ListState = {
   data?: unknown[];
@@ -68,47 +66,11 @@ const listResult = ({
     refetch,
   }) as never;
 
-type Vote = {
-  faqId: string;
-  resolve: () => void;
-  reject: () => void;
-};
-
-/** 호출마다 개별로 성공/실패시킬 수 있는 mutation 목 (mutate/mutateAsync 모두 지원) */
-const createControlledMutation = () => {
-  const votes: Vote[] = [];
-  const start = (faqId: string) => {
-    let resolve!: () => void;
-    let reject!: () => void;
-    const promise = new Promise<void>((res, rej) => {
-      resolve = () => res();
-      reject = () => rej(new Error('fail'));
-    });
-    votes.push({ faqId, resolve, reject });
-    return promise;
-  };
-  const mutateAsync = vi.fn((faqId: string) => start(faqId));
-  const mutate = vi.fn(
-    (
-      faqId: string,
-      options?: { onSuccess?: () => void; onError?: (e: Error) => void },
-    ) => {
-      start(faqId).then(
-        () => options?.onSuccess?.(),
-        (e: Error) => options?.onError?.(e),
-      );
-    },
-  );
-  return { votes, mutation: { mutate, mutateAsync, isPending: false } };
-};
-
 const setup = ({
   faqs = {} as ListState,
   search = SEARCH_RESULTS as unknown[],
   searchState = {} as ListState,
   unread = 0,
-  mutation = { mutate, isPending: false } as unknown,
-  withToast = false,
 } = {}) => {
   vi.mocked(useFaqs).mockImplementation(((category?: string) =>
     listResult({
@@ -119,14 +81,8 @@ const setup = ({
     keyword.trim().length >= 2
       ? listResult({ data: search, ...searchState })
       : listResult({ data: undefined })) as never);
-  vi.mocked(useIncrementFaqHelpful).mockReturnValue(mutation as never);
   vi.mocked(useUnreadReplyCount).mockReturnValue({ data: unread } as never);
-  return render(
-    <>
-      <SupportPage />
-      {withToast ? <ToastViewport /> : null}
-    </>,
-  );
+  return render(<SupportPage />);
 };
 
 const SEARCH_PLACEHOLDER = '궁금한 내용을 검색하세요';
@@ -240,10 +196,10 @@ describe('SupportPage', () => {
       ).not.toBeInTheDocument();
     });
 
-    it('질문을 누르면 답변과 "도움이 됐어요" 버튼이 펼쳐진다', () => {
+    it('질문을 누르면 답변이 펼쳐지고 "도움이 됐어요" 버튼/완료 문구는 없다', () => {
       setup();
 
-      fireEvent.click(screen.getByRole('button', { name: /로그인이 안 돼요/ }));
+      openFaq(/로그인이 안 돼요/);
 
       expect(
         screen.getByRole('button', { name: /로그인이 안 돼요/ }),
@@ -252,8 +208,9 @@ describe('SupportPage', () => {
         screen.getByText('로그인이 안 돼요의 답변입니다'),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('button', { name: '도움이 됐어요' }),
-      ).toBeInTheDocument();
+        screen.queryByRole('button', { name: '도움이 됐어요' }),
+      ).toBeNull();
+      expect(screen.queryByText('의견 주셔서 감사해요')).toBeNull();
     });
 
     it('다시 누르면 접힌다', () => {
@@ -267,24 +224,6 @@ describe('SupportPage', () => {
       expect(
         screen.queryByText('로그인이 안 돼요의 답변입니다'),
       ).not.toBeInTheDocument();
-    });
-
-    it('"도움이 됐어요"를 누르면 mutation이 한 번만 호출되고 완료 상태로 바뀐다', () => {
-      setup();
-      fireEvent.click(screen.getByRole('button', { name: /로그인이 안 돼요/ }));
-
-      fireEvent.click(screen.getByRole('button', { name: '도움이 됐어요' }));
-
-      expect(mutate).toHaveBeenCalledTimes(1);
-      expect(mutate.mock.calls[0][0]).toBe('f1');
-
-      // 완료 상태: 같은 버튼이 사라지거나 비활성화돼 재호출할 수 없다
-      const again = screen.queryByRole('button', { name: '도움이 됐어요' });
-      if (again) {
-        expect(again).toBeDisabled();
-        fireEvent.click(again);
-      }
-      expect(mutate).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -562,113 +501,6 @@ describe('SupportPage', () => {
       fireEvent.click(screen.getByRole('button', { name: '전체 질문 보기' }));
 
       expect(chip('전체')).toHaveAttribute('aria-pressed', 'true');
-    });
-  });
-
-  describe('도움이 됐어요 투표 (호출별 실패 처리)', () => {
-    const FAIL_MESSAGE = '의견을 남기지 못했어요. 다시 시도해주세요.';
-
-    const voteOn = (question: RegExp) => {
-      openFaq(question);
-      fireEvent.click(screen.getByRole('button', { name: '도움이 됐어요' }));
-    };
-
-    it('A, B를 연달아 눌러 A만 실패하면 A는 되돌아가고 토스트가 뜨며 B는 투표 상태를 유지한다', async () => {
-      const { votes, mutation } = createControlledMutation();
-      setup({ mutation, withToast: true });
-
-      voteOn(/로그인이 안 돼요/);
-      voteOn(/앱이 멈춰요/);
-      expect(votes.map((v) => v.faqId)).toEqual(['f1', 'f2']);
-
-      await act(async () => {
-        votes[0].reject();
-      });
-
-      expect(screen.getByText(FAIL_MESSAGE)).toBeInTheDocument();
-      // A는 다시 투표 가능한 버튼
-      const aItem = screen
-        .getByRole('button', { name: /로그인이 안 돼요/ })
-        .closest('li') as HTMLElement;
-      expect(
-        within(aItem).getByRole('button', { name: '도움이 됐어요' }),
-      ).toBeEnabled();
-      // B는 여전히 투표 완료
-      const bItem = screen
-        .getByRole('button', { name: /앱이 멈춰요/ })
-        .closest('li') as HTMLElement;
-      expect(
-        within(bItem).getByText('의견 주셔서 감사해요'),
-      ).toBeInTheDocument();
-      expect(
-        within(bItem).queryByRole('button', { name: '도움이 됐어요' }),
-      ).toBeNull();
-    });
-
-    it('두 투표가 모두 실패하면 둘 다 되돌아간다', async () => {
-      const { votes, mutation } = createControlledMutation();
-      setup({ mutation, withToast: true });
-
-      voteOn(/로그인이 안 돼요/);
-      voteOn(/앱이 멈춰요/);
-
-      await act(async () => {
-        votes[0].reject();
-        votes[1].reject();
-      });
-
-      expect(
-        screen.getAllByRole('button', { name: '도움이 됐어요' }),
-      ).toHaveLength(2);
-      expect(
-        screen.queryByText('의견 주셔서 감사해요'),
-      ).not.toBeInTheDocument();
-      expect(screen.getByText(FAIL_MESSAGE)).toBeInTheDocument();
-    });
-
-    it('카테고리를 바꿨다 돌아와도 투표한 FAQ는 투표 상태로 남아 다시 mutate할 수 없다', () => {
-      const { votes, mutation } = createControlledMutation();
-      setup({ mutation });
-      voteOn(/로그인이 안 돼요/);
-
-      fireEvent.click(chip(INQUIRY_CATEGORY_LABELS.bug_report));
-      fireEvent.click(chip('전체'));
-      openFaq(/로그인이 안 돼요/);
-
-      expect(screen.getByText('의견 주셔서 감사해요')).toBeInTheDocument();
-      const again = screen.queryByRole('button', { name: '도움이 됐어요' });
-      if (again) fireEvent.click(again);
-      expect(votes).toHaveLength(1);
-    });
-
-    it('검색했다 지워도(또는 검색 결과에서도) 투표 상태가 유지된다', () => {
-      const { votes, mutation } = createControlledMutation();
-      setup({ mutation, search: [FAQS[0]] });
-      voteOn(/로그인이 안 돼요/);
-
-      typeSearch('로그');
-      openFaq(/로그인이 안 돼요/);
-      expect(screen.getByText('의견 주셔서 감사해요')).toBeInTheDocument();
-
-      typeSearch('');
-      openFaq(/로그인이 안 돼요/);
-      expect(screen.getByText('의견 주셔서 감사해요')).toBeInTheDocument();
-      expect(votes).toHaveLength(1);
-    });
-
-    it('투표 후 포커스를 잃지 않고 완료 문구가 status/live 영역 안에 렌더된다', () => {
-      const { mutation } = createControlledMutation();
-      setup({ mutation });
-      openFaq(/로그인이 안 돼요/);
-      const button = screen.getByRole('button', { name: '도움이 됐어요' });
-      button.focus();
-      expect(document.activeElement).toBe(button);
-
-      fireEvent.click(button);
-
-      expect(document.activeElement).not.toBe(document.body);
-      const done = screen.getByText('의견 주셔서 감사해요');
-      expect(done.closest('[role="status"], [aria-live]')).not.toBeNull();
     });
   });
 

@@ -3,17 +3,15 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getFaqs, incrementFaqHelpful, searchFaqs } from '@/entities/faq';
+import { getFaqs, searchFaqs } from '@/entities/faq';
 
 import { useFaqs } from './useFaqs';
-import { useIncrementFaqHelpful } from './useIncrementFaqHelpful';
 import { useSearchFaqs } from './useSearchFaqs';
 
 vi.mock('@/entities/faq', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/entities/faq')>()),
   getFaqs: vi.fn(),
   searchFaqs: vi.fn(),
-  incrementFaqHelpful: vi.fn(),
 }));
 
 vi.mock('@/shared/api', () => ({
@@ -43,7 +41,6 @@ const createWrapper = () => {
 beforeEach(() => {
   vi.mocked(getFaqs).mockReset().mockResolvedValue([FAQ]);
   vi.mocked(searchFaqs).mockReset().mockResolvedValue([FAQ]);
-  vi.mocked(incrementFaqHelpful).mockReset().mockResolvedValue(undefined);
 });
 
 describe('useFaqs', () => {
@@ -217,34 +214,5 @@ describe('useSearchFaqs', () => {
     });
     expect(searchFaqs).toHaveBeenCalledTimes(1);
     expect(searchFaqs).toHaveBeenCalledWith(expect.anything(), '로그인');
-  });
-});
-
-describe('useIncrementFaqHelpful', () => {
-  it('mutate(faqId)로 incrementFaqHelpful을 해당 id로 호출한다', async () => {
-    const { result } = renderHook(() => useIncrementFaqHelpful(), {
-      wrapper: createWrapper(),
-    });
-
-    await act(async () => {
-      result.current.mutate('f1');
-    });
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(incrementFaqHelpful).toHaveBeenCalledTimes(1);
-    expect(incrementFaqHelpful).toHaveBeenCalledWith(expect.anything(), 'f1');
-  });
-
-  it('실패하면 isError가 true가 된다', async () => {
-    vi.mocked(incrementFaqHelpful).mockRejectedValue(new Error('fail'));
-    const { result } = renderHook(() => useIncrementFaqHelpful(), {
-      wrapper: createWrapper(),
-    });
-
-    await act(async () => {
-      result.current.mutate('f1');
-    });
-
-    await waitFor(() => expect(result.current.isError).toBe(true));
   });
 });
