@@ -1,0 +1,484 @@
+.page {
+  display: flex;
+  max-width: 80rem;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+}
+
+.headingTotal {
+  margin: 0;
+  color: var(--color-muted-strong);
+  font-size: 0.9375rem;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 필터 */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3) var(--space-4);
+}
+
+.field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.fieldGrow {
+  flex: 1 1 14rem;
+}
+
+.label {
+  padding: 0;
+  color: var(--color-muted-strong);
+  font-size: 0.8125rem;
+}
+
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+}
+
+.check {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+
+.check input {
+  width: 1.125rem;
+  height: 1.125rem;
+  accent-color: var(--color-accent);
+}
+
+.check input[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.select,
+.input {
+  min-height: 2.75rem;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-muted);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.9375rem;
+}
+
+.select[aria-disabled='true'] {
+  color: var(--color-muted-strong);
+  cursor: not-allowed;
+}
+
+.hint {
+  margin: 0;
+  color: var(--color-muted-strong);
+  font-size: 0.8125rem;
+}
+
+.statusHint {
+  margin: 0;
+  color: var(--color-muted-strong);
+  font-size: 0.8125rem;
+}
+
+/* 기본은 시각적으로만 숨기고(스크린리더 설명은 유지), 시도했을 때 드러낸다. */
+.statusHint[data-revealed='false'] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.inputWrap {
+  position: relative;
+  display: flex;
+}
+
+.input {
+  width: 100%;
+}
+
+/* 지우기 버튼을 따로 두므로 브라우저 기본 지우기(x)는 숨긴다. */
+.input[type='search']::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.inputWrap .input {
+  padding-right: 2.75rem;
+}
+
+.clearButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-flex;
+  width: 2.75rem;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--color-muted-strong);
+  cursor: pointer;
+}
+
+.clearButton:hover {
+  color: var(--color-text);
+}
+
+.clearButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.input::placeholder {
+  color: var(--color-muted);
+}
+
+.toggle {
+  min-height: 2.75rem;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-muted);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.toggle[aria-disabled='true'] {
+  color: var(--color-muted-strong);
+  cursor: not-allowed;
+}
+
+.toggle[aria-pressed='true'] {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface));
+  color: var(--color-accent);
+}
+
+.select:focus-visible,
+.input:focus-visible,
+.toggle:focus-visible,
+.check input:focus-visible,
+.sortButton:focus-visible,
+.pageButton:focus-visible,
+.stateButton:focus-visible,
+.titleLink:focus-visible,
+.tableScroll:focus-visible,
+.results:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* 결과 영역 */
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* 이전 결과를 유지한 채 새로 불러오는 중이면 흐리게 보여 오래된 값임을 알린다. */
+.tableScroll[data-stale='true'] {
+  opacity: 0.55;
+  transition: opacity 0.15s ease;
+}
+
+/* 좁은 화면에서는 표가 잘리지 않고 가로로 스크롤한다. */
+.tableScroll {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--radius) * 2);
+  background: var(--color-surface);
+}
+
+.table {
+  width: 100%;
+  min-width: 44rem;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.th {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.row {
+  cursor: pointer;
+}
+
+.row:last-child .td {
+  border-bottom: 0;
+}
+
+.row:hover {
+  background: color-mix(in srgb, var(--color-accent) 4%, var(--color-surface));
+}
+
+.row[data-overdue='true'] {
+  background: var(--color-warning-bg);
+}
+
+.row[data-overdue='true'] .waiting {
+  color: var(--color-warning-text);
+  font-weight: 700;
+}
+
+/* 색에만 기대지 않도록 24시간 초과 행에는 글자 표시를 함께 둔다. */
+.overdueMark {
+  display: inline-block;
+  margin-left: var(--space-2);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-warning-text);
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+}
+
+.numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.titleCell {
+  width: 100%;
+}
+
+.titleLink {
+  display: -webkit-box;
+  max-width: 40rem;
+  padding: var(--space-1) 0;
+  overflow: hidden;
+  font-weight: 600;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
+}
+
+.titleLink:hover {
+  text-decoration: underline;
+}
+
+/* 미분류는 색이 아니라 점선 테두리와 굵은 글씨로도 구분한다. */
+.uncategorized {
+  display: inline-block;
+  padding: 0.125rem var(--space-2);
+  border: 1px dashed var(--color-warning-text);
+  border-radius: var(--radius);
+  color: var(--color-warning-text);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.sortButton {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: var(--space-1);
+  margin: calc(var(--space-3) * -1) calc(var(--space-2) * -1);
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: inherit;
+  font-weight: inherit;
+  white-space: nowrap;
+}
+
+.sortButton:hover {
+  color: var(--color-text);
+}
+
+.sortIconIdle {
+  color: var(--color-muted);
+}
+
+th[aria-sort='ascending'] .sortButton,
+th[aria-sort='descending'] .sortButton {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.skeleton {
+  display: block;
+  height: 1.25rem;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--color-border) 70%, var(--color-surface));
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+
+  .tableScroll[data-stale='true'] {
+    transition: none;
+  }
+}
+
+/* 페이지네이션 */
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-4);
+}
+
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.pageButton {
+  display: inline-flex;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.pageButton:hover {
+  background: var(--color-border);
+}
+
+.pageButton[aria-current='page'] {
+  background: var(--color-text);
+  color: var(--color-surface);
+  font-weight: 700;
+}
+
+.pageButton[aria-disabled='true'] {
+  color: var(--color-muted);
+  cursor: not-allowed;
+}
+
+.pageButton[aria-disabled='true']:hover {
+  background: transparent;
+}
+
+.ellipsis {
+  min-width: 1.5rem;
+  color: var(--color-muted-strong);
+  text-align: center;
+}
+
+.sizeField {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* 빈·오류 상태 */
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-8) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--radius) * 2);
+  background: var(--color-surface);
+  text-align: center;
+}
+
+.stateText {
+  margin: 0;
+  color: var(--color-muted-strong);
+}
+
+.stateButton {
+  min-height: 2.75rem;
+  padding: 0 var(--space-5);
+  border: 1px solid var(--color-muted);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+@media (min-width: 48rem) {
+  .page {
+    gap: var(--space-5);
+    padding: var(--space-8);
+  }
+
+  .title {
+    font-size: 1.75rem;
+  }
+}

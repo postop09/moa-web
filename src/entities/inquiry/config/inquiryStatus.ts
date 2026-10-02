@@ -1,4 +1,6 @@
-export type InquiryStatus = 'waiting' | 'in_progress' | 'answered' | 'closed';
+import type { InquiryStatus } from '@/shared/model';
+
+export type { InquiryStatus };
 
 export const getUserStatusLabel = (status: InquiryStatus): string => {
   switch (status) {

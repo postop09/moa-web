@@ -80,12 +80,13 @@ features/{domain}/model/use*.ts           'use client' — useQuery/useMutation 
 
 ### Route Group
 
-| 그룹          | 용도                     | 인증 가드                                                 |
-| ------------- | ------------------------ | --------------------------------------------------------- |
-| `(app)`       | 로그인 후 앱 화면        | `proxy.ts`(미들웨어)만. 페이지 자체의 서버 측 검증은 없음 |
-| `(auth)`      | 로그인·온보딩·초대       | 각 페이지가 서버에서 `resolveAuthGate()` 직접 호출        |
-| `(marketing)` | 공개 마케팅 페이지       | 없음(공개)                                                |
-| 없음(루트)    | Route Handler, 전역 파일 | `/auth/*`는 pass-through                                  |
+| 그룹          | 용도                     | 인증 가드                                                              |
+| ------------- | ------------------------ | ---------------------------------------------------------------------- |
+| `(app)`       | 로그인 후 앱 화면        | `proxy.ts`(미들웨어)만. 페이지 자체의 서버 측 검증은 없음              |
+| `(auth)`      | 로그인·온보딩·초대       | 각 페이지가 서버에서 `resolveAuthGate()` 직접 호출                     |
+| `(marketing)` | 공개 마케팅 페이지       | 없음(공개)                                                             |
+| `admin`       | 운영자 전용(그룹 아님)   | `proxy.ts`(로그인) + 레이아웃의 `requireAdmin()`(운영자만, 아니면 404) |
+| 없음(루트)    | Route Handler, 전역 파일 | `/auth/*`는 pass-through                                               |
 
 ### URL → 페이지 슬라이스
 
@@ -109,6 +110,10 @@ features/{domain}/model/use*.ts           'use client' — useQuery/useMutation 
 | `/support/inquiries/[id]/done`     | `app/(app)/support/inquiries/[id]/done/page.tsx` | `inquiryDone`                          |
 | `/api/inquiries/classify`          | `app/api/inquiries/classify/route.ts`            | 문의 AI 분류 (Route Handler, POST)     |
 | `/auth/complete`                   | `app/auth/complete/route.ts`                     | 온보딩 게이트 판별 (Route Handler)     |
+| `/admin`                           | `app/admin/page.tsx`                             | `/admin/inquiries` 로 redirect         |
+| `/admin/inquiries`                 | `app/admin/inquiries/page.tsx`                   | `adminInquiries` (필터는 URL 쿼리)     |
+
+`app/admin/`은 `(app)` 그룹 밖이라 `AppShell`(탭바·FAB)이 없고 `widgets/adminShell`(어두운 사이드바, 좁은 화면에서는 상단 바)을 쓴다. 레이아웃 서버 컴포넌트가 `@/entities/admin/server`의 `requireAdmin()`(`is_admin` RPC)으로 운영자만 통과시키고, 아니거나 확인에 실패하면 `notFound()`다. `/admin`, `/support`는 `app/robots.ts`에서 disallow하고 레이아웃 metadata도 noindex다. 어드민 쿼리(`['admin', ...]`)는 다른 사용자의 데이터를 담고 있어 `shouldDehydrateQuery`가 localStorage 영속화에서 제외한다. 운영자도 온보딩(프로필·가계부)을 마쳐야 `moa_gate`가 생겨 `/admin`에 들어올 수 있다.
 
 ### 앱 네비게이션
 
@@ -297,6 +302,19 @@ erDiagram
 | `name`        | `string` |
 | `color`       | `string` |
 | `createdDt`   | `string` |
+
+#### 어드민 조회 RPC (1:1 문의)
+
+[`20261002000000_add_admin_inquiry_read_functions.sql`](../supabase/migrations/20261002000000_add_admin_inquiry_read_functions.sql). 모두 `SECURITY DEFINER`이고 시작 시 `auth.uid()`/`is_admin()`을 검사한다(`unauthorized`/`forbidden`). 운영자도 `authenticated` 롤이라 `closeReason`/`categoryConfidence`/`assigneeId`/`authorId`는 테이블 직접 SELECT가 안 되므로 어드민 화면은 아래 함수로만 읽는다.
+
+| RPC                                                                                                                             | 반환                      | 쓰는 곳                                  |
+| ------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ---------------------------------------- |
+| `admin_list_inquiries(p_statuses, p_category, p_uncategorized_only, p_since, p_keyword, p_sort, p_sort_dir, p_limit, p_offset)` | 목록 행 + `totalCount`    | `getAdminInquiries` (`/admin/inquiries`) |
+| `admin_pending_inquiry_count()`                                                                                                 | `bigint` (대기 + 처리 중) | `getAdminPendingCount` (사이드바 배지)   |
+| `admin_get_inquiry(p_inquiry_id)`                                                                                               | 문의 상세                 | 상세 화면(미구현)                        |
+| `admin_get_inquiry_messages(p_inquiry_id)`                                                                                      | 메시지(메모 포함)         | 상세 화면(미구현)                        |
+| `admin_list_admins()`                                                                                                           | 운영자 목록               | 상세 화면(미구현)                        |
+| `admin_user_recent_inquiries(p_inquiry_id, p_limit)`                                                                            | 같은 사용자의 다른 문의   | 상세 화면(미구현)                        |
 
 ### 공통 enum
 
