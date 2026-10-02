@@ -25,8 +25,6 @@ export const SettingsPage = () => {
 
       <AccountSection />
 
-      <SupportSection />
-
       {householdId && profile ? (
         <MembersSection
           key={`members-${householdId}`}
@@ -43,6 +41,8 @@ export const SettingsPage = () => {
           householdId={householdId}
         />
       ) : null}
+
+      <SupportSection />
 
       {household && profile ? (
         <HouseholdDangerSection

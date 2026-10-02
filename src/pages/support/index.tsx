@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { FAQ_SEARCH_MIN_LENGTH } from '@/entities/faq';
 import type { InquiryCategory } from '@/entities/inquiry';
-import { useFaqs, useIncrementFaqHelpful, useSearchFaqs } from '@/features/faq';
+import { useFaqs, useSearchFaqs } from '@/features/faq';
 import { useUnreadReplyCount } from '@/features/inquiry';
-import { PageHeader, useToast } from '@/shared/ui';
+import { PageHeader } from '@/shared/ui';
 
 import { CategoryChips } from './ui/CategoryChips';
 import { FaqEmpty } from './ui/FaqEmpty';
@@ -20,30 +20,14 @@ import { SearchEmpty } from './ui/SearchEmpty';
 import { SupportNotice } from './ui/SupportNotice';
 import styles from './ui/support.module.css';
 
-const VOTE_ERROR_MESSAGE = '의견을 남기지 못했어요. 다시 시도해주세요.';
-/** 하단 고정 CTA가 차지하는 높이. 토스트가 CTA 위에 뜨도록 viewport 오프셋으로 쓴다. */
-const TOAST_OFFSET_ABOVE_CTA = '6.5rem';
-
 export const SupportPage = () => {
   const [keyword, setKeyword] = useState('');
   const [category, setCategory] = useState<InquiryCategory | null>(null);
-  // 카테고리·검색 전환으로 목록이 다시 마운트돼도 투표 상태는 유지한다.
-  const [votedIds, setVotedIds] = useState<ReadonlySet<string>>(new Set());
 
   const isSearching = keyword.trim().length >= FAQ_SEARCH_MIN_LENGTH;
   const faqsQuery = useFaqs(category ?? undefined);
   const searchQuery = useSearchFaqs(keyword);
   const { data: unreadCount = 0 } = useUnreadReplyCount();
-  const { mutate: vote } = useIncrementFaqHelpful();
-  const showToast = useToast((state) => state.showToast);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    root.style.setProperty('--toast-bottom-offset', TOAST_OFFSET_ABOVE_CTA);
-    return () => {
-      root.style.removeProperty('--toast-bottom-offset');
-    };
-  }, []);
 
   // 검색 결과가 아직 없는 디바운스 대기 중에는 현재 목록을 그대로 보여준다.
   const isSearchView =
@@ -63,22 +47,6 @@ export const SupportPage = () => {
       ? '검색 결과가 없어요'
       : `검색 결과 ${faqs.length}개`
     : '';
-
-  const handleHelpful = (faqId: string) => {
-    if (votedIds.has(faqId)) return;
-
-    setVotedIds((prev) => new Set(prev).add(faqId));
-    vote(faqId, {
-      onError: () => {
-        setVotedIds((prev) => {
-          const next = new Set(prev);
-          next.delete(faqId);
-          return next;
-        });
-        showToast(VOTE_ERROR_MESSAGE, { tone: 'error' });
-      },
-    });
-  };
 
   const renderFaqs = () => {
     if (activeQuery.isError) {
@@ -106,8 +74,6 @@ export const SupportPage = () => {
           // 카테고리·검색이 바뀌면 열림 상태를 초기화한다.
           key={isSearchView ? 'search' : (category ?? 'all')}
           faqs={faqs}
-          votedIds={votedIds}
-          onHelpful={handleHelpful}
         />
       </section>
     );
