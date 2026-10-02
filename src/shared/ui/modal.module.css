@@ -81,3 +81,19 @@
   font-size: 0.8125rem;
   color: var(--color-expense);
 }
+
+/* 이탈 확인처럼 확인이 파괴적이지 않고 '계속'이 기본 행동일 때 확인 버튼을 낮춘다. */
+.actions button[data-emphasis='subtle'] {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-muted-strong);
+}
+
+.actions
+  button[data-emphasis='subtle']:hover:not(:disabled):not(
+    [aria-disabled='true']
+  ) {
+  border-color: var(--color-accent);
+  background: var(--color-surface);
+  color: var(--color-accent);
+}

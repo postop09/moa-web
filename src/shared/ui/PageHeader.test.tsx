@@ -46,4 +46,22 @@ describe('PageHeader', () => {
 
     expect(screen.getByRole('button', { name: '편집' })).toBeInTheDocument();
   });
+  it('backDisabled 이면 뒤로 가기가 aria-disabled 이고 눌러도 onBack 이 호출되지 않는다', () => {
+    const onBack = vi.fn();
+    render(<PageHeader title="문의하기" onBack={onBack} backDisabled />);
+
+    const back = screen.getByRole('button', { name: '뒤로 가기' });
+    fireEvent.click(back);
+
+    expect(back).toHaveAttribute('aria-disabled', 'true');
+    expect(onBack).not.toHaveBeenCalled();
+  });
+
+  it('backDisabled 가 아니면 aria-disabled 가 없다', () => {
+    render(<PageHeader title="문의하기" onBack={() => {}} />);
+
+    expect(
+      screen.getByRole('button', { name: '뒤로 가기' }),
+    ).not.toHaveAttribute('aria-disabled', 'true');
+  });
 });

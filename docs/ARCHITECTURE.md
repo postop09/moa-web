@@ -89,23 +89,26 @@ features/{domain}/model/use*.ts           'use client' — useQuery/useMutation 
 
 ### URL → 페이지 슬라이스
 
-| URL                                | 라우트 파일                                | 페이지 슬라이스                    |
-| ---------------------------------- | ------------------------------------------ | ---------------------------------- |
-| `/`                                | `app/(app)/page.tsx`                       | `home`                             |
-| `/history`                         | `app/(app)/history/page.tsx`               | `history`                          |
-| `/calendar`                        | `app/(app)/calendar/page.tsx`              | `calendar`                         |
-| `/settings`                        | `app/(app)/settings/page.tsx`              | `settings`                         |
-| `/write`, `/write/[transactionId]` | `app/(app)/write/**`                       | `write`, `write/edit`              |
-| `/stats`                           | `app/(app)/stats/page.tsx`                 | 없음 — `redirect('/history')` 스텁 |
-| `/login`                           | `app/(auth)/login/page.tsx`                | `login`                            |
-| `/onboarding/profile`              | `app/(auth)/onboarding/profile/page.tsx`   | `createProfile`                    |
-| `/onboarding/household`            | `app/(auth)/onboarding/household/page.tsx` | `createHousehold`                  |
-| `/invite/[token]`                  | `app/(auth)/invite/[token]/page.tsx`       | `acceptInvite`                     |
-| `/welcome`                         | `app/(marketing)/welcome/page.tsx`         | `welcome`                          |
-| `/guide`, `/guide/[slug]`          | `app/(marketing)/guide/**`                 | `guide`                            |
-| `/privacy`, `/terms`               | `app/(marketing)/*/page.tsx`               | `legal`                            |
-| `/auth/callback`                   | `app/auth/callback/route.ts`               | OAuth 콜백 (Route Handler)         |
-| `/auth/complete`                   | `app/auth/complete/route.ts`               | 온보딩 게이트 판별 (Route Handler) |
+| URL                                | 라우트 파일                                      | 페이지 슬라이스                        |
+| ---------------------------------- | ------------------------------------------------ | -------------------------------------- |
+| `/`                                | `app/(app)/page.tsx`                             | `home`                                 |
+| `/history`                         | `app/(app)/history/page.tsx`                     | `history`                              |
+| `/calendar`                        | `app/(app)/calendar/page.tsx`                    | `calendar`                             |
+| `/settings`                        | `app/(app)/settings/page.tsx`                    | `settings`                             |
+| `/write`, `/write/[transactionId]` | `app/(app)/write/**`                             | `write`, `write/edit`                  |
+| `/stats`                           | `app/(app)/stats/page.tsx`                       | 없음 — `redirect('/history')` 스텁     |
+| `/login`                           | `app/(auth)/login/page.tsx`                      | `login`                                |
+| `/onboarding/profile`              | `app/(auth)/onboarding/profile/page.tsx`         | `createProfile`                        |
+| `/onboarding/household`            | `app/(auth)/onboarding/household/page.tsx`       | `createHousehold`                      |
+| `/invite/[token]`                  | `app/(auth)/invite/[token]/page.tsx`             | `acceptInvite`                         |
+| `/welcome`                         | `app/(marketing)/welcome/page.tsx`               | `welcome`                              |
+| `/guide`, `/guide/[slug]`          | `app/(marketing)/guide/**`                       | `guide`                                |
+| `/privacy`, `/terms`               | `app/(marketing)/*/page.tsx`                     | `legal`                                |
+| `/auth/callback`                   | `app/auth/callback/route.ts`                     | OAuth 콜백 (Route Handler)             |
+| `/support/inquiries/new`           | `app/(app)/support/inquiries/new/page.tsx`       | `inquiryWrite` (`?followUp=`/`?edit=`) |
+| `/support/inquiries/[id]/done`     | `app/(app)/support/inquiries/[id]/done/page.tsx` | `inquiryDone`                          |
+| `/api/inquiries/classify`          | `app/api/inquiries/classify/route.ts`            | 문의 AI 분류 (Route Handler, POST)     |
+| `/auth/complete`                   | `app/auth/complete/route.ts`                     | 온보딩 게이트 판별 (Route Handler)     |
 
 ### 앱 네비게이션
 
@@ -359,7 +362,7 @@ Supabase httpOnly 쿠키(세션) + `moa_gate`(온보딩 완료 캐시). 상세�
 
 **iOS 스플래시**: 해상도 목록은 [`src/shared/config/appleSplash.ts`](../src/shared/config/appleSplash.ts)가 단일 출처이고, `app/layout.tsx`의 `appleWebApp.startupImage`와 생성 스크립트가 모두 이 목록에서 파생된다. 새 iPhone·iPad가 나오면 `APPLE_SPLASH_SPECS`에 `{ width, height, deviceWidth, deviceHeight, ratio }`(width = deviceWidth × ratio)를 추가하고 `pnpm splash:generate`를 실행해 PNG를 커밋한다 — 테스트가 스펙과 `public/splash/`의 파일 목록이 정확히 일치하는지 검사하므로 누락·잔여 파일은 CI에서 걸린다. 매칭되는 `media`가 없으면 iOS는 흰 화면을 띄운다. 가로·다크 변형은 앱이 세로 전용 UI이고 다크 모드가 없어 만들지 않는다. 생성물은 `next.config.ts`의 `publicExcludes`로 SW 프리캐시에서 제외한다 — iOS가 시작 이미지를 OS 레벨에서 따로 캐시하므로 프리캐시하면 모든 방문자가 쓰지 않는 수 MB를 받게 된다.
 
-환경 변수: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`(필수, [`src/shared/api/createBrowserClient.ts`](../src/shared/api/createBrowserClient.ts) 등에서 non-null 단언으로만 사용 — 런타임 검증 없음), `NEXT_PUBLIC_SITE_URL`(선택, [`src/shared/config/site.ts`](../src/shared/config/site.ts)에서 Vercel 환경변수로 폴백).
+환경 변수: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`(필수, [`src/shared/api/createBrowserClient.ts`](../src/shared/api/createBrowserClient.ts) 등에서 non-null 단언으로만 사용 — 런타임 검증 없음), `NEXT_PUBLIC_SITE_URL`(선택, [`src/shared/config/site.ts`](../src/shared/config/site.ts)에서 Vercel 환경변수로 폴백). 서버 전용(`NEXT_PUBLIC_` 금지): `JEV_API_KEY`(1:1 문의 AI 분류 API 키, 없으면 분류는 항상 미분류), `JEV_API_URL`(선택, 분류 API 엔드포인트), `JEV_MODEL`(선택, 분류 모델명). 호출은 [`src/shared/api/jev/server.ts`](../src/shared/api/jev/server.ts)에서만 하며 `POST /api/inquiries/classify` Route Handler가 로그인 확인 후 사용한다.
 
 CI는 [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)에서 `pull_request`와 `main` push마다 `lint`/`format:check`/`typecheck`/`test`를 하나의 `verify` 잡으로, `pnpm build`를 별도 `build` 잡으로 병렬 실행한다(빌드는 dev의 turbopack과 다른 webpack 경로라 별도 검증이 필요). git hook(husky/lint-staged)은 없다. 브랜치·커밋·PR 규칙은 [`.claude/rules/git-workflow.md`](../.claude/rules/git-workflow.md).
 

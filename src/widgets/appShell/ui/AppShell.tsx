@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { InAppNavigationTracker } from '@/shared/lib';
 import { ToastViewport } from '@/shared/ui';
 
 import { BottomTabBar } from './BottomTabBar';
@@ -16,6 +17,7 @@ type Props = {
 export const AppShell = ({ children }: Props) => {
   return (
     <div className={styles.shell}>
+      <InAppNavigationTracker />
       <NavigationProgress />
       <NoHouseholdRedirect />
       <Sidebar />

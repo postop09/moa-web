@@ -31,19 +31,14 @@ describe('Button', () => {
   });
 
   describe('loading 상태', () => {
-    it('loading=true이면 button이 disabled 상태다', () => {
+    it('loading=true이면 disabled 속성 없이 aria-disabled="true" 이고 포커스할 수 있다', () => {
       render(<Button loading>저장</Button>);
 
-      expect(screen.getByRole('button', { name: '저장' })).toBeDisabled();
-    });
-
-    it('loading=true이면 aria-busy="true"가 설정된다', () => {
-      render(<Button loading>저장</Button>);
-
-      expect(screen.getByRole('button', { name: '저장' })).toHaveAttribute(
-        'aria-busy',
-        'true',
-      );
+      const button = screen.getByRole('button', { name: '저장' });
+      expect(button).not.toBeDisabled();
+      expect(button).toHaveAttribute('aria-disabled', 'true');
+      button.focus();
+      expect(button).toHaveFocus();
     });
 
     it('loading=true이고 loadingLabel을 주면 children 대신 loadingLabel이 보인다', () => {
@@ -65,11 +60,12 @@ describe('Button', () => {
       expect(screen.getByRole('button', { name: '저장' })).toBeInTheDocument();
     });
 
-    it('loading=false(기본값)면 disabled가 아니고 aria-busy도 true가 아니다', () => {
+    it('loading=false(기본값)면 disabled/aria-disabled가 아니고 aria-busy도 true가 아니다', () => {
       render(<Button>저장</Button>);
 
       const button = screen.getByRole('button', { name: '저장' });
       expect(button).not.toBeDisabled();
+      expect(button).not.toHaveAttribute('aria-disabled', 'true');
       expect(button).not.toHaveAttribute('aria-busy', 'true');
     });
   });
@@ -79,6 +75,15 @@ describe('Button', () => {
       render(<Button disabled>저장</Button>);
 
       expect(screen.getByRole('button', { name: '저장' })).toBeDisabled();
+    });
+
+    it('disabled=true 는 기존처럼 disabled 속성이며 aria-disabled 는 쓰지 않는다', () => {
+      render(<Button disabled>저장</Button>);
+
+      expect(screen.getByRole('button', { name: '저장' })).not.toHaveAttribute(
+        'aria-disabled',
+        'true',
+      );
     });
   });
 
@@ -168,7 +173,7 @@ describe('Button', () => {
       expect(handleClick).toHaveBeenCalledTimes(1);
     });
 
-    it('loading=true이면 disabled라 클릭해도 onClick이 호출되지 않는다', () => {
+    it('loading=true이면 aria-disabled 라 클릭해도 onClick이 호출되지 않는다', () => {
       const handleClick = vi.fn();
       render(
         <Button loading onClick={handleClick}>

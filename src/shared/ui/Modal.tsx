@@ -1,11 +1,32 @@
 'use client';
 
-import { useEffect, useId, useSyncExternalStore, type ReactNode } from 'react';
+import {
+  useEffect,
+  useId,
+  useRef,
+  useSyncExternalStore,
+  type ReactNode,
+  type RefObject,
+} from 'react';
 import { createPortal } from 'react-dom';
 
 import styles from './modal.module.css';
 
 const subscribeClient = () => () => {};
+
+const FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled]):not([type="hidden"])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]',
+].join(',');
+
+const getFocusable = (panel: HTMLElement) =>
+  Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+    (element) => element.tabIndex >= 0 && !element.hasAttribute('inert'),
+  );
 
 type Props = {
   title: string;
@@ -13,6 +34,12 @@ type Props = {
   children: ReactNode;
   closeDisabled?: boolean;
   elevated?: boolean;
+  /** 열릴 때 포커스할 요소. 없으면 패널의 첫 번째 포커스 가능 요소. */
+  initialFocus?: RefObject<HTMLElement | null>;
+  /** 'alertdialog'는 확인을 요구하는 대화상자. */
+  role?: 'dialog' | 'alertdialog';
+  /** 대화상자 설명 요소 id (aria-describedby). */
+  descriptionId?: string;
 };
 
 export const Modal = ({
@@ -21,6 +48,9 @@ export const Modal = ({
   children,
   closeDisabled = false,
   elevated = false,
+  initialFocus,
+  role = 'dialog',
+  descriptionId,
 }: Props) => {
   const titleId = useId();
   const mounted = useSyncExternalStore(
@@ -29,17 +59,71 @@ export const Modal = ({
     () => false,
   );
 
+  const panelRef = useRef<HTMLDivElement>(null);
+  const onCloseRef = useRef(onClose);
+  const closeDisabledRef = useRef(closeDisabled);
+  const initialFocusRef = useRef(initialFocus);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+    closeDisabledRef.current = closeDisabled;
+    initialFocusRef.current = initialFocus;
+  });
+
   useEffect(() => {
     if (!mounted) {
       return;
     }
 
     const previousOverflow = document.body.style.overflow;
+    const previousFocus =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
     document.body.style.overflow = 'hidden';
 
+    const panel = panelRef.current;
+    const target =
+      initialFocusRef.current?.current ??
+      (panel ? getFocusable(panel)[0] : null) ??
+      panel;
+    target?.focus();
+
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && !closeDisabled) {
-        onClose();
+      if (event.key === 'Escape') {
+        if (!closeDisabledRef.current) {
+          onCloseRef.current();
+        }
+
+        return;
+      }
+
+      if (event.key !== 'Tab' || !panel) {
+        return;
+      }
+
+      const focusable = getFocusable(panel);
+      if (focusable.length === 0) {
+        event.preventDefault();
+        panel.focus();
+
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+      const inside = active instanceof Node && panel.contains(active);
+
+      if (!inside) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      } else if (event.shiftKey && (active === first || active === panel)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
       }
     };
 
@@ -48,8 +132,11 @@ export const Modal = ({
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', handleKeyDown);
+      if (previousFocus?.isConnected) {
+        previousFocus.focus();
+      }
     };
-  }, [closeDisabled, mounted, onClose]);
+  }, [mounted]);
 
   if (!mounted) {
     return null;
@@ -61,14 +148,18 @@ export const Modal = ({
         type="button"
         className={styles.backdrop}
         aria-label="닫기"
+        tabIndex={-1}
         disabled={closeDisabled}
         onClick={onClose}
       />
       <div
+        ref={panelRef}
         className={styles.dialog}
-        role="dialog"
+        role={role}
         aria-modal="true"
         aria-labelledby={titleId}
+        aria-describedby={descriptionId}
+        tabIndex={-1}
       >
         <header className={styles.header}>
           <h3 id={titleId} className={styles.title}>

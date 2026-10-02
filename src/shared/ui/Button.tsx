@@ -7,6 +7,7 @@ import type {
   ButtonHTMLAttributes,
   ComponentProps,
   ReactNode,
+  Ref,
 } from 'react';
 
 import styles from './button.module.css';
@@ -28,6 +29,7 @@ type BaseProps = {
 type ButtonAsButton = BaseProps &
   Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'disabled'> & {
     as?: 'button';
+    ref?: Ref<HTMLButtonElement>;
     href?: never;
     target?: never;
   };
@@ -197,15 +199,23 @@ export const Button = (props: Props) => {
     ...rest
   } = props;
 
-  const isDisabled = loading || disabled;
-
   return (
     <button
       type="button"
       {...rest}
       className={getButtonClassName({ variant, size, fullWidth, className })}
-      disabled={isDisabled}
+      disabled={disabled}
+      aria-disabled={loading ? true : rest['aria-disabled']}
       aria-busy={loading || undefined}
+      onClick={(event) => {
+        // loading 은 disabled 가 아니라 aria-disabled 라 포커스는 유지되고,
+        // 클릭(Enter/Space 포함)과 버튼을 통한 폼 제출만 막는다.
+        if (loading) {
+          event.preventDefault();
+          return;
+        }
+        rest.onClick?.(event);
+      }}
     >
       {getButtonContent({ loading, loadingLabel, size, children })}
     </button>
