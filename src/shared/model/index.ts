@@ -5,5 +5,3 @@ export {
   TRANSACTION_TYPE_COLOR,
   TRANSACTION_TYPE_LABEL,
 } from './transactionType';
-export type { InquiryCategory, InquiryStatus } from './inquiryTaxonomy';
-export { INQUIRY_CATEGORIES, INQUIRY_STATUSES } from './inquiryTaxonomy';

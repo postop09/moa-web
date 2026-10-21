@@ -16,10 +16,10 @@ afterEach(() => {
 });
 
 describe('robots', () => {
-  it('프로덕션에서 어드민과 고객센터 경로는 크롤링을 막는다', async () => {
+  it('프로덕션에서 로그인 뒤 경로는 크롤링을 막는다', async () => {
     const rule = await loadProductionRules();
     const disallow = ([] as string[]).concat(rule.disallow ?? []);
 
-    expect(disallow).toEqual(expect.arrayContaining(['/admin', '/support']));
+    expect(disallow).toEqual(expect.arrayContaining(['/settings', '/write']));
   });
 });

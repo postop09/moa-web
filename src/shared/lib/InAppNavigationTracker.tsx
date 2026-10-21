@@ -15,7 +15,7 @@ import {
 let initialised = false;
 
 // 같은 탭의 이전 문서에서 남은 sessionStorage 플래그 때문에, 새로 연 화면
-// (예: /support/inquiries/new)이 이전 화면이 없는데도 router.back() 을 호출하면 안 된다.
+// (예: /write)이 이전 화면이 없는데도 router.back() 을 호출하면 안 된다.
 // 새 탐색('navigate')으로 열린 문서면 플래그를 지우고 기준 길이를 새로 잡는다.
 // reload/back_forward 등 그 외에는 저장된 값을 그대로 둔다.
 const initialiseHistory = () => {

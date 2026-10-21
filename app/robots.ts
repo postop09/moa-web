@@ -30,8 +30,6 @@ const robots = (): MetadataRoute.Robots => {
         '/onboarding',
         '/invite',
         '/auth',
-        '/admin',
-        '/support',
       ],
     },
     sitemap: `${getSiteUrl()}/sitemap.xml`,

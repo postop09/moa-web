@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useCurrentHousehold } from '@/features/household';
-import { useUnreadReplyCount } from '@/features/inquiry';
 import { useGetProfile } from '@/features/profile';
 
 import { SettingsPage } from './index';
@@ -16,11 +15,7 @@ vi.mock('@/features/profile', () => ({
   useGetProfile: vi.fn(),
 }));
 
-vi.mock('@/features/inquiry', () => ({
-  useUnreadReplyCount: vi.fn(),
-}));
-
-// 무거운 섹션은 제목만 렌더하는 스텁으로 대체한다. SupportSection은 실제 컴포넌트를 쓴다.
+// 무거운 섹션은 제목만 렌더하는 스텁으로 대체한다.
 vi.mock('./ui/AccountSection', () => ({
   AccountSection: () => (
     <section>
@@ -61,10 +56,9 @@ const headings = () =>
 describe('SettingsPage 섹션 순서', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(useUnreadReplyCount).mockReturnValue({ data: 0 } as never);
   });
 
-  it('가계부와 프로필이 있으면 계정 → 멤버 → 카테고리 → 도움말 → 가계부 순서다', () => {
+  it('가계부와 프로필이 있으면 계정 → 멤버 → 카테고리 → 가계부 순서다', () => {
     vi.mocked(useCurrentHousehold).mockReturnValue({
       household: HOUSEHOLD,
       householdId: 'h1',
@@ -73,16 +67,10 @@ describe('SettingsPage 섹션 순서', () => {
 
     render(<SettingsPage />);
 
-    expect(headings()).toEqual([
-      '계정',
-      '멤버',
-      '카테고리',
-      '도움말',
-      '가계부',
-    ]);
+    expect(headings()).toEqual(['계정', '멤버', '카테고리', '가계부']);
   });
 
-  it('가계부가 없으면 멤버/카테고리/가계부 섹션 없이 계정 다음에 도움말이 보인다', () => {
+  it('가계부가 없으면 멤버/카테고리/가계부 섹션 없이 계정만 보인다', () => {
     vi.mocked(useCurrentHousehold).mockReturnValue({
       household: undefined,
       householdId: undefined,
@@ -91,6 +79,6 @@ describe('SettingsPage 섹션 순서', () => {
 
     render(<SettingsPage />);
 
-    expect(headings()).toEqual(['계정', '도움말']);
+    expect(headings()).toEqual(['계정']);
   });
 });
