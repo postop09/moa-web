@@ -38,6 +38,11 @@ pnpm dev
 - `src/pages` — 페이지
 - `src/widgets` / `features` / `entities` / `shared`
 
+## Deployment
+
+- Vercel에 GitHub 저장소(`postop09/moa-web`)가 연결돼 있다. `main`에 머지되면 프로덕션이 자동 배포된다.
+- Vercel 프로젝트 환경변수에 `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`가 필요하다.
+
 ## Docs
 
 - [제품 요구사항 (PRD)](docs/PRD.md)
