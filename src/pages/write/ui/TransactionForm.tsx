@@ -12,6 +12,9 @@ import { getErrorMessage } from '@/shared/lib';
 import { TRANSACTION_TYPE_LABEL, type TransactionType } from '@/shared/model';
 import { Button, DatePicker } from '@/shared/ui';
 
+import { useAutoFocusOnEnable } from '../model/useAutoFocusOnEnable';
+import { useSuccessLock } from '../model/useSuccessLock';
+
 import { CategoryPopover } from './CategoryPopover';
 import styles from './write.module.css';
 
@@ -98,6 +101,13 @@ export const TransactionForm = ({
   const filteredCategories = categories.filter((item) => item.type === type);
   const disabled = isPending || isCategoriesLoading;
 
+  const amountInputRef = useAutoFocusOnEnable<HTMLInputElement>({
+    enabled: mode.type === 'create' && !disabled,
+  });
+
+  // 제출 성공 후 화면 이동이 끝나기 전까지 중복 제출을 막는다 (실패 시에는 잠그지 않는다)
+  const { isLocked, runOnce } = useSuccessLock();
+
   const handleTypeChange = (nextType: TransactionType) => {
     setType(nextType);
     setCategoryId('');
@@ -133,23 +143,16 @@ export const TransactionForm = ({
           : null,
     };
 
-    try {
-      if (mode.type === 'create') {
-        await createTransaction.mutateAsync({
-          householdId,
-          ...payload,
-        });
-      } else {
-        await updateTransaction.mutateAsync({
-          id: mode.transaction.id,
-          ...payload,
-        });
-      }
-
-      onSuccess();
-    } catch {
-      // mutation error state에 표시
-    }
+    await runOnce(
+      () =>
+        mode.type === 'create'
+          ? createTransaction.mutateAsync({ householdId, ...payload })
+          : updateTransaction.mutateAsync({
+              id: mode.transaction.id,
+              ...payload,
+            }),
+      onSuccess,
+    );
   };
 
   return (
@@ -190,6 +193,7 @@ export const TransactionForm = ({
           금액
         </label>
         <input
+          ref={amountInputRef}
           id="transactionAmount"
           className={styles.input}
           type="number"
@@ -296,7 +300,7 @@ export const TransactionForm = ({
             variant="danger"
             fullWidth
             onClick={onDelete}
-            disabled={disabled}
+            disabled={disabled || isLocked}
           >
             삭제
           </Button>
@@ -306,7 +310,7 @@ export const TransactionForm = ({
           variant="primary"
           fullWidth
           type="submit"
-          disabled={disabled}
+          disabled={disabled || isLocked}
           loading={isPending}
           loadingLabel="저장 중…"
         >
