@@ -5,6 +5,8 @@ import { useDeleteTransaction } from '@/features/transaction';
 import { formatAmount } from '@/shared/lib';
 import { ConfirmDialog } from '@/shared/ui';
 
+import { useSuccessLock } from '../model/useSuccessLock';
+
 type Props = {
   householdId: string;
   transaction: Transaction;
@@ -20,14 +22,11 @@ export const TransactionDeleteConfirm = ({
 }: Props) => {
   const { mutateAsync, isPending, error } = useDeleteTransaction(householdId);
 
-  const handleConfirm = async () => {
-    try {
-      await mutateAsync(transaction.id);
-      onSuccess();
-    } catch {
-      // mutation error state에 표시
-    }
-  };
+  // 삭제 성공 후 화면 이동이 끝나기 전까지 중복 삭제를 막는다 (실패 시에는 잠그지 않는다)
+  const { isLocked, runOnce } = useSuccessLock();
+
+  const handleConfirm = () =>
+    runOnce(() => mutateAsync(transaction.id), onSuccess);
 
   const label = transaction.name?.trim() || formatAmount(transaction.amount);
 
@@ -42,6 +41,7 @@ export const TransactionDeleteConfirm = ({
       confirmLabel="삭제"
       pendingLabel="삭제 중…"
       isPending={isPending}
+      confirmDisabled={isLocked}
       error={error}
       fallbackError="내역 삭제에 실패했습니다."
       onCancel={onCancel}

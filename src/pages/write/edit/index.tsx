@@ -1,11 +1,11 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { useCurrentHousehold } from '@/features/household';
 import { useGetTransaction } from '@/features/transaction';
-import { getErrorMessage } from '@/shared/lib';
+import { getErrorMessage, useSafeBack } from '@/shared/lib';
+import { useToast } from '@/shared/ui';
 
 import { TransactionDeleteConfirm } from '../ui/TransactionDeleteConfirm';
 import { TransactionForm } from '../ui/TransactionForm';
@@ -16,7 +16,8 @@ type Props = {
 };
 
 export const WriteEditPage = ({ transactionId }: Props) => {
-  const router = useRouter();
+  const goBack = useSafeBack('/');
+  const showToast = useToast((state) => state.showToast);
   const isValidId = Number.isFinite(transactionId);
   const { householdId, isLoading: isHouseholdLoading } = useCurrentHousehold();
   const {
@@ -25,6 +26,16 @@ export const WriteEditPage = ({ transactionId }: Props) => {
     error,
   } = useGetTransaction(isValidId ? transactionId : null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
+  const handleSaveSuccess = () => {
+    showToast('저장했어요');
+    goBack();
+  };
+
+  const handleDeleteSuccess = () => {
+    showToast('삭제했어요');
+    goBack();
+  };
 
   if (!isValidId) {
     return (
@@ -72,7 +83,7 @@ export const WriteEditPage = ({ transactionId }: Props) => {
             key={`edit-${transaction.id}-${householdId}`}
             householdId={householdId}
             mode={{ type: 'edit', transaction }}
-            onSuccess={() => router.replace('/')}
+            onSuccess={handleSaveSuccess}
             onDelete={() => setIsDeleteOpen(true)}
           />
           {isDeleteOpen ? (
@@ -80,7 +91,7 @@ export const WriteEditPage = ({ transactionId }: Props) => {
               householdId={householdId}
               transaction={transaction}
               onCancel={() => setIsDeleteOpen(false)}
-              onSuccess={() => router.replace('/')}
+              onSuccess={handleDeleteSuccess}
             />
           ) : null}
         </>

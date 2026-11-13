@@ -22,6 +22,8 @@ type Props = {
   initialFocus?: 'cancel' | 'confirm';
   pendingLabel?: string;
   isPending?: boolean;
+  /** 확인 버튼만 비활성화한다 (예: 성공 후 이동 중 중복 실행 방지). */
+  confirmDisabled?: boolean;
   error?: Error | null;
   fallbackError?: string;
   onCancel: () => void;
@@ -38,6 +40,7 @@ export const ConfirmDialog = ({
   initialFocus = 'cancel',
   pendingLabel,
   isPending = false,
+  confirmDisabled = false,
   error = null,
   fallbackError = '',
   onCancel,
@@ -79,6 +82,7 @@ export const ConfirmDialog = ({
             variant={tone === 'danger' ? 'danger' : 'primary'}
             data-emphasis={confirmEmphasis}
             onClick={onConfirm}
+            disabled={confirmDisabled}
             loading={isPending}
             loadingLabel={pendingLabel}
           >

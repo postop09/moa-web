@@ -20,7 +20,8 @@ export const useDeleteTransaction = (householdId: string) => {
       void queryClient.invalidateQueries({
         queryKey: transactionQueryKeys.lists(householdId),
       });
-      void queryClient.invalidateQueries({
+      // 삭제된 행을 다시 조회하면 .single() 에러가 나므로 캐시에서 제거한다.
+      queryClient.removeQueries({
         queryKey: transactionQueryKeys.detail(id),
       });
     },

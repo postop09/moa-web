@@ -1,8 +1,8 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-
 import { HouseholdGuard } from '@/features/household';
+import { useSafeBack } from '@/shared/lib';
+import { useToast } from '@/shared/ui';
 
 import { TransactionForm } from './ui/TransactionForm';
 import styles from './ui/write.module.css';
@@ -10,7 +10,13 @@ import styles from './ui/write.module.css';
 export { WriteEditPage } from './edit';
 
 export const WritePage = () => {
-  const router = useRouter();
+  const goBack = useSafeBack('/');
+  const showToast = useToast((state) => state.showToast);
+
+  const handleSuccess = () => {
+    showToast('추가했어요');
+    goBack();
+  };
 
   return (
     <main className={styles.page}>
@@ -21,7 +27,7 @@ export const WritePage = () => {
           <TransactionForm
             householdId={householdId}
             mode={{ type: 'create' }}
-            onSuccess={() => router.replace('/')}
+            onSuccess={handleSuccess}
           />
         )}
       </HouseholdGuard>
